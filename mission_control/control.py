@@ -160,5 +160,5 @@ class Control:
         self.client.stop()
 
 if __name__ == "__main__":
-    server_ip = "100.76.221.110"  # RP IP = "100.76.221.110"
+    server_ip = "100.87.109.70"  # RP IP = "100.76.221.110" Jetson IP = "100.87.109.70"
     Control(server_ip).run()
