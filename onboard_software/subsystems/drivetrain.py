@@ -9,7 +9,7 @@ import motor_controller  # type: ignore
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from library import telemetry_logger
-from library import util as Util
+from library.util import Util
 
 # Subsystem Parameters
 logTelemetryData = False
@@ -86,9 +86,9 @@ class Drivetrain:
         self.mc.set_motor_duty_cycle(self.left_motor_ids[1], Util.clip(back_left_power, -self.max_speed, self.max_speed))
 
     def drive_task(self, y_axis, x_axis, turning_axis):
-        #y_axis = Util.apply_deadzone(y_axis, 0.12)
-        #x_axis = Util.apply_deadzone(x_axis, 0.12)
-        #turning_axis = Util.apply_deadzone(turning_axis, 0.12)
+        y_axis = Util.apply_deadzone(y_axis, 0.05)
+        x_axis = Util.apply_deadzone(x_axis, 0.05)
+        turning_axis = Util.apply_deadzone(turning_axis, 0.05)
 
         y = (math.atan(5 * y_axis) / math.atan(5))
         x = (math.atan(5 * x_axis) / math.atan(5)) * 1.1 # Strafing compensation

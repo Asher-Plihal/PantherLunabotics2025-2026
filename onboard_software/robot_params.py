@@ -11,7 +11,7 @@ class RobotConfig:
     useRiLidarRemoteStream = True
     useCameraRemoteStream = True
 
-    useDrivetrain = False
+    useDrivetrain = True
     useAuger = True
 
 class LoopConfig:
@@ -37,7 +37,7 @@ class RobotTimer:
         return f"[T+{minutes:02d}:{seconds:05.2f}]"
 
 class Telemetry:
-    PRINTS_PER_SECOND = 10  # Change this to adjust how often telemetry prints per second
+    PRINTS_PER_SECOND = 5  # Change this to adjust how often telemetry prints per second
     _timers = {}  # Per-call-site timers keyed by (filename, lineno)
 
     @classmethod
