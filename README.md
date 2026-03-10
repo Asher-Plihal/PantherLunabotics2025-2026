@@ -8,7 +8,7 @@ ssh rmcnasa@100.76.221.110
 ## SSH into onboard jetson
 
 ```bash
-ssh luna01@100.87.109.70
+ssh luna01@100.87.109.7
 ```
 
 ## Start venv on onboard server
