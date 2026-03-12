@@ -15,7 +15,7 @@ import robot_params
 sys.path.append(os.path.join(os.path.dirname(__file__), '../library/motor_controller/build'))
 import motor_controller as mc  # type: ignore
 
-def init_can_bus(interface: str = "can0", bitrate: int = 1_000_000):
+def init_can_bus(interface: str = "can1", bitrate: int = 1_000_000):
     """Bring up the CAN bus interface. Requires root privileges."""
     commands = [
         ["sudo", "ip", "link", "set", interface, "down"],
@@ -39,10 +39,10 @@ class Robot:
         robot_params.robot_timer = robot_params.RobotTimer()
 
         # Bring up CAN bus before accessing hardware
-        init_can_bus("can0", 1_000_000)
+        init_can_bus("can1", 1_000_000)
 
         # Initialize hardware
-        self.motor_controller = mc.MotorController.get_instance("can0")
+        self.motor_controller = mc.MotorController.get_instance("can1")
         self.drivetrain = drivetrain.Drivetrain(self.motor_controller)
         self.auger = auger.Auger(self.motor_controller)
 

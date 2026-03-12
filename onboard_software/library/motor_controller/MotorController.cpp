@@ -56,7 +56,7 @@ private:
 
 public:
     // Get the singleton instance
-    static MotorController& GetInstance(const std::string& canbus_name = "can0") 
+    static MotorController& GetInstance(const std::string& canbus_name = "can1") 
     {
         static MotorController instance(canbus_name);
 
@@ -335,7 +335,7 @@ PYBIND11_MODULE(motor_controller, m)
     // Bind MotorController class (singleton)
     py::class_<MotorController>(m, "MotorController")
         .def_static("get_instance", &MotorController::GetInstance,
-                    py::arg("canbus_name") = "can0",
+                    py::arg("canbus_name") = "can1",
                     py::return_value_policy::reference,
                     "Get the singleton instance of MotorController")
         .def("get_canbus_name", &MotorController::GetCanBusName,
