@@ -15,6 +15,18 @@ import robot_params
 sys.path.append(os.path.join(os.path.dirname(__file__), '../library/motor_controller/build'))
 import motor_controller as mc  # type: ignore
 
+def print_network_info():
+    """Print the Wi-Fi SSID at startup."""
+    try:
+        result = subprocess.run(["iwgetid", "-r"], capture_output=True, text=True)
+        ssid = result.stdout.strip()
+        if ssid:
+            print(f"[Network] Connected to Wi-Fi: {ssid}")
+        else:
+            print("[Network] Not connected to Wi-Fi")
+    except Exception as e:
+        print(f"[Network] Could not determine Wi-Fi: {e}")
+
 def init_can_bus(interface: str = "can1", bitrate: int = 1_000_000):
     """Bring up the CAN bus interface. Requires root privileges."""
     commands = [
@@ -34,6 +46,9 @@ class Robot:
     def __init__(self):
         self.current_mode = None
         self.running = True
+
+        # Print network info so we know where to connect
+        print_network_info()
 
         # Initialize global timer
         robot_params.robot_timer = robot_params.RobotTimer()
