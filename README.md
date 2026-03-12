@@ -5,6 +5,11 @@
 ```bash
 ssh rmcnasa@100.76.221.110
 ```
+## SSH into onboard jetson
+
+```bash
+ssh luna01@100.87.109.7
+```
 
 ## Start venv on onboard server
 
@@ -15,10 +20,10 @@ source lunaenv/bin/activate
 ## Start up the robot power up
 
 ```bash
-sudo ip link set can0 down
-sudo ip link set can0 type can bitrate 1000000
-sudo ip link set can0 txqueuelen 1000
-sudo ip link set can0 up
+sudo ip link set can1 down
+sudo ip link set can1 type can bitrate 1000000
+sudo ip link set can1 txqueuelen 1000
+sudo ip link set can1 up
 python robot.py
 ```
 
@@ -37,15 +42,9 @@ python control.py
 # TODO:
 
 # Phase 1: TeleOp/Gen:
-1. Commit on the robot (forgot to do that)
-2. Slove drive math for joysticks
+1. Setup vision streaming for camera and Lidar throught ssh
 
-4. Jetson?
-5. Clean up client server code (Do we need telemetry)
+4. Optimze clint server code 
 
 # Phase 2: Auto/Automations:
-1. Figure out all the required sensor for auto and how to use all of them
-
-- How do we track x, y, and heading? 
-- How do we localize them at the start of the match how do we localize mid match if position drifts?
-(Sam and Nico might need to be in for this conversation)
+1. Order parts

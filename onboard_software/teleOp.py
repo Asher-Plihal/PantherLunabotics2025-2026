@@ -11,73 +11,65 @@ class TeleOp:
     def __init__(self, robot: robot.Robot):
         self.robot = robot
         self._last_update_time = time.monotonic()
+        self._button_drive_active = False
 
     # Called only when there is a button event
+    # Drivetrain: DPAD_UP = forward, DPAD_DOWN = backward, DPAD_LEFT = strafe left, DPAD_RIGHT = strafe right
+    # Drivetrain: LB = turn left, RB = turn right
+    # Auger: Y = intake, A = outtake, B = stop auger
     def on_button_event(self, button, is_pressed):
-        if button == 'A':
-            if is_pressed:
-                #Forward
-                if robot_params.RobotConfig.useDrivetrain:
-                    self.robot.drivetrain.set_power(0.5,0.5,0.5,0.5)
+        if button in ('DPAD_UP', 'DPAD_DOWN', 'DPAD_LEFT', 'DPAD_RIGHT', 'LB', 'RB'):
+            if robot_params.RobotConfig.useDrivetrain:
+                self._button_drive_active = is_pressed
+                if is_pressed:
+                    if button == 'DPAD_UP':
+                        # Drive forward
+                        self.robot.drivetrain.set_power(0.5,0.5,0.5,0.5)
+                    elif button == 'DPAD_DOWN':
+                        # Drive backward
+                        self.robot.drivetrain.set_power(-0.5,-0.5,-0.5,-0.5)
+                    elif button == 'DPAD_LEFT':
+                        # Strafe left
+                        self.robot.drivetrain.set_power(0.5,0.5,-0.5,-0.5)
+                    elif button == 'DPAD_RIGHT':
+                        # Strafe right
+                        self.robot.drivetrain.set_power(-0.5,-0.5,0.5,0.5)
+                    elif button == 'LB':
+                        # Turn left
+                        self.robot.drivetrain.set_power(-0.5,0.5,-0.5,0.5)
+                    elif button == 'RB':
+                        # Turn right
+                        self.robot.drivetrain.set_power(0.5,-0.5,0.5,-0.5)
+                else:
+                    self.robot.drivetrain.set_power(0.0,0.0,0.0,0.0)
         elif button == 'Y':
             if is_pressed:
-                #Backward
-                if robot_params.RobotConfig.useDrivetrain:
-                    self.robot.drivetrain.set_power(-0.5,-0.5,-0.5,-0.5)
-        elif button == 'B':
-            if is_pressed:
-                #Strafe right
-                if robot_params.RobotConfig.useDrivetrain:
-                    self.robot.drivetrain.set_power(-0.5,-0.5,0.5,0.5)
-        elif button == 'X':
-            if is_pressed:
-                #Strafe left
-                if robot_params.RobotConfig.useDrivetrain:
-                    self.robot.drivetrain.set_power(0.5,0.5,-0.5,-0.5)
-        elif button == 'LB':
-            if is_pressed:
-                #Turn left
-                if robot_params.RobotConfig.useDrivetrain:
-                    self.robot.drivetrain.set_power(-0.5,0.5,-0.5,0.5)
-        elif button == 'RB':
-            if is_pressed:
-                #Turn right
-                if robot_params.RobotConfig.useDrivetrain:
-                    self.robot.drivetrain.set_power(0.5,-0.5,0.5,-0.5)
-        elif button == 'DPAD_UP':
-            if is_pressed:
-                #Intake Auger
+                # Auger intake
                 print("Intake Auger")
                 self.robot.auger.intake()
-        elif button == 'DPAD_DOWN':
+        elif button == 'A':
             if is_pressed:
-                #Outtake Auger
+                # Auger outtake
                 print("Outtake Auger")
                 self.robot.auger.outtake()
-        elif button == 'DPAD_LEFT':
+        elif button == 'B':
             if is_pressed:
-                #Off Drivetrain
-                if robot_params.RobotConfig.useDrivetrain:
-                    self.robot.drivetrain.set_power(0.0,0.0,0.0,0.0)
-        elif button == 'DPAD_RIGHT':
-            if is_pressed:
-                #Off Auger
+                # Stop auger
                 self.robot.auger.stop()
 
     """Called at 50Hz — put all periodic tasks here."""
     def periodic_loop(self):
-        #if robot_params.RobotConfig.useDrivetrain:
-        #    self.robot.drivetrain.drive_task(self.robot.controller.AxisValues['LY'], self.robot.controller.AxisValues['LX'], self.robot.controller.AxisValues['RX'])
-        
-        # Update motor controller
-        try:
-            self.robot.motor_controller.update()
-        except RuntimeError as e:
-            print(f"[TeleOp] motor_controller.update() error: {e}")
+        if robot_params.RobotConfig.useDrivetrain and not self._button_drive_active:
+            self.robot.drivetrain.drive_task(self.robot.controller.AxisValues.y, self.robot.controller.AxisValues.x, self.robot.controller.AxisValues.yaw_rate)
 
-        # Debug: print auger telemetry to check if motor responds on CAN
-        self.robot.auger.print_telemetry(False, False, False, True, False, True, interval=0.2)
-        #self.robot.drivetrain.print_telemetry()
+        # Check for joystick drift
+        robot_params.Telemetry.print_t(f"Controller Y: {self.robot.controller.AxisValues.y:.2f}, X: {self.robot.controller.AxisValues.x:.2f}, Yaw: {self.robot.controller.AxisValues.yaw_rate:.2f}")
+
+        # Print telemetry and log data
+        self.robot.auger.log_data()
+
+        # Update motor controller
+        self.robot.motor_controller.update()
 
     def run_teleOp_step(self):
 

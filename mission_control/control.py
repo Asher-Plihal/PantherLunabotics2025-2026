@@ -43,11 +43,6 @@ class Control:
         self.joystick.init()
         print("[Control] 🎮 Controller connected!")
 
-    def print_telemetry(self):
-        telemetry = self.client.get_telemetry()
-        if telemetry is not None:
-            print(f"[Control] \033[35mTelemetry\033[0m: {telemetry}")
-
     def run(self):
         self.client_t = threading.Thread(target=self.client.connect)
         self.client_t.start()
@@ -72,7 +67,6 @@ class Control:
                         self.client.send_command("SHUTDOWN")
                         self.stop()
                         return
-            self.print_telemetry()
             time.sleep(0.05) # 20 Hz loop
 
         # Prevent A/B release events from leaking into control loop
@@ -157,7 +151,6 @@ class Control:
                 self.client.send_command(commands)
                 last_command = commands
                 #print(commands)
-            self.print_telemetry()
             time.sleep(0.05) # 20 Hz loop
 
     def stop(self):
@@ -167,5 +160,5 @@ class Control:
         self.client.stop()
 
 if __name__ == "__main__":
-    server_ip = "100.76.221.110"  # RP IP = "100.76.221.110"
+    server_ip = "100.87.109.7"  # RP IP = "100.76.221.110" Jetson IP = "100.87.109.7"
     Control(server_ip).run()

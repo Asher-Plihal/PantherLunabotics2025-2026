@@ -78,7 +78,7 @@ def radar_map():
                 radar_surface.blit(label, (CENTER[0] + int(r * SCALE) - 25, CENTER[1]))
 
             # Draw points from current scan only
-            for (_, angle, distance) in scan:
+            for (quality, angle, distance) in scan:
                 if MIN_DISTANCE <= distance <= MAX_DISTANCE:
                     px, py = polar_to_cartesian(angle, distance)
                     if distance <= 1000:
@@ -88,6 +88,7 @@ def radar_map():
                     else:
                         color = GREEN
                     pygame.draw.circle(radar_surface, color, (px, py), 2)
+                    #print(f"Point: angle={angle}, distance={distance}, quality={quality}, px={px}, py={py}")
 
             # Blit radar surface to screen
             screen.blit(radar_surface, (0, 0))

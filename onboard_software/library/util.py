@@ -17,18 +17,15 @@ class Util:
         return max(min_value, min(value, max_value))
     
     @staticmethod
-    def magnitude(*nums):
-        """
-        Calculate the magnitude of a given set of numbers.
-        """
-        total = 0.0
-        for num in nums:
-            total += num * num
-        return math.sqrt(total)
-    
-    @staticmethod
     def signum(x):
         """
         Returns the sign of the given number.
         """
         return (x > 0) - (x < 0)
+    
+    @staticmethod
+    def apply_deadzone(value, deadzone=0.1):
+        if abs(value) < deadzone:
+            return 0.0
+        sign = 1.0 if value > 0 else -1.0
+        return sign * (abs(value) - deadzone) / (1.0 - deadzone)

@@ -7,9 +7,6 @@ from library import telemetry_logger
 sys.path.append(os.path.join(os.path.dirname(__file__), '../library/motor_controller/build'))
 import motor_controller  # type: ignore
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from library import telemetry_logger
-
 # Subsystem Parameters
 logTelemetryData = False
 
@@ -36,16 +33,16 @@ class Auger:
 
         self.mc.initialize_motor(self.motor_id, config)
         self.mc.reset_motor_position(self.motor_id)
-        self.start_logging()
+        #self.start_logging()
 
     def set_power(self, power):
         self.mc.set_motor_duty_cycle(self.motor_id, power)
 
     def intake(self):
-        self.set_power(0.25)
+        self.set_power(0.5)
 
     def outtake(self):
-        self.set_power(-0.25)
+        self.set_power(-0.5)
 
     def start_logging(self):
         self._logger.start_logging(_LOG_COLUMNS)
@@ -55,6 +52,9 @@ class Auger:
 
     def stop(self):
         self.set_power(0.0)
+
+    def shutdown(self):
+        self.stop()
         self.stop_logging()
 
     def print_telemetry(self, duty_cycle=True, velocity=True, position=True, current=True, temperature=False, voltage=True, interval=1):
@@ -84,9 +84,11 @@ class Auger:
 
         print(f"{robot_params.robot_timer.timestamp()} [Auger] " + ", ".join(parts))
 
-        if self._logger.is_logging:
-            self._logger.log_row(
-                robot_params.robot_timer.timestamp(),
-                [feedback.duty_cycle, feedback.velocity, feedback.position,
-                 feedback.current, feedback.temperature, feedback.voltage]
-            )
+    def log_data(self):
+        if not self._logger.is_logging:
+            return
+        feedback = self.mc.get_motor_feedback(self.motor_id)
+        self._logger.log_row(
+            [feedback.duty_cycle, feedback.velocity, feedback.position,
+             feedback.current, feedback.temperature, feedback.voltage]
+        )

@@ -1,5 +1,6 @@
 import os
 import csv
+import time
 import datetime
 
 
@@ -10,7 +11,7 @@ class TelemetryLogger:
     Usage:
         logger = TelemetryLogger("auger")
         logger.start_logging(["Velocity (RPM)", "Current (A)"])
-        logger.log_row("[T+00:01.00]", [120.4, 2.1])
+        logger.log_row([120.4, 2.1])
         logger.stop_logging()
 
     Output is CSV — open the file in any spreadsheet app and each
@@ -33,6 +34,7 @@ class TelemetryLogger:
         self._writer = None
         self._filepath = None
         self._row_count = 0
+        self._start_time = None
 
     @property
     def is_logging(self) -> bool:
@@ -58,23 +60,32 @@ class TelemetryLogger:
         self._file = open(self._filepath, 'w', newline='', encoding='utf-8')
         self._writer = csv.writer(self._file)
         self._row_count = 0
+        self._start_time = time.monotonic()
 
         self._writer.writerow(["Timestamp"] + columns)
         self._file.flush()
 
         print(f"[{self.name.capitalize()}] Logging started -> {self._filepath}")
 
-    def log_row(self, timestamp: str, values: list):
+    def timestamp(self) -> str:
+        """Return a formatted timestamp relative to when logging started."""
+        if self._start_time is None:
+            return "00:00.00"
+        e = time.monotonic() - self._start_time
+        minutes = int(e) // 60
+        seconds = e % 60
+        return f"{minutes:02d}:{seconds:05.2f}"
+
+    def log_row(self, values: list):
         """
         Write one data row to the CSV log.
 
-        timestamp: string from robot_params.robot_timer.timestamp()
-        values:    list of raw numbers matching the column order from start_logging()
+        values: list of raw numbers matching the column order from start_logging()
         """
         if self._file is None:
             return
 
-        self._writer.writerow([timestamp] + [str(v) for v in values])
+        self._writer.writerow([self.timestamp()] + [str(v) for v in values])
         self._file.flush()
         self._row_count += 1
 
@@ -90,3 +101,4 @@ class TelemetryLogger:
         print(f"[{self.name.capitalize()}] Logging stopped — {self._row_count} rows saved to {self._filepath}")
         self._filepath = None
         self._row_count = 0
+        self._start_time = None

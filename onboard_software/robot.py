@@ -15,7 +15,19 @@ import robot_params
 sys.path.append(os.path.join(os.path.dirname(__file__), '../library/motor_controller/build'))
 import motor_controller as mc  # type: ignore
 
-def init_can_bus(interface: str = "can0", bitrate: int = 1_000_000):
+def print_network_info():
+    """Print the Wi-Fi SSID at startup."""
+    try:
+        result = subprocess.run(["iwgetid", "-r"], capture_output=True, text=True)
+        ssid = result.stdout.strip()
+        if ssid:
+            print(f"[Network] Connected to Wi-Fi: {ssid}")
+        else:
+            print("[Network] Not connected to Wi-Fi")
+    except Exception as e:
+        print(f"[Network] Could not determine Wi-Fi: {e}")
+
+def init_can_bus(interface: str = "can1", bitrate: int = 1_000_000):
     """Bring up the CAN bus interface. Requires root privileges."""
     commands = [
         ["sudo", "ip", "link", "set", interface, "down"],
@@ -35,14 +47,17 @@ class Robot:
         self.current_mode = None
         self.running = True
 
+        # Print network info so we know where to connect
+        print_network_info()
+
         # Initialize global timer
         robot_params.robot_timer = robot_params.RobotTimer()
 
         # Bring up CAN bus before accessing hardware
-        init_can_bus("can0", 1_000_000)
+        init_can_bus("can1", 1_000_000)
 
         # Initialize hardware
-        self.motor_controller = mc.MotorController.get_instance("can0")
+        self.motor_controller = mc.MotorController.get_instance("can1")
         self.drivetrain = drivetrain.Drivetrain(self.motor_controller)
         self.auger = auger.Auger(self.motor_controller)
 
@@ -66,9 +81,6 @@ class Robot:
         robot_params.robot_timer.start()
         print("[Robot] Startup complete!")
 
-    def send_telemetry(self, data):
-        self.server.send_telemetry(data)
-
     def run(self):
 
         while self.running:
@@ -91,8 +103,8 @@ class Robot:
         print("[Robot] Stopping robot")
         self.running = False
         self.server.stop()
-        self.drivetrain.stop()
-        self.auger.stop()
+        self.drivetrain.shutdown()
+        self.auger.shutdown()
         
 if __name__ == "__main__":
     Robot().run()
