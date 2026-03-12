@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/rmcnasa/PantherLunabotics2025-2026/onboard_software/subsystems/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

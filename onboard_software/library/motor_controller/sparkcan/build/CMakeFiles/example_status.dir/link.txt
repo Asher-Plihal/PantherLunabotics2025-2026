@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/example_status.dir/examples/status.cpp.o  -o example_status -Wl,-rpath,/home/luna01/sparkcan/build libsparkcan.so -lpthread 

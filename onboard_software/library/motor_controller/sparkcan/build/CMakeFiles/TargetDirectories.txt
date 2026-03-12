@@ -1,0 +1,10 @@
+/home/luna01/sparkcan/build/CMakeFiles/install/strip.dir
+/home/luna01/sparkcan/build/CMakeFiles/install/local.dir
+/home/luna01/sparkcan/build/CMakeFiles/list_install_components.dir
+/home/luna01/sparkcan/build/CMakeFiles/install.dir
+/home/luna01/sparkcan/build/CMakeFiles/sparkcan.dir
+/home/luna01/sparkcan/build/CMakeFiles/rebuild_cache.dir
+/home/luna01/sparkcan/build/CMakeFiles/example_pid.dir
+/home/luna01/sparkcan/build/CMakeFiles/example_status.dir
+/home/luna01/sparkcan/build/CMakeFiles/example_control.dir
+/home/luna01/sparkcan/build/CMakeFiles/edit_cache.dir

@@ -1,83 +1,85 @@
 from __future__ import annotations
+import os
+import sys
+import subprocess
 import server
 import threading
 import time
 import teleOp
 import auto
-from dataclasses import dataclass
+from subsystems import drivetrain
+from subsystems import auger
+from library import controller
+import robot_params
 
-@dataclass
-class AxisValues:
-    x: float = 0.0
-    y: float = 0.0
-    yaw_rate: float = 0.0
-    pitch_rate: float = 0.0
-    lt: float = 0.0
-    rt: float = 0.0
+sys.path.append(os.path.join(os.path.dirname(__file__), '../library/motor_controller/build'))
+import motor_controller as mc  # type: ignore
 
-    def update(self, cmd):
-        self.x = cmd[1]
-        self.y = cmd[2]
-        self.yaw_rate = cmd[3]
-        self.pitch_rate = cmd[4]
-        self.lt = cmd[5]
-        self.rt = cmd[6]
-
-    def __str__(self):
-        return (f"Axis State:"
-                f"  X: {self.x},"
-                f"  Y: {self.y},"
-                f"  Yaw Rate: {self.yaw_rate},"
-                f"  Pitch Rate: {self.pitch_rate},"
-                f"  Left Trigger: {self.lt},"
-                f"  Right Trigger: {self.rt}")
-
-class Controller:
-    def __init__(self, robot: Robot):
-        self.robot = robot
-        self.AxisValues = AxisValues()
-        
-
-    def process_axes(self, cmd):
-        self.AxisValues.update(cmd)
-        #print(f"[Controller] {self.AxisValues.__str__()}")
-
-    def process_buttons(self, cmd):
-        
-        mode, button, action = cmd
-        is_pressed = (action == "PRESSED")
-
-        if self.robot.current_mode == "TELEOP":
-            self.robot.teleop.on_button_event(button, is_pressed)
-        elif self.robot.current_mode == "AUTO":
-            self.robot.auto.on_button_event(button, is_pressed)
-
-    def process_controller_inputs(self, cmd):
-        if len(cmd) > 4 and cmd[0] == "TELEOP": # For now only TELEOP uses axes
-            self.process_axes(cmd)
+def print_network_info():
+    """Print the Wi-Fi SSID at startup."""
+    try:
+        result = subprocess.run(["iwgetid", "-r"], capture_output=True, text=True)
+        ssid = result.stdout.strip()
+        if ssid:
+            print(f"[Network] Connected to Wi-Fi: {ssid}")
         else:
-            self.process_buttons(cmd)
+            print("[Network] Not connected to Wi-Fi")
+    except Exception as e:
+        print(f"[Network] Could not determine Wi-Fi: {e}")
+
+def init_can_bus(interface: str = "can1", bitrate: int = 1_000_000):
+    """Bring up the CAN bus interface. Requires root privileges."""
+    commands = [
+        ["sudo", "ip", "link", "set", interface, "down"],
+        ["sudo", "ip", "link", "set", interface, "type", "can", "bitrate", str(bitrate)],
+        ["sudo", "ip", "link", "set", interface, "txqueuelen", "1000"],
+        ["sudo", "ip", "link", "set", interface, "up"],
+    ]
+    for cmd in commands:
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"[CAN] Failed: {' '.join(cmd)}\n  {result.stderr.strip()}")
+            sys.exit(1)
+    print(f"[CAN] {interface} is up at {bitrate} bps")
 
 class Robot:
     def __init__(self):
         self.current_mode = None
         self.running = True
 
+        # Print network info so we know where to connect
+        print_network_info()
+
+        # Initialize global timer
+        robot_params.robot_timer = robot_params.RobotTimer()
+
+        # Bring up CAN bus before accessing hardware
+        init_can_bus("can1", 1_000_000)
+
+        # Initialize hardware
+        self.motor_controller = mc.MotorController.get_instance("can1")
+        self.drivetrain = drivetrain.Drivetrain(self.motor_controller)
+        self.auger = auger.Auger(self.motor_controller)
+
         # Initialize server
         self.server = server.Server()
         threading.Thread(target=self.server.start).start()
 
         # Initialize controller and run modes
-        self.controller = Controller(self)
-        self.teleop = teleOp.Teleop(self)
+        self.controller = controller.Controller(self)
+        self.teleop = teleOp.TeleOp(self)
         self.auto = auto.Auto(self)
 
+        startup_timeout = 60 # seconds
+        startup_start = time.monotonic()
         while self.server.get_command() != "READY":
+            if time.monotonic() - startup_start > startup_timeout:
+                print("[Robot] Timed out waiting for READY from mission control")
+                self.stop()
+                return
             time.sleep(0.1)
+        robot_params.robot_timer.start()
         print("[Robot] Startup complete!")
-
-    def print_telemetry(self, data):
-        self.server.send_telemetry(data)
 
     def run(self):
 
@@ -101,6 +103,8 @@ class Robot:
         print("[Robot] Stopping robot")
         self.running = False
         self.server.stop()
-
+        self.drivetrain.shutdown()
+        self.auger.shutdown()
+        
 if __name__ == "__main__":
     Robot().run()

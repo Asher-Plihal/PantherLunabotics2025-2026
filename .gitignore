@@ -8,5 +8,5 @@ lunaenv/
 .venv/
 .env/
 
-# Claude
+# Claude Code
 .claude/

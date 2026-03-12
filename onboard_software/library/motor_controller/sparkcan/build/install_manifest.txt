@@ -1,0 +1,8 @@
+/usr/local/lib/libsparkcan.so
+/usr/local/include/SparkFlex.hpp
+/usr/local/include/SparkMax.hpp
+/usr/local/include/SparkBase.hpp
+/usr/local/lib/cmake/sparkcan/sparkcanTargets.cmake
+/usr/local/lib/cmake/sparkcan/sparkcanTargets-noconfig.cmake
+/usr/local/lib/cmake/sparkcan/sparkcanConfig.cmake
+/usr/local/lib/cmake/sparkcan/sparkcanConfigVersion.cmake

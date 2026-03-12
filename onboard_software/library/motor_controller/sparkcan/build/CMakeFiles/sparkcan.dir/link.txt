@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC   -shared -Wl,-soname,libsparkcan.so -o libsparkcan.so CMakeFiles/sparkcan.dir/src/SparkBase.cpp.o CMakeFiles/sparkcan.dir/src/SparkMax.cpp.o CMakeFiles/sparkcan.dir/src/SparkFlex.cpp.o -lpthread 

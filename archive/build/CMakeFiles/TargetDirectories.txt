@@ -1,0 +1,3 @@
+/home/rmcnasa/PantherLunabotics2025-2026/onboard_software/subsystems/build/CMakeFiles/motor_lib.dir
+/home/rmcnasa/PantherLunabotics2025-2026/onboard_software/subsystems/build/CMakeFiles/edit_cache.dir
+/home/rmcnasa/PantherLunabotics2025-2026/onboard_software/subsystems/build/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -O0 CMakeFiles/ecbf_unicycle.dir/ecbf_unicycle.cpp.o -o /mnt/c/Users/georg/Documents/GitHub/PantherLunabotics2025-2026/library/ecbf_unicycle  -Wl,-rpath,/usr/local/lib /usr/local/lib/libOsqpEigen.so.0.11.0 /usr/local/lib/libosqp.so 

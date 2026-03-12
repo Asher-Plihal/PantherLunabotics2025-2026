@@ -7,12 +7,13 @@ import time
 class Client: # Laptop Client robot controller
     def __init__(self, server_ip):
         self.host = server_ip
-        self.port = 1010
+        self.port = 8080
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.input_queue = queue.Queue() # For incoming telemetry and ACKs
         self.output_queue = queue.Queue() # For outgoing commands and ACKs
         self.telemetry_queue = queue.Queue() # Queue to send incoming telemetry
         self.running = True
+        self.connected = threading.Event() # Signals when connection is established
         self.message_id = 1
         self.pending_acks = {}
         self.ack_timeout = 0.5 # seconds
@@ -25,6 +26,7 @@ class Client: # Laptop Client robot controller
             return
 
         print("[Client] Connected to server at : " + self.host)
+        self.connected.set()
 
         threading.Thread(target=self._sender_thread).start()
         threading.Thread(target=self._receiver_thread).start()
@@ -41,11 +43,11 @@ class Client: # Laptop Client robot controller
                 elif msg.get('type') == 'ack':
                     # Handle ACK: Remove from pending
                     msg_id = msg.get('id')
-                    if msg_id in self.pending_acks: 
+                    if msg_id in self.pending_acks:
                         del self.pending_acks[msg_id]
             except queue.Empty:
                 continue
-    
+
     def get_telemetry(self):
         try:
             msg = self.telemetry_queue.get_nowait()  # Get the full message
@@ -78,7 +80,7 @@ class Client: # Laptop Client robot controller
         self.output_queue.put(msg)
         self.pending_acks[self.message_id] = (msg, time.time())
         self.message_id += 1
-        
+
     def _sender_thread(self):
         stream = self.client_socket.makefile('w')
         try:
@@ -111,4 +113,3 @@ class Client: # Laptop Client robot controller
         self.running = False
         self.client_socket.shutdown(socket.SHUT_RDWR)
         self.client_socket.close()
-                
