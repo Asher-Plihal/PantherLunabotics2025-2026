@@ -3,6 +3,7 @@ import time
 import robot_params
 from typing import TYPE_CHECKING
 
+# self.robot.drivetrain.set_power(0.5,0.5,-0.5,-0.5) fold out
 if TYPE_CHECKING:
     import robot
 
@@ -24,16 +25,16 @@ class TeleOp:
                 if is_pressed:
                     if button == 'DPAD_UP':
                         # Drive forward
-                        self.robot.drivetrain.set_power(0.5,0.5,0.5,0.5)
+                        self.robot.drivetrain.set_power(-0.5,-0.5,-0.5,-0.5)
                     elif button == 'DPAD_DOWN':
                         # Drive backward
-                        self.robot.drivetrain.set_power(-0.5,-0.5,-0.5,-0.5)
+                        self.robot.drivetrain.set_power(0.5,0.5,0.5,0.5)
                     elif button == 'DPAD_LEFT':
                         # Strafe left
-                        self.robot.drivetrain.set_power(0.5,0.5,-0.5,-0.5)
+                        self.robot.drivetrain.set_power(-0.5,0.5,0.5,-0.5)
                     elif button == 'DPAD_RIGHT':
                         # Strafe right
-                        self.robot.drivetrain.set_power(-0.5,-0.5,0.5,0.5)
+                        self.robot.drivetrain.set_power(-0.5,0.5,0.5,-0.5)
                     elif button == 'LB':
                         # Turn left
                         self.robot.drivetrain.set_power(-0.5,0.5,-0.5,0.5)
