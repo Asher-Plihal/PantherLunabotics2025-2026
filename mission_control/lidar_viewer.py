@@ -12,7 +12,7 @@ import struct
 import pygame
 
 STREAM_PORT = 5000
-PI_IP = "100.76.221.110"
+PI_IP = "100.87.109.7"
 WIDTH, HEIGHT = 800, 800
 
 
@@ -33,6 +33,7 @@ def main():
     print(f"Connecting to {PI_IP}:{STREAM_PORT}...")
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((PI_IP, STREAM_PORT))
+    sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     print("Connected. Receiving stream...")
 
     pygame.init()
@@ -52,6 +53,7 @@ def main():
             frame_bytes = recv_exact(sock, frame_len)
 
             surface = pygame.image.load(io.BytesIO(frame_bytes))
+            surface = pygame.transform.scale(surface, (WIDTH, HEIGHT))
             screen.blit(surface, (0, 0))
             pygame.display.flip()
             clock.tick(60)

@@ -41,13 +41,16 @@ def polar_to_cartesian(angle_deg, distance_mm):
     y = CENTER[1] + int(r * math.sin(angle_rad))
     return x, y
 
+STREAM_WIDTH, STREAM_HEIGHT = WIDTH // 2, HEIGHT // 2
+
 def encode_frame(surface):
-    """Encode a pygame surface as JPEG bytes."""
-    arr = pygame.surfarray.array3d(surface)
+    """Encode a pygame surface as JPEG bytes (downscaled for speed)."""
+    small = pygame.transform.scale(surface, (STREAM_WIDTH, STREAM_HEIGHT))
+    arr = pygame.surfarray.array3d(small)
     arr = arr.transpose(1, 0, 2)  # (w,h,3) -> (h,w,3) for PIL
     img = Image.fromarray(arr, 'RGB')
     buf = io.BytesIO()
-    img.save(buf, format='JPEG', quality=70)
+    img.save(buf, format='JPEG', quality=50)
     return buf.getvalue()
 
 def send_frame(conn, frame_bytes):
@@ -84,6 +87,7 @@ def radar_map():
     server_sock.listen(1)
     print(f"Streaming server listening on port {STREAM_PORT} — waiting for viewer to connect...")
     conn, addr = server_sock.accept()
+    conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     print(f"Viewer connected from {addr}")
 
     # Connect to LIDAR

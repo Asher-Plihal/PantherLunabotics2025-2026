@@ -42,8 +42,7 @@ python control.py
 # TODO:
 
 # Phase 1: TeleOp/Gen:
-1. Fix joysticks stick drift and check driveing with joysticks
-2. Setup vision streaming for camera and Lidar throught ssh
+1. Setup vision streaming for camera and Lidar throught ssh
 
 4. Optimze clint server code 
 
