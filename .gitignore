@@ -7,3 +7,6 @@ __pycache__/
 lunaenv/
 .venv/
 .env/
+
+# Claude Code
+.claude/

@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -flto=auto -shared  -o motor_controller.cpython-310-aarch64-linux-gnu.so CMakeFiles/motor_controller.dir/MotorControler.cpp.o CMakeFiles/motor_controller.dir/sparkcan/src/SparkBase.cpp.o CMakeFiles/motor_controller.dir/sparkcan/src/SparkMax.cpp.o CMakeFiles/motor_controller.dir/sparkcan/src/SparkFlex.cpp.o  -lpthread 

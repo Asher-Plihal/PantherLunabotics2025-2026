@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -shared  -o motor_controller.so CMakeFiles/motor_controller.dir/MotorController.cpp.o CMakeFiles/motor_controller.dir/sparkcan/src/SparkBase.cpp.o CMakeFiles/motor_controller.dir/sparkcan/src/SparkMax.cpp.o CMakeFiles/motor_controller.dir/sparkcan/src/SparkFlex.cpp.o  -lpthread

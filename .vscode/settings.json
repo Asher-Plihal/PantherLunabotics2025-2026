@@ -3,7 +3,6 @@
     "cmake.ignoreCMakeListsMissing": true,
     "python-envs.pythonProjects": [],
     "python.analysis.extraPaths": [
-        "${workspaceFolder}/onboard_software/subsystems"
+        "${workspaceFolder}/library/motor_controller",
     ],
-    "claudeCodeChat.permissions.yoloMode": false
 }
