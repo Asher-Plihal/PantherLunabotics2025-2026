@@ -63,9 +63,6 @@ class TeleOp:
         if robot_params.RobotConfig.useDrivetrain and not self._button_drive_active:
             self.robot.drivetrain.drive_task(self.robot.controller.AxisValues.y, self.robot.controller.AxisValues.x, self.robot.controller.AxisValues.yaw_rate)
 
-        # Check for joystick drift
-        robot_params.Telemetry.print_t(f"Controller Y: {self.robot.controller.AxisValues.y:.2f}, X: {self.robot.controller.AxisValues.x:.2f}, Yaw: {self.robot.controller.AxisValues.yaw_rate:.2f}")
-
         # Print telemetry and log data
         self.robot.auger.log_data()
 
