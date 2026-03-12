@@ -34,7 +34,7 @@ class TeleOp:
                         self.robot.drivetrain.set_power(-0.5,0.5,0.5,-0.5)
                     elif button == 'DPAD_RIGHT':
                         # Strafe right
-                        self.robot.drivetrain.set_power(-0.5,0.5,0.5,-0.5)
+                        self.robot.drivetrain.set_power(0.5,-0.5,-0.5,0.5)
                     elif button == 'LB':
                         # Turn left
                         self.robot.drivetrain.set_power(-0.5,0.5,-0.5,0.5)
