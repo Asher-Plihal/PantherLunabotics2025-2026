@@ -13,7 +13,7 @@ import pygame
 
 STREAM_PORT = 5000
 PI_IP = "100.87.109.7"
-WIDTH, HEIGHT = 800, 800
+WIDTH, HEIGHT = 600, 600
 
 
 def recv_exact(sock, n):
@@ -53,7 +53,6 @@ def main():
             frame_bytes = recv_exact(sock, frame_len)
 
             surface = pygame.image.load(io.BytesIO(frame_bytes))
-            surface = pygame.transform.scale(surface, (WIDTH, HEIGHT))
             screen.blit(surface, (0, 0))
             pygame.display.flip()
             clock.tick(60)

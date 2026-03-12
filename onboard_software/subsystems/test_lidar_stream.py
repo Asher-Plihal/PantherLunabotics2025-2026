@@ -16,7 +16,7 @@ import pygame
 # -------------------------------
 # Configuration
 # -------------------------------
-WIDTH, HEIGHT = 800, 800
+WIDTH, HEIGHT = 600, 600
 CENTER = (WIDTH // 2, HEIGHT // 2)
 MIN_DISTANCE = 50      # mm
 MAX_DISTANCE = 3000    # mm
@@ -41,12 +41,25 @@ def polar_to_cartesian(angle_deg, distance_mm):
     y = CENTER[1] + int(r * math.sin(angle_rad))
     return x, y
 
-STREAM_WIDTH, STREAM_HEIGHT = WIDTH // 2, HEIGHT // 2
+def scan_to_points(scan):
+    """Convert a lidar scan to a sorted tuple of (px, py, color) for comparison."""
+    points = []
+    for _, angle, distance in scan:
+        if MIN_DISTANCE <= distance <= MAX_DISTANCE:
+            px, py = polar_to_cartesian(angle, distance)
+            if distance <= 1000:
+                color = RED
+            elif distance <= 2000:
+                color = YELLOW
+            else:
+                color = GREEN
+            points.append((px, py, color))
+    points.sort()
+    return tuple(points)
 
 def encode_frame(surface):
-    """Encode a pygame surface as JPEG bytes (downscaled for speed)."""
-    small = pygame.transform.scale(surface, (STREAM_WIDTH, STREAM_HEIGHT))
-    arr = pygame.surfarray.array3d(small)
+    """Encode a pygame surface as JPEG bytes."""
+    arr = pygame.surfarray.array3d(surface)
     arr = arr.transpose(1, 0, 2)  # (w,h,3) -> (h,w,3) for PIL
     img = Image.fromarray(arr, 'RGB')
     buf = io.BytesIO()
@@ -95,22 +108,20 @@ def radar_map():
     lidar = RPLidar(PORT_NAME)
     time.sleep(2)  # let motor stabilize
 
+    prev_points = None
     try:
         for scan in lidar.iter_scans():
+            # Only re-encode and send if points changed
+            curr_points = scan_to_points(scan)
+            if curr_points == prev_points:
+                continue
+            prev_points = curr_points
+
             screen.fill(BLACK)
             screen.blit(static_overlay, (0, 0))
 
-            # Draw scan points
-            for _, angle, distance in scan:
-                if MIN_DISTANCE <= distance <= MAX_DISTANCE:
-                    px, py = polar_to_cartesian(angle, distance)
-                    if distance <= 1000:
-                        color = RED
-                    elif distance <= 2000:
-                        color = YELLOW
-                    else:
-                        color = GREEN
-                    pygame.draw.circle(screen, color, (px, py), 2)
+            for px, py, color in curr_points:
+                pygame.draw.circle(screen, color, (px, py), 2)
 
             try:
                 send_frame(conn, encode_frame(screen))
