@@ -2,6 +2,8 @@ import math
 import pygame
 from rplidar import RPLidar
 import time
+import sys
+import numpy as np
 
 # -------------------------------
 # Configuration
@@ -61,6 +63,7 @@ def radar_map():
 
     points = []
     running = True
+    save_data = []
     try:
         for scan in lidar.iter_scans():
             # Handle Pygame events
@@ -99,7 +102,10 @@ def radar_map():
 
             pygame.display.flip()
             clock.tick(60)
-
+            print(len(scan))
+            # save scan data
+            save_data.append(np.array(scan).T)
+            
             if not running:
                 break
 
@@ -110,6 +116,9 @@ def radar_map():
         lidar.stop_motor()
         lidar.disconnect()
         pygame.quit()
+        print(len(save_data))
+        save_data = np.concatenate(save_data, axis=1)
+        np.savetxt(sys.argv[1], save_data)
 
 # -------------------------------
 # Entry point
