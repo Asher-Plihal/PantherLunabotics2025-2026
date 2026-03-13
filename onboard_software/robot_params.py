@@ -22,9 +22,11 @@ class RobotConfig:
     # Subsystem configuration
     useDrivetrain = True
     useAuger = True
+    useLidar = True
 
     # Telemetry configuration
     useTelemetry = True
+    logLiDarTelemetry = False
     logAugerTelemetry = False
     logDrivetrainTelemetry = False
 
