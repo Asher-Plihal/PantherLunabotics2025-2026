@@ -49,6 +49,7 @@ class TeleOp:
         elif button == 'B':
             if is_pressed:
                 # Stop auger
+                print("Stop Auger")
                 self.robot.auger.stop()
 
     def periodic_loop(self):
