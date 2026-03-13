@@ -49,6 +49,7 @@ class Connection(ABC):
         self._socket = None
         self._pending_acks = {}
         self._ack_lock = threading.Lock()
+        self._seen_msg_ids: set = set()
         self._ack_timeout = 0.5  # seconds
         self._message_id = 0
         self._message_id_lock = threading.Lock()
@@ -99,8 +100,11 @@ class Connection(ABC):
                 with self._ack_lock:
                     self._pending_acks.pop(msg_id, None)
             elif msg_type in (MessageType.COMMAND, MessageType.TELEMETRY):
-                self._data_queue.put(msg)
-                ack = {"type": MessageType.ACK, "id": msg.get("id")}
+                msg_id = msg.get("id")
+                if msg_id not in self._seen_msg_ids:
+                    self._seen_msg_ids.add(msg_id)
+                    self._data_queue.put(msg)
+                ack = {"type": MessageType.ACK, "id": msg_id}
                 self._output_queue.put(ack)
 
     def _receiver_thread(self):
@@ -155,16 +159,16 @@ class Connection(ABC):
     def _ack_monitor_thread(self):
         while self._running:
             time.sleep(0.1)
+            current_time = time.time()
+            to_resend = []
             with self._ack_lock:
-                current_time = time.time()
-                to_resend = []
                 for msg_id, (msg, sent_time) in list(self._pending_acks.items()):
                     if current_time - sent_time > self._ack_timeout:
                         to_resend.append(msg)
-                for msg in to_resend:
-                    print(f"[{self._get_role_name()}] Resending unacknowledged: {msg}")
-                    self._output_queue.put(msg)
-                    self._pending_acks[msg["id"]] = (msg, time.time())
+                        self._pending_acks[msg_id] = (msg, current_time)
+            for msg in to_resend:
+                print(f"[{self._get_role_name()}] Resending unacknowledged: {msg}")
+                self._output_queue.put(msg)
 
     def _next_message_id(self) -> int:
         with self._message_id_lock:

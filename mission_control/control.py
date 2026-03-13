@@ -82,7 +82,10 @@ class Control:
             time.sleep(0.05) # 20 Hz loop
 
         # Prevent A/B release events from leaking into control loop
+        drain_start = time.monotonic()
         while self.joystick.get_button(0) or self.joystick.get_button(1):
+            if time.monotonic() - drain_start > 2.0:
+                break
             pygame.event.pump()
             time.sleep(0.05) # 20 Hz loop
         pygame.event.clear()
@@ -111,8 +114,8 @@ class Control:
             pygame.event.pump() # Update joystick states
 
             # Read joystick axes
-            x = self.joystick.get_axis(0)          # Left Stick up and down
-            y = self.joystick.get_axis(1)          # Left Stick left and right
+            x = self.joystick.get_axis(0)          # Left Stick left and right
+            y = self.joystick.get_axis(1)          # Left Stick up and down
             yaw_rate = self.joystick.get_axis(2)   # Right Stick left and right
             pitch_rate = self.joystick.get_axis(3) # Right Stick up and down
 

@@ -1,8 +1,13 @@
+from __future__ import annotations
 import json
 import math
 import time
+from typing import TYPE_CHECKING
 from library.streaming import Stream, StreamMode
 from robot_params import RobotConfig
+
+if TYPE_CHECKING:
+    from rplidar import RPLidar  # type: ignore
 
 
 # ---------------------------------------------------------------------------

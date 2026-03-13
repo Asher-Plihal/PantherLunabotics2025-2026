@@ -108,6 +108,7 @@ class Robot:
                 self.teleop.run_teleOp_step()
             elif self.current_mode == Mode.AUTO:
                 self.auto.run_auto_step()
+            time.sleep(0.001)
     
     def stop(self):
         print("[Robot] Stopping robot")

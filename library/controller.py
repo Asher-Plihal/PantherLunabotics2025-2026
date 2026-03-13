@@ -44,7 +44,9 @@ class Controller:
         #print(f"[Controller] {self.AxisValues.__str__()}")
 
     def process_buttons(self, cmd):
-
+        if len(cmd) != 3:
+            print(f"[Controller] Unexpected button command length {len(cmd)}: {cmd}")
+            return
         mode, button, action = cmd
         is_pressed = (action == ButtonAction.PRESSED)
 

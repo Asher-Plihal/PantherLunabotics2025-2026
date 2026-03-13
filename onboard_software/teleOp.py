@@ -51,8 +51,8 @@ class TeleOp:
                 # Stop auger
                 self.robot.auger.stop()
 
-    """Called at 50Hz — put all periodic tasks here."""
     def periodic_loop(self):
+        """Called at 50Hz — put all periodic tasks here."""
         if robot_params.RobotConfig.useDrivetrain and not self._active_drive_buttons:
             self.robot.drivetrain.drive_task(self.robot.controller.AxisValues.y, self.robot.controller.AxisValues.x, self.robot.controller.AxisValues.yaw_rate)
 
