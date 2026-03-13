@@ -3,6 +3,7 @@ import time
 import robot_params
 from typing import TYPE_CHECKING
 
+# self.robot.drivetrain.set_power(0.5,0.5,-0.5,-0.5) fold out
 if TYPE_CHECKING:
     import robot
 
@@ -24,16 +25,16 @@ class TeleOp:
                 if is_pressed:
                     if button == 'DPAD_UP':
                         # Drive forward
-                        self.robot.drivetrain.set_power(0.5,0.5,0.5,0.5)
+                        self.robot.drivetrain.set_power(-0.5,-0.5,-0.5,-0.5)
                     elif button == 'DPAD_DOWN':
                         # Drive backward
-                        self.robot.drivetrain.set_power(-0.5,-0.5,-0.5,-0.5)
+                        self.robot.drivetrain.set_power(0.5,0.5,0.5,0.5)
                     elif button == 'DPAD_LEFT':
                         # Strafe left
-                        self.robot.drivetrain.set_power(0.5,0.5,-0.5,-0.5)
+                        self.robot.drivetrain.set_power(-0.5,0.5,0.5,-0.5)
                     elif button == 'DPAD_RIGHT':
                         # Strafe right
-                        self.robot.drivetrain.set_power(-0.5,-0.5,0.5,0.5)
+                        self.robot.drivetrain.set_power(0.5,-0.5,-0.5,0.5)
                     elif button == 'LB':
                         # Turn left
                         self.robot.drivetrain.set_power(-0.5,0.5,-0.5,0.5)
@@ -61,9 +62,6 @@ class TeleOp:
     def periodic_loop(self):
         if robot_params.RobotConfig.useDrivetrain and not self._button_drive_active:
             self.robot.drivetrain.drive_task(self.robot.controller.AxisValues.y, self.robot.controller.AxisValues.x, self.robot.controller.AxisValues.yaw_rate)
-
-        # Check for joystick drift
-        robot_params.Telemetry.print_t(f"Controller Y: {self.robot.controller.AxisValues.y:.2f}, X: {self.robot.controller.AxisValues.x:.2f}, Yaw: {self.robot.controller.AxisValues.yaw_rate:.2f}")
 
         # Print telemetry and log data
         self.robot.auger.log_data()

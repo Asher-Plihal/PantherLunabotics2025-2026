@@ -50,7 +50,7 @@ class Drivetrain:
         configR.motor_type = motor_controller.MotorType.BRUSHLESS
         configR.sensor_type = motor_controller.SensorType.HALL_SENSOR
         configR.ramp_rate = 0.0
-        configR.inverted = True
+        configR.inverted = False
         configR.motor_kv = 480
         configR.smart_current_free_limit = 20.0
         configR.smart_current_stall_limit = 80.0
