@@ -42,9 +42,9 @@ python control.py
 # TODO:
 
 # Phase 1: TeleOp/Gen:
-1. Testing everything rebuild everything, everything changed
+1. SSH does not work with local
 2. Add loging for lidar like test_lidar.py
-3. WiFi
+3. WiFi (NMCLI)
 
 # Phase 2: Auto/Automations:
 1. Order parts

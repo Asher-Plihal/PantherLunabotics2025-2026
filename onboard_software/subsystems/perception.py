@@ -1,8 +1,12 @@
 from __future__ import annotations
+import datetime
 import json
 import math
+import os
+import threading
 import time
 from typing import TYPE_CHECKING
+import numpy as np
 from library.streaming import Stream, StreamMode
 from robot_params import RobotConfig
 
@@ -130,6 +134,10 @@ class LidarStream:
         self.mode = mode
         self.stream = Stream(port, "LidarStream")
         self.lidar: RPLidar | None = None
+        self._log_data: list = []
+        self._logging = False
+        self._log_thread: threading.Thread | None = None
+        self._log_dir = os.path.join(os.path.dirname(__file__), '..', 'logs')
 
     def start(self):
         self.stream.start_source(self.mode, self._run)
@@ -137,6 +145,52 @@ class LidarStream:
     def stop(self):
         self.stream.stop()
         self._cleanup_hardware()
+        self.stop_logging()
+
+    def start_logging(self):
+        self._log_data = []
+        self._logging = True
+        print("[LidarStream] Logging started")
+        if self.mode == StreamMode.NONE:
+            self._log_thread = threading.Thread(target=self._run_logging_only, daemon=True)
+            self._log_thread.start()
+
+    def stop_logging(self):
+        if not self._logging:
+            return
+        self._logging = False
+        if self._log_thread:
+            self._log_thread.join(timeout=5)
+            self._log_thread = None
+        if not self._log_data:
+            return
+        os.makedirs(self._log_dir, exist_ok=True)
+        file_tag = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filepath = os.path.join(self._log_dir, f"lidar_{file_tag}.txt")
+        data = np.concatenate(self._log_data, axis=1)
+        np.savetxt(filepath, data)
+        print(f"[LidarStream] Logging stopped — {data.shape[1]} points saved to {filepath}")
+        self._log_data = []
+
+    def _run_logging_only(self):
+        try:
+            self._init_hardware()
+            assert self.lidar is not None
+            for scan in self.lidar.iter_scans():
+                if not self._logging:
+                    break
+                self._log_scan(scan)
+        except Exception as e:
+            print(f"[LidarStream] Logging error: {e}")
+        finally:
+            self._cleanup_hardware()
+
+    def log_data(self):
+        pass  # Lidar logging is driven by the scan thread; no periodic action needed
+
+    def _log_scan(self, scan):
+        if self._logging and scan:
+            self._log_data.append(np.array(scan).T)
 
     def _run(self):
         try:
@@ -178,6 +232,7 @@ class LidarStream:
         for scan in self.lidar.iter_scans():
             if not self.stream.running:
                 break
+            self._log_scan(scan)
             points = self._filter_scan(scan)
             data = json.dumps(points).encode()
             if not self.stream.send_frame(data):
@@ -194,6 +249,7 @@ class LidarStream:
             for scan in self.lidar.iter_scans():
                 if not self.stream.running:
                     break
+                self._log_scan(scan)
                 points = self._filter_scan(scan)
                 _render_frame(pygame, screen, overlay, points)
                 clock.tick(60)

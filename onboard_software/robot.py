@@ -68,6 +68,8 @@ class Robot:
         # Initialize perception (lidar/camera streams)
         self.perception = perception.Perception()
         self.perception.start()
+        if robot_params.RobotConfig.logLiDarTelemetry:
+            self.perception.lidar_stream.start_logging()
 
         # Initialize server
         self.server = server.Server()
