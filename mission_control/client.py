@@ -4,7 +4,7 @@ import socket
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "onboard_software"))
-from shared.protocol import Connection, MessageType
+from library.protocol import Connection, MessageType
 from robot_params import RobotConfig
 
 

@@ -4,7 +4,7 @@ import socket
 import robot_params
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from shared.protocol import Connection, MessageType
+from library.protocol import Connection, MessageType
 
 
 class Server(Connection):

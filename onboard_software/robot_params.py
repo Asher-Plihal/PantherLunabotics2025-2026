@@ -12,7 +12,7 @@ class StreamMode(Enum):
     LOCAL = "local"          # Stream locally on the robot (monitor plugged in)
 
 # Global timer instance to be initialized by robot.py on startup
-robot_timer = None
+robot_timer: "RobotTimer | None" = None
 
 class RobotConfig:
     Robot_IP = "100.87.109.7"

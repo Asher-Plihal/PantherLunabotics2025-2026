@@ -4,10 +4,9 @@ import time
 import robot_params
 import math
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../library/motor_controller/build'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../library/motor_controller/build'))
 import motor_controller  # type: ignore
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from library import telemetry_logger
 from library.util import Util
 

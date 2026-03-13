@@ -2,20 +2,21 @@ from __future__ import annotations
 import os
 import sys
 import subprocess
-import server
 import threading
 import time
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+import server
 import teleOp
 import auto
 from subsystems import drivetrain
 from subsystems import auger
 from library import controller
+from library.protocol import Command, Mode
 import robot_params
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from shared.protocol import Command, Mode
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '../library/motor_controller/build'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'library', 'motor_controller', 'build'))
 import motor_controller as mc  # type: ignore
 
 def print_network_info():

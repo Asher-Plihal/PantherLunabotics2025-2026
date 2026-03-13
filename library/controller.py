@@ -1,11 +1,8 @@
 from __future__ import annotations
-import os
-import sys
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
-from shared.protocol import Mode, ButtonAction
+from library.protocol import Mode, ButtonAction
 
 if TYPE_CHECKING:
     from onboard_software.robot import Robot

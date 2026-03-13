@@ -1,7 +1,7 @@
 {
     "extraPaths": [
+        ".",
         "onboard_software",
-        "mission_control",
-        "shared"
+        "mission_control"
     ]
 }

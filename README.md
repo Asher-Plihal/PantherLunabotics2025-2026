@@ -42,9 +42,7 @@ python control.py
 # TODO:
 
 # Phase 1: TeleOp/Gen:
-1. Setup vision streaming for camera and Lidar throught ssh
-
-4. Optimze clint server code 
+1. Testing everything rebuild everything, everything changed
 
 # Phase 2: Auto/Automations:
 1. Order parts

@@ -4,7 +4,7 @@ import time
 import robot_params
 from library import telemetry_logger
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../library/motor_controller/build'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../library/motor_controller/build'))
 import motor_controller  # type: ignore
 
 # Subsystem Parameters
