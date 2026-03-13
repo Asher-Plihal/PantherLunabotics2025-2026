@@ -2,9 +2,10 @@ import os
 import sys
 import time
 import robot_params
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 from library import telemetry_logger
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../library/motor_controller/build'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../library/motor_controller/build'))
 import motor_controller  # type: ignore
 
 # Subsystem Parameters
@@ -33,7 +34,9 @@ class Auger:
 
         self.mc.initialize_motor(self.motor_id, config)
         self.mc.reset_motor_position(self.motor_id)
-        #self.start_logging()
+        
+        if robot_params.RobotConfig.logAugerTelemetry:
+            self.start_logging()
 
     def set_power(self, power):
         self.mc.set_motor_duty_cycle(self.motor_id, power)
@@ -79,7 +82,7 @@ class Auger:
         if voltage:
             parts.append(f"Bus: {feedback.voltage:.2f} V")
 
-        if not parts:
+        if not parts or robot_params.robot_timer is None:
             return
 
         print(f"{robot_params.robot_timer.timestamp()} [Auger] " + ", ".join(parts))

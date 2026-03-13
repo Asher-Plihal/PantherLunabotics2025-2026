@@ -2,6 +2,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from library.protocol import Mode, ButtonAction
+
 if TYPE_CHECKING:
     from onboard_software.robot import Robot
 
@@ -42,17 +44,19 @@ class Controller:
         #print(f"[Controller] {self.AxisValues.__str__()}")
 
     def process_buttons(self, cmd):
-
+        if len(cmd) != 3:
+            print(f"[Controller] Unexpected button command length {len(cmd)}: {cmd}")
+            return
         mode, button, action = cmd
-        is_pressed = (action == "PRESSED")
+        is_pressed = (action == ButtonAction.PRESSED)
 
-        if self.robot.current_mode == "TELEOP":
+        if self.robot.current_mode == Mode.TELEOP:
             self.robot.teleop.on_button_event(button, is_pressed)
-        elif self.robot.current_mode == "AUTO":
+        elif self.robot.current_mode == Mode.AUTO:
             self.robot.auto.on_button_event(button, is_pressed)
 
     def process_controller_inputs(self, cmd):
-        if len(cmd) > 4 and cmd[0] == "TELEOP": # For now only TELEOP uses axes
+        if len(cmd) > 4 and cmd[0] == Mode.TELEOP: # For now only TELEOP uses axes
             self.process_axes(cmd)
         else:
             self.process_buttons(cmd)

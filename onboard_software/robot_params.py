@@ -1,18 +1,34 @@
-# RobotParams
-# Stores all constants and configs used across the robot codebase.
-
 import time
 import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from library.streaming import StreamMode
 
 # Global timer instance to be initialized by robot.py on startup
-robot_timer = None
+robot_timer: "RobotTimer | None" = None
 
 class RobotConfig:
-    useRiLidarRemoteStream = True
-    useCameraRemoteStream = True
+    # Network configuration
+    Robot_IP = "100.87.109.7"
+    Robot_Port = 8080
+    Robot_CAN_Interface = "can0"
 
+    # Streaming configuration
+    lidarStream = StreamMode.REMOTE
+    lidarStreamPort = 5000
+    cameraStream = StreamMode.NONE
+    cameraStreamPort = 5001
+
+    # Subsystem configuration
     useDrivetrain = True
     useAuger = True
+    useLidar = True
+
+    # Telemetry configuration
+    useTelemetry = True
+    logLiDarTelemetry = False
+    logAugerTelemetry = False
+    logDrivetrainTelemetry = False
 
 class LoopConfig:
     UPDATE_RATE_HZ = 50  # Change this to adjust loop frequency

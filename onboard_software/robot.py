@@ -2,17 +2,21 @@ from __future__ import annotations
 import os
 import sys
 import subprocess
-import server
 import threading
 import time
 import teleOp
 import auto
+import robot_params
+import server
 from subsystems import drivetrain
 from subsystems import auger
-from library import controller
-import robot_params
+from subsystems import perception
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../library/motor_controller/build'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from library import controller
+from library.protocol import Command, Mode
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'library', 'motor_controller', 'build'))
 import motor_controller as mc  # type: ignore
 
 def print_network_info():
@@ -54,12 +58,16 @@ class Robot:
         robot_params.robot_timer = robot_params.RobotTimer()
 
         # Bring up CAN bus before accessing hardware
-        init_can_bus("can1", 1_000_000)
+        init_can_bus(robot_params.RobotConfig.Robot_CAN_Interface, 1_000_000)
 
         # Initialize hardware
-        self.motor_controller = mc.MotorController.get_instance("can1")
+        self.motor_controller = mc.MotorController.get_instance(robot_params.RobotConfig.Robot_CAN_Interface)
         self.drivetrain = drivetrain.Drivetrain(self.motor_controller)
         self.auger = auger.Auger(self.motor_controller)
+
+        # Initialize perception (lidar/camera streams)
+        self.perception = perception.Perception()
+        self.perception.start()
 
         # Initialize server
         self.server = server.Server()
@@ -72,7 +80,7 @@ class Robot:
 
         startup_timeout = 60 # seconds
         startup_start = time.monotonic()
-        while self.server.get_command() != "READY":
+        while self.server.get_command() != Command.READY:
             if time.monotonic() - startup_start > startup_timeout:
                 print("[Robot] Timed out waiting for READY from mission control")
                 self.stop()
@@ -86,22 +94,26 @@ class Robot:
         while self.running:
 
             cmd = self.server.get_command()
-            if cmd == "SHUTDOWN":
+            if cmd == Command.SHUTDOWN:
                 self.stop()
                 break
 
             if cmd is not None:
-                self.current_mode = cmd[0]
-                self.controller.process_controller_inputs(cmd)
+                # Skip plain string commands (READY, etc.) — only process list commands
+                if isinstance(cmd, (list, tuple)):
+                    self.current_mode = cmd[0]
+                    self.controller.process_controller_inputs(cmd)
 
-            if self.current_mode == "TELEOP":
+            if self.current_mode == Mode.TELEOP:
                 self.teleop.run_teleOp_step()
-            elif self.current_mode == "AUTO":
+            elif self.current_mode == Mode.AUTO:
                 self.auto.run_auto_step()
+            time.sleep(0.001)
     
     def stop(self):
         print("[Robot] Stopping robot")
         self.running = False
+        self.perception.stop()
         self.server.stop()
         self.drivetrain.shutdown()
         self.auger.shutdown()

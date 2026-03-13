@@ -1,6 +1,6 @@
 import math
 import pygame
-from rplidar import RPLidar
+from rplidar import RPLidar # type: ignore
 import time
 import sys
 import numpy as np

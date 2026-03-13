@@ -20,10 +20,10 @@ source lunaenv/bin/activate
 ## Start up the robot power up
 
 ```bash
-sudo ip link set can1 down
-sudo ip link set can1 type can bitrate 1000000
-sudo ip link set can1 txqueuelen 1000
-sudo ip link set can1 up
+sudo ip link set can0 down
+sudo ip link set can0 type can bitrate 1000000
+sudo ip link set can0 txqueuelen 1000
+sudo ip link set can0 up
 python robot.py
 ```
 
@@ -42,9 +42,9 @@ python control.py
 # TODO:
 
 # Phase 1: TeleOp/Gen:
-1. Setup vision streaming for camera and Lidar throught ssh
-
-4. Optimze clint server code 
+1. Testing everything rebuild everything, everything changed
+2. Add loging for lidar like test_lidar.py
+3. WiFi
 
 # Phase 2: Auto/Automations:
 1. Order parts

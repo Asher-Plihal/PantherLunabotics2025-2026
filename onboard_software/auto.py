@@ -65,8 +65,8 @@ class Auto:
             else:
                 pass
 
-    """Called at 50Hz — put all periodic tasks here."""
     def periodic_loop(self):
+        """Called at 50Hz — put all periodic tasks here."""
 
         # Update motor controller
         self.robot.motor_controller.update()
