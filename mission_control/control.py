@@ -1,8 +1,14 @@
+import os
 import sys
 import threading
 import time
 import pygame
 import client
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "onboard_software"))
+from shared.protocol import Command, Mode, Button, ButtonAction
+from robot_params import RobotConfig
 
 '''
 Axis 0 - Left Stick (L = -1, R = 1)
@@ -49,7 +55,7 @@ class Control:
         if not self.client.connected.wait(timeout=10):
             print("[Control] Failed to connect to robot within 10 seconds")
             return
-        self.client.send_command("READY") # Notify robot that client is ready
+        self.client.send_command(Command.READY) # Notify robot that client is ready
 
         print("[Control] Waiting for mode selection: \n Press A for TELEOP \n Press B for AUTO\n")
         while self.mode is None:
@@ -59,12 +65,12 @@ class Control:
                     button = event.button
                     if button == 0:
                         print("[Control] Starting in TELEOP mode")
-                        self.mode = "TELEOP"
+                        self.mode = Mode.TELEOP
                     elif button == 1:
                         print("[Control] Starting in AUTO mode")
-                        self.mode = "AUTO"
+                        self.mode = Mode.AUTO
                     elif button == 7:
-                        self.client.send_command("SHUTDOWN")
+                        self.client.send_command(Command.SHUTDOWN)
                         self.stop()
                         return
             time.sleep(0.05) # 20 Hz loop
@@ -76,20 +82,20 @@ class Control:
         pygame.event.clear()
         
         button_map = {
-            "A": 0,
-            "B": 1,
-            "X": 2,
-            "Y": 3,
-            "LB": 4,
-            "RB": 5
+            Button.A: 0,
+            Button.B: 1,
+            Button.X: 2,
+            Button.Y: 3,
+            Button.LB: 4,
+            Button.RB: 5,
         }
 
         # D-pad hat state: maps (x, y) offset -> button name
         dpad_map = {
-            ( 0,  1): "DPAD_UP",
-            ( 0, -1): "DPAD_DOWN",
-            (-1,  0): "DPAD_LEFT",
-            ( 1,  0): "DPAD_RIGHT",
+            ( 0,  1): Button.DPAD_UP,
+            ( 0, -1): Button.DPAD_DOWN,
+            (-1,  0): Button.DPAD_LEFT,
+            ( 1,  0): Button.DPAD_RIGHT,
         }
         prev_hat = (0, 0)
 
@@ -111,28 +117,24 @@ class Control:
                 if event.type == pygame.JOYBUTTONDOWN:
 
                     if event.button == 7:
-                        self.client.send_command("SHUTDOWN")
+                        self.client.send_command(Command.SHUTDOWN)
                         self.stop()
                         return
-                    
+
                     if event.button == 6:
-                        self.mode = "TELEOP" if self.mode != "TELEOP" else "AUTO"
+                        self.mode = Mode.TELEOP if self.mode != Mode.TELEOP else Mode.AUTO
                         print(f"[Control] Switching to {self.mode} mode")
 
                     for name, btn in button_map.items():
                         if event.button == btn:
-                            # Button just pressed
-                            buttonCommand = (self.mode, name, "PRESSED")
+                            buttonCommand = (self.mode, name, ButtonAction.PRESSED)
                             self.client.send_command(buttonCommand)
-                            #print(buttonCommand)
 
                 elif event.type == pygame.JOYBUTTONUP:
                     for name, btn in button_map.items():
                         if event.button == btn:
-                            # Button just released
-                            buttonCommand = (self.mode, name, "RELEASED")
+                            buttonCommand = (self.mode, name, ButtonAction.RELEASED)
                             self.client.send_command(buttonCommand)
-                            #print(buttonCommand)
 
                 elif event.type == pygame.JOYHATMOTION:
                     curr_hat = event.value
@@ -141,13 +143,13 @@ class Control:
                         was_active = (ox != 0 and prev_hat[0] == ox) or (oy != 0 and prev_hat[1] == oy)
                         is_active  = (ox != 0 and curr_hat[0] == ox) or (oy != 0 and curr_hat[1] == oy)
                         if was_active and not is_active:
-                            self.client.send_command((self.mode, name, "RELEASED"))
+                            self.client.send_command((self.mode, name, ButtonAction.RELEASED))
                         elif is_active and not was_active:
-                            self.client.send_command((self.mode, name, "PRESSED"))
+                            self.client.send_command((self.mode, name, ButtonAction.PRESSED))
                     prev_hat = curr_hat
 
             commands = (self.mode, x, y, yaw_rate, pitch_rate, lt, rt)
-            if commands != last_command and self.mode == "TELEOP": # For now only TELEOP uses axes
+            if commands != last_command and self.mode == Mode.TELEOP: # For now only TELEOP uses axes
                 self.client.send_command(commands)
                 last_command = commands
                 #print(commands)
@@ -160,5 +162,4 @@ class Control:
         self.client.stop()
 
 if __name__ == "__main__":
-    server_ip = "100.87.109.7"  # RP IP = "100.76.221.110" Jetson IP = "100.87.109.7"
-    Control(server_ip).run()
+    Control(RobotConfig.Robot_IP).run()

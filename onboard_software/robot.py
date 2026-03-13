@@ -12,6 +12,9 @@ from subsystems import auger
 from library import controller
 import robot_params
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from shared.protocol import Command, Mode
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '../library/motor_controller/build'))
 import motor_controller as mc  # type: ignore
 
@@ -72,7 +75,7 @@ class Robot:
 
         startup_timeout = 60 # seconds
         startup_start = time.monotonic()
-        while self.server.get_command() != "READY":
+        while self.server.get_command() != Command.READY:
             if time.monotonic() - startup_start > startup_timeout:
                 print("[Robot] Timed out waiting for READY from mission control")
                 self.stop()
@@ -86,17 +89,19 @@ class Robot:
         while self.running:
 
             cmd = self.server.get_command()
-            if cmd == "SHUTDOWN":
+            if cmd == Command.SHUTDOWN:
                 self.stop()
                 break
 
             if cmd is not None:
-                self.current_mode = cmd[0]
-                self.controller.process_controller_inputs(cmd)
+                # Skip plain string commands (READY, etc.) — only process list commands
+                if isinstance(cmd, (list, tuple)):
+                    self.current_mode = cmd[0]
+                    self.controller.process_controller_inputs(cmd)
 
-            if self.current_mode == "TELEOP":
+            if self.current_mode == Mode.TELEOP:
                 self.teleop.run_teleOp_step()
-            elif self.current_mode == "AUTO":
+            elif self.current_mode == Mode.AUTO:
                 self.auto.run_auto_step()
     
     def stop(self):
