@@ -141,8 +141,10 @@ class Drivetrain:
                 parts.append(f"Temp: {feedback.temperature:.1f} °C")
             if voltage:
                 parts.append(f"Bus: {feedback.voltage:.2f} V")
-            if parts:
-                print(f"{robot_params.robot_timer.timestamp()} [Drivetrain {label}] " + ", ".join(parts))
+            if not parts or robot_params.robot_timer is None:
+                continue
+
+            print(f"{robot_params.robot_timer.timestamp()} [Drivetrain {label}] " + ", ".join(parts))
 
     def log_data(self):
         if not self._logger.is_logging:

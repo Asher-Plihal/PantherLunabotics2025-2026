@@ -79,7 +79,7 @@ class Auger:
         if voltage:
             parts.append(f"Bus: {feedback.voltage:.2f} V")
 
-        if not parts:
+        if not parts or robot_params.robot_timer is None:
             return
 
         print(f"{robot_params.robot_timer.timestamp()} [Auger] " + ", ".join(parts))
