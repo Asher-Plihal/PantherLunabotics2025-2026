@@ -1,3 +1,4 @@
+import multiprocessing
 import os
 import sys
 import threading
@@ -8,6 +9,8 @@ import client
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "onboard_software"))
 from library.protocol import Command, Mode, Button, ButtonAction
+from library.streaming import StreamMode
+from subsystems.perception import run_lidar_viewer
 from robot_params import RobotConfig
 
 '''
@@ -35,6 +38,7 @@ class Control:
     def __init__(self, server_ip):
         self.running = True
         self.mode = None
+        self.viewer_procs: list[multiprocessing.Process] = []
         self.client = client.Client(server_ip) # Start the TCP server
 
         # Initialize the controller
@@ -56,6 +60,9 @@ class Control:
             print("[Control] Failed to connect to robot within 10 seconds")
             return
         self.client.send_command(Command.READY) # Notify robot that client is ready
+
+        # Auto-launch stream viewers based on RobotConfig
+        self._launch_viewers()
 
         print("[Control] Waiting for mode selection: \n Press A for TELEOP \n Press B for AUTO\n")
         while self.mode is None:
@@ -155,9 +162,26 @@ class Control:
                 #print(commands)
             time.sleep(0.05) # 20 Hz loop
 
+    def _launch_viewers(self):
+        if RobotConfig.lidarStream == StreamMode.REMOTE:
+            proc = multiprocessing.Process(target=run_lidar_viewer, daemon=True)
+            proc.start()
+            self.viewer_procs.append(proc)
+            print("[Control] Launched lidar viewer")
+
+    def _stop_viewers(self):
+        for proc in self.viewer_procs:
+            proc.terminate()
+        for proc in self.viewer_procs:
+            proc.join(timeout=3)
+            if proc.is_alive():
+                proc.kill()
+        self.viewer_procs.clear()
+
     def stop(self):
         print("[Control] Starting shut down")
         self.running = False
+        self._stop_viewers()
         pygame.quit()
         self.client.stop()
 

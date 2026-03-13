@@ -4,17 +4,17 @@ import sys
 import subprocess
 import threading
 import time
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-
-import server
 import teleOp
 import auto
+import robot_params
+import server
 from subsystems import drivetrain
 from subsystems import auger
+from subsystems import perception
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from library import controller
 from library.protocol import Command, Mode
-import robot_params
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'library', 'motor_controller', 'build'))
 import motor_controller as mc  # type: ignore
@@ -65,6 +65,10 @@ class Robot:
         self.drivetrain = drivetrain.Drivetrain(self.motor_controller)
         self.auger = auger.Auger(self.motor_controller)
 
+        # Initialize perception (lidar/camera streams)
+        self.perception = perception.Perception()
+        self.perception.start()
+
         # Initialize server
         self.server = server.Server()
         threading.Thread(target=self.server.start).start()
@@ -108,6 +112,7 @@ class Robot:
     def stop(self):
         print("[Robot] Stopping robot")
         self.running = False
+        self.perception.stop()
         self.server.stop()
         self.drivetrain.shutdown()
         self.auger.shutdown()
