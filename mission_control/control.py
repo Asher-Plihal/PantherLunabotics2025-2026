@@ -65,6 +65,10 @@ class Control:
 
         print("[Control] Waiting for mode selection: \n Press A for TELEOP \n Press B for AUTO\n")
         while self.mode is None:
+            if not self.client.is_connected:
+                print("[Control] Lost connection to robot.")
+                self.stop()
+                return
             pygame.event.pump()
             for event in pygame.event.get():
                 if event.type == pygame.JOYBUTTONDOWN:
@@ -111,6 +115,10 @@ class Control:
         last_command = None
 
         while self.running:
+            if not self.client.is_connected:
+                print("[Control] Lost connection to robot.")
+                self.stop()
+                return
             pygame.event.pump() # Update joystick states
 
             # Read joystick axes

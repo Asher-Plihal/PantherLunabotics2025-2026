@@ -43,6 +43,8 @@ python control.py
 
 # Phase 1: TeleOp/Gen:
 1. Testing everything rebuild everything, everything changed
+2. Add loging for lidar like test_lidar.py
+3. WiFi
 
 # Phase 2: Auto/Automations:
 1. Order parts

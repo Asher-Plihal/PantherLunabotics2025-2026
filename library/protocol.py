@@ -191,6 +191,11 @@ class Connection(ABC):
         except queue.Empty:
             return None
 
+    @property
+    def is_connected(self) -> bool:
+        """True while the connection is active."""
+        return self._running
+
     def stop(self):
         """Gracefully shut down the connection."""
         self._running = False
