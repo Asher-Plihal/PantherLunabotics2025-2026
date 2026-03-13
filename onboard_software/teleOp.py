@@ -3,7 +3,6 @@ import time
 import robot_params
 from typing import TYPE_CHECKING
 
-# self.robot.drivetrain.set_power(0.5,0.5,-0.5,-0.5) fold out
 if TYPE_CHECKING:
     import robot
 
@@ -14,35 +13,27 @@ class TeleOp:
         self._last_update_time = time.monotonic()
         self._button_drive_active = False
 
-    # Called only when there is a button event
-    # Drivetrain: DPAD_UP = forward, DPAD_DOWN = backward, DPAD_LEFT = strafe left, DPAD_RIGHT = strafe right
-    # Drivetrain: LB = turn left, RB = turn right
-    # Auger: Y = intake, A = outtake, B = stop auger
     def on_button_event(self, button, is_pressed):
-        if button in ('DPAD_UP', 'DPAD_DOWN', 'DPAD_LEFT', 'DPAD_RIGHT', 'LB', 'RB'):
+        if button in ('DPAD_UP', 'DPAD_DOWN', 'DPAD_LEFT', 'DPAD_RIGHT', 'LB', 'RB', 'X'):
             if robot_params.RobotConfig.useDrivetrain:
                 self._button_drive_active = is_pressed
                 if is_pressed:
                     if button == 'DPAD_UP':
-                        # Drive forward
-                        self.robot.drivetrain.set_power(-0.5,-0.5,-0.5,-0.5)
+                        self.robot.drivetrain.drive_forward()
                     elif button == 'DPAD_DOWN':
-                        # Drive backward
-                        self.robot.drivetrain.set_power(0.5,0.5,0.5,0.5)
+                        self.robot.drivetrain.drive_backward()
                     elif button == 'DPAD_LEFT':
-                        # Strafe left
-                        self.robot.drivetrain.set_power(-0.5,0.5,0.5,-0.5)
+                        self.robot.drivetrain.strafe_left()
                     elif button == 'DPAD_RIGHT':
-                        # Strafe right
-                        self.robot.drivetrain.set_power(0.5,-0.5,-0.5,0.5)
+                        self.robot.drivetrain.strafe_right()
                     elif button == 'LB':
-                        # Turn left
-                        self.robot.drivetrain.set_power(-0.5,0.5,-0.5,0.5)
+                        self.robot.drivetrain.turn_left()
                     elif button == 'RB':
-                        # Turn right
-                        self.robot.drivetrain.set_power(0.5,-0.5,0.5,-0.5)
+                        self.robot.drivetrain.turn_right()
+                    elif button == 'X':
+                        self.robot.drivetrain.fold_out()
                 else:
-                    self.robot.drivetrain.set_power(0.0,0.0,0.0,0.0)
+                    self.robot.drivetrain.stop()
         elif button == 'Y':
             if is_pressed:
                 # Auger intake
