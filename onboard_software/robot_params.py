@@ -1,28 +1,31 @@
-# RobotParams
-# Stores all constants and configs used across the robot codebase.
-
-from enum import Enum
 import time
 import sys
-
-
-class StreamMode(Enum):
-    NONE = "none"            # No streaming
-    REMOTE = "remote"        # Stream over SSH via sockets (remote view)
-    LOCAL = "local"          # Stream locally on the robot (monitor plugged in)
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from library.streaming import StreamMode
 
 # Global timer instance to be initialized by robot.py on startup
 robot_timer: "RobotTimer | None" = None
 
 class RobotConfig:
+    # Network configuration
     Robot_IP = "100.87.109.7"
     Robot_Port = 8080
 
+    # Streaming configuration
     lidarStream = StreamMode.NONE
+    lidarStreamPort = 5000
     cameraStream = StreamMode.NONE
+    cameraStreamPort = 5001
 
+    # Subsystem configuration
     useDrivetrain = True
     useAuger = True
+
+    # Telemetry configuration
+    useTelemetry = True
+    logAugerTelemetry = False
+    logDrivetrainTelemetry = False
 
 class LoopConfig:
     UPDATE_RATE_HZ = 50  # Change this to adjust loop frequency

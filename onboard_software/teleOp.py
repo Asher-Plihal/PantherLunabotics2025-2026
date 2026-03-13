@@ -56,6 +56,7 @@ class TeleOp:
 
         # Print telemetry and log data
         self.robot.auger.log_data()
+        self.robot.drivetrain.log_data()
 
         # Update motor controller
         self.robot.motor_controller.update()

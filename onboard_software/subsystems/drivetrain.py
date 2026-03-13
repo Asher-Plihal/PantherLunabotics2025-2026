@@ -45,6 +45,9 @@ class Drivetrain:
         self.mc.initialize_motors(self.motor_ids, config)
         for motor_id in self.motor_ids:
             self.mc.reset_motor_position(motor_id)
+            
+        if robot_params.RobotConfig.logAugerTelemetry:
+            self.start_logging()
 
     def start_logging(self):
         self._logger.start_logging(_LOG_COLUMNS)
