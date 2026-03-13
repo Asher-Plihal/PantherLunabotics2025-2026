@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -Dmotor_controller_EXPORTS
 
-CXX_INCLUDES = -I/home/luna01/PantherLunabotics2025-2026/lunaenv/lib/python3.10/site-packages/pybind11/include -I/usr/include/python3.10 -I/home/luna01/PantherLunabotics2025-2026/onboard_software/library/motor_controller/sparkcan/include
+CXX_INCLUDES = -I/home/luna01/PantherLunabotics2025-2026/lunaenv/lib/python3.10/site-packages/pybind11/include -I/usr/include/python3.10 -I/home/luna01/PantherLunabotics2025-2026/library/motor_controller/sparkcan/include
 
 CXX_FLAGS = -std=gnu++17 -fPIC
 

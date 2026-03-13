@@ -1,8 +1,8 @@
 CMakeFiles/motor_controller.dir/sparkcan/src/SparkMax.cpp.o: \
- /home/luna01/PantherLunabotics2025-2026/onboard_software/library/motor_controller/sparkcan/src/SparkMax.cpp \
+ /home/luna01/PantherLunabotics2025-2026/library/motor_controller/sparkcan/src/SparkMax.cpp \
  /usr/include/stdc-predef.h \
- /home/luna01/PantherLunabotics2025-2026/onboard_software/library/motor_controller/sparkcan/include/SparkMax.hpp \
- /home/luna01/PantherLunabotics2025-2026/onboard_software/library/motor_controller/sparkcan/include/SparkBase.hpp \
+ /home/luna01/PantherLunabotics2025-2026/library/motor_controller/sparkcan/include/SparkMax.hpp \
+ /home/luna01/PantherLunabotics2025-2026/library/motor_controller/sparkcan/include/SparkBase.hpp \
  /usr/include/c++/11/array /usr/include/c++/11/utility \
  /usr/include/aarch64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/aarch64-linux-gnu/c++/11/bits/os_defines.h \

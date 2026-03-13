@@ -11,9 +11,10 @@ class RobotConfig:
     # Network configuration
     Robot_IP = "100.87.109.7"
     Robot_Port = 8080
+    Robot_CAN_Interface = "can0"
 
     # Streaming configuration
-    lidarStream = StreamMode.NONE
+    lidarStream = StreamMode.REMOTE
     lidarStreamPort = 5000
     cameraStream = StreamMode.NONE
     cameraStreamPort = 5001
