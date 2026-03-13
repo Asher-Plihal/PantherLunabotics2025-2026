@@ -58,10 +58,10 @@ class Robot:
         robot_params.robot_timer = robot_params.RobotTimer()
 
         # Bring up CAN bus before accessing hardware
-        init_can_bus("can1", 1_000_000)
+        init_can_bus(robot_params.RobotConfig.Robot_CAN_Interface, 1_000_000)
 
         # Initialize hardware
-        self.motor_controller = mc.MotorController.get_instance("can1")
+        self.motor_controller = mc.MotorController.get_instance(robot_params.RobotConfig.Robot_CAN_Interface)
         self.drivetrain = drivetrain.Drivetrain(self.motor_controller)
         self.auger = auger.Auger(self.motor_controller)
 

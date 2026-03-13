@@ -1,5 +1,5 @@
 CMakeFiles/motor_controller.dir/MotorController.cpp.o: \
- /home/luna01/PantherLunabotics2025-2026/onboard_software/library/motor_controller/MotorController.cpp \
+ /home/luna01/PantherLunabotics2025-2026/library/motor_controller/MotorController.cpp \
  /usr/include/stdc-predef.h \
  /home/luna01/PantherLunabotics2025-2026/lunaenv/lib/python3.10/site-packages/pybind11/include/pybind11/pybind11.h \
  /home/luna01/PantherLunabotics2025-2026/lunaenv/lib/python3.10/site-packages/pybind11/include/pybind11/detail/class.h \
@@ -385,8 +385,8 @@ CMakeFiles/motor_controller.dir/MotorController.cpp.o: \
  /usr/include/c++/11/bits/mask_array.h \
  /usr/include/c++/11/bits/indirect_array.h /usr/include/c++/11/variant \
  /usr/include/c++/11/iostream \
- /home/luna01/PantherLunabotics2025-2026/onboard_software/library/motor_controller/sparkcan/include/SparkMax.hpp \
- /home/luna01/PantherLunabotics2025-2026/onboard_software/library/motor_controller/sparkcan/include/SparkBase.hpp \
+ /home/luna01/PantherLunabotics2025-2026/library/motor_controller/sparkcan/include/SparkMax.hpp \
+ /home/luna01/PantherLunabotics2025-2026/library/motor_controller/sparkcan/include/SparkBase.hpp \
  /usr/include/fcntl.h /usr/include/aarch64-linux-gnu/bits/fcntl.h \
  /usr/include/aarch64-linux-gnu/bits/fcntl-linux.h \
  /usr/include/aarch64-linux-gnu/bits/types/struct_iovec.h \

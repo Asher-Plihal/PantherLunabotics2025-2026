@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"/home/luna01/PantherLunabotics2025-2026/onboard_software/library/motor_controller/build/cmake_install.cmake"
+		"/home/luna01/PantherLunabotics2025-2026/library/motor_controller/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

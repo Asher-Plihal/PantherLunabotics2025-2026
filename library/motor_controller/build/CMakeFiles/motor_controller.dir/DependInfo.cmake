@@ -8,10 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/luna01/PantherLunabotics2025-2026/onboard_software/library/motor_controller/MotorController.cpp" "CMakeFiles/motor_controller.dir/MotorController.cpp.o" "gcc" "CMakeFiles/motor_controller.dir/MotorController.cpp.o.d"
-  "/home/luna01/PantherLunabotics2025-2026/onboard_software/library/motor_controller/sparkcan/src/SparkBase.cpp" "CMakeFiles/motor_controller.dir/sparkcan/src/SparkBase.cpp.o" "gcc" "CMakeFiles/motor_controller.dir/sparkcan/src/SparkBase.cpp.o.d"
-  "/home/luna01/PantherLunabotics2025-2026/onboard_software/library/motor_controller/sparkcan/src/SparkFlex.cpp" "CMakeFiles/motor_controller.dir/sparkcan/src/SparkFlex.cpp.o" "gcc" "CMakeFiles/motor_controller.dir/sparkcan/src/SparkFlex.cpp.o.d"
-  "/home/luna01/PantherLunabotics2025-2026/onboard_software/library/motor_controller/sparkcan/src/SparkMax.cpp" "CMakeFiles/motor_controller.dir/sparkcan/src/SparkMax.cpp.o" "gcc" "CMakeFiles/motor_controller.dir/sparkcan/src/SparkMax.cpp.o.d"
+  "/home/luna01/PantherLunabotics2025-2026/library/motor_controller/MotorController.cpp" "CMakeFiles/motor_controller.dir/MotorController.cpp.o" "gcc" "CMakeFiles/motor_controller.dir/MotorController.cpp.o.d"
+  "/home/luna01/PantherLunabotics2025-2026/library/motor_controller/sparkcan/src/SparkBase.cpp" "CMakeFiles/motor_controller.dir/sparkcan/src/SparkBase.cpp.o" "gcc" "CMakeFiles/motor_controller.dir/sparkcan/src/SparkBase.cpp.o.d"
+  "/home/luna01/PantherLunabotics2025-2026/library/motor_controller/sparkcan/src/SparkFlex.cpp" "CMakeFiles/motor_controller.dir/sparkcan/src/SparkFlex.cpp.o" "gcc" "CMakeFiles/motor_controller.dir/sparkcan/src/SparkFlex.cpp.o.d"
+  "/home/luna01/PantherLunabotics2025-2026/library/motor_controller/sparkcan/src/SparkMax.cpp" "CMakeFiles/motor_controller.dir/sparkcan/src/SparkMax.cpp.o" "gcc" "CMakeFiles/motor_controller.dir/sparkcan/src/SparkMax.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

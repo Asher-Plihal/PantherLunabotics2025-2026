@@ -20,10 +20,10 @@ source lunaenv/bin/activate
 ## Start up the robot power up
 
 ```bash
-sudo ip link set can1 down
-sudo ip link set can1 type can bitrate 1000000
-sudo ip link set can1 txqueuelen 1000
-sudo ip link set can1 up
+sudo ip link set can0 down
+sudo ip link set can0 type can bitrate 1000000
+sudo ip link set can0 txqueuelen 1000
+sudo ip link set can0 up
 python robot.py
 ```
 
