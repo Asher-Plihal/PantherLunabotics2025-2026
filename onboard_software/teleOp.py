@@ -11,13 +11,13 @@ class TeleOp:
     def __init__(self, robot: robot.Robot):
         self.robot = robot
         self._last_update_time = time.monotonic()
-        self._button_drive_active = False
+        self._active_drive_buttons: set = set()
 
     def on_button_event(self, button, is_pressed):
         if button in ('DPAD_UP', 'DPAD_DOWN', 'DPAD_LEFT', 'DPAD_RIGHT', 'LB', 'RB', 'X'):
             if robot_params.RobotConfig.useDrivetrain:
-                self._button_drive_active = is_pressed
                 if is_pressed:
+                    self._active_drive_buttons.add(button)
                     if button == 'DPAD_UP':
                         self.robot.drivetrain.drive_forward()
                     elif button == 'DPAD_DOWN':
@@ -33,7 +33,9 @@ class TeleOp:
                     elif button == 'X':
                         self.robot.drivetrain.fold_out()
                 else:
-                    self.robot.drivetrain.stop()
+                    self._active_drive_buttons.discard(button)
+                    if not self._active_drive_buttons:
+                        self.robot.drivetrain.stop()
         elif button == 'Y':
             if is_pressed:
                 # Auger intake
@@ -51,7 +53,7 @@ class TeleOp:
 
     """Called at 50Hz — put all periodic tasks here."""
     def periodic_loop(self):
-        if robot_params.RobotConfig.useDrivetrain and not self._button_drive_active:
+        if robot_params.RobotConfig.useDrivetrain and not self._active_drive_buttons:
             self.robot.drivetrain.drive_task(self.robot.controller.AxisValues.y, self.robot.controller.AxisValues.x, self.robot.controller.AxisValues.yaw_rate)
 
         # Print telemetry and log data

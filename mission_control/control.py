@@ -4,10 +4,9 @@ import sys
 import threading
 import time
 import pygame
-import client
-
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "onboard_software"))
+import client
 from library.protocol import Command, Mode, Button, ButtonAction
 from library.streaming import StreamMode
 from subsystems.perception import run_lidar_viewer

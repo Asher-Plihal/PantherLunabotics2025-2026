@@ -4,6 +4,7 @@ import time
 import robot_params
 import math
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../library/motor_controller/build'))
 import motor_controller  # type: ignore
 
@@ -46,7 +47,7 @@ class Drivetrain:
         for motor_id in self.motor_ids:
             self.mc.reset_motor_position(motor_id)
             
-        if robot_params.RobotConfig.logAugerTelemetry:
+        if robot_params.RobotConfig.logDrivetrainTelemetry:
             self.start_logging()
 
     def start_logging(self):
