@@ -26,7 +26,7 @@ class RobotConfig:
 
     # Telemetry configuration
     useTelemetry = True
-    logLiDarTelemetry = False
+    logLiDarTelemetry = True
     logAugerTelemetry = False
     logDrivetrainTelemetry = False
 
