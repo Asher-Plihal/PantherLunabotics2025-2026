@@ -35,6 +35,20 @@ class RobotConfig:
     logAugerTelemetry = False
     logDrivetrainTelemetry = False
 
+
+class NetworkConfig:
+    # Select which network to connect to on startup.
+    # The key must match one of the entries in NETWORKS below.
+    SELECTED_NETWORK = "competition"
+
+    # Maps a friendly name to the nmcli connection profile name saved on the Jetson.
+    # Add or rename entries to match what you see in `nmcli connection show`.
+    NETWORKS = {
+        "Florida Tech Guest": "FIT-Competition",
+        "Ashers hotspot": "MePhone",
+    }
+
+
 class LoopConfig:
     UPDATE_RATE_HZ = 50  # Change this to adjust loop frequency
     UPDATE_PERIOD_S = 1.0 / UPDATE_RATE_HZ  # 0.02s at 50Hz
@@ -56,6 +70,7 @@ class RobotTimer:
         minutes = int(e) // 60
         seconds = e % 60
         return f"[T+{minutes:02d}:{seconds:05.2f}]"
+
 
 class Telemetry:
     PRINTS_PER_SECOND = 5  # Change this to adjust how often telemetry prints per second

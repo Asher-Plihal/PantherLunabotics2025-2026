@@ -44,7 +44,7 @@ python control.py
 # Phase 1: TeleOp/Gen:
 1. Test local stream with ssh and not
 2. Add loging for lidar like test_lidar.py
-3. WiFi (NMCLI)
+3. WiFi (NMCLI) test new wifi connection setup
 
 # Phase 2: Auto/Automations:
 1. Order parts

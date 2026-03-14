@@ -19,40 +19,13 @@ from library.protocol import Command, Mode
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'library', 'motor_controller', 'build'))
 import motor_controller as mc  # type: ignore
 
-def print_network_info():
-    """Print the Wi-Fi SSID at startup."""
-    try:
-        result = subprocess.run(["iwgetid", "-r"], capture_output=True, text=True)
-        ssid = result.stdout.strip()
-        if ssid:
-            print(f"[Network] Connected to Wi-Fi: {ssid}")
-        else:
-            print("[Network] Not connected to Wi-Fi")
-    except Exception as e:
-        print(f"[Network] Could not determine Wi-Fi: {e}")
-
-def init_can_bus(interface: str = "can1", bitrate: int = 1_000_000):
-    """Bring up the CAN bus interface. Requires root privileges."""
-    commands = [
-        ["sudo", "ip", "link", "set", interface, "down"],
-        ["sudo", "ip", "link", "set", interface, "type", "can", "bitrate", str(bitrate)],
-        ["sudo", "ip", "link", "set", interface, "txqueuelen", "1000"],
-        ["sudo", "ip", "link", "set", interface, "up"],
-    ]
-    for cmd in commands:
-        result = subprocess.run(cmd, capture_output=True, text=True)
-        if result.returncode != 0:
-            print(f"[CAN] Failed: {' '.join(cmd)}\n  {result.stderr.strip()}")
-            sys.exit(1)
-    print(f"[CAN] {interface} is up at {bitrate} bps")
-
 class Robot:
     def __init__(self):
         self.current_mode = None
         self.running = True
 
         # Print network info so we know where to connect
-        print_network_info()
+        setup_network()
 
         # Initialize global timer
         robot_params.robot_timer = robot_params.RobotTimer()
@@ -68,8 +41,6 @@ class Robot:
         # Initialize perception (lidar/camera streams)
         self.perception = perception.Perception()
         self.perception.start()
-        if robot_params.RobotConfig.logLiDarTelemetry:
-            self.perception.lidar_stream.start_logging()
 
         # Initialize server
         self.server = server.Server()
@@ -119,6 +90,69 @@ class Robot:
         self.server.stop()
         self.drivetrain.shutdown()
         self.auger.shutdown()
+
+def setup_network():
+    """Connect to the configured network via nmcli (skips if already connected), then print the active SSID."""
+    selected = robot_params.NetworkConfig.SELECTED_NETWORK
+    connection_name = robot_params.NetworkConfig.NETWORKS.get(selected)
+
+    if not connection_name:
+        raise ValueError(f"[Network] Unknown network key '{selected}' — check NetworkConfig.NETWORKS in robot_params.py")
+    else:
+        # Check if the target profile is already active
+        already_connected = False
+        try:
+            active = subprocess.run(
+                ["nmcli", "-t", "-f", "NAME", "connection", "show", "--active"],
+                capture_output=True, text=True
+            )
+            active_names = [line.strip() for line in active.stdout.splitlines()]
+            already_connected = connection_name in active_names
+        except Exception:
+            pass
+
+        if already_connected:
+            print(f"[Network] Already connected to '{connection_name}'")
+        else:
+            print(f"[Network] Connecting to '{selected}' ({connection_name})...")
+            try:
+                result = subprocess.run(
+                    ["sudo", "nmcli", "connection", "up", connection_name],
+                    capture_output=True, text=True, timeout=20
+                )
+                if result.returncode == 0:
+                    print(f"[Network] Connected to '{connection_name}'")
+                else:
+                    print(f"[Network] nmcli failed: {result.stderr.strip()}")
+            except subprocess.TimeoutExpired:
+                print(f"[Network] Connection attempt timed out for '{connection_name}'")
+            except Exception as e:
+                print(f"[Network] Could not run nmcli: {e}")
+
+    try:
+        result = subprocess.run(["iwgetid", "-r"], capture_output=True, text=True)
+        ssid = result.stdout.strip()
+        if ssid:
+            print(f"[Network] Active Wi-Fi SSID: {ssid}")
+        else:
+            print("[Network] Not connected to Wi-Fi")
+    except Exception as e:
+        print(f"[Network] Could not determine Wi-Fi: {e}")
+
+def init_can_bus(interface: str = "can1", bitrate: int = 1_000_000):
+    """Bring up the CAN bus interface. Requires root privileges."""
+    commands = [
+        ["sudo", "ip", "link", "set", interface, "down"],
+        ["sudo", "ip", "link", "set", interface, "type", "can", "bitrate", str(bitrate)],
+        ["sudo", "ip", "link", "set", interface, "txqueuelen", "1000"],
+        ["sudo", "ip", "link", "set", interface, "up"],
+    ]
+    for cmd in commands:
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"[CAN] Failed: {' '.join(cmd)}\n  {result.stderr.strip()}")
+            sys.exit(1)
+    print(f"[CAN] {interface} is up at {bitrate} bps")
         
 if __name__ == "__main__":
     Robot().run()
