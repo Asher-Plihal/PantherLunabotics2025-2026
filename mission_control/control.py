@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "onboard_softwa
 import client
 from library.protocol import Command, Mode, Button, ButtonAction
 from library.streaming import StreamMode
-from subsystems.perception import run_lidar_viewer
+from subsystems.perception import Lidar
 from robot_params import RobotConfig
 
 '''
@@ -174,7 +174,7 @@ class Control:
 
     def _launch_viewers(self):
         if RobotConfig.lidarStream == StreamMode.REMOTE:
-            proc = multiprocessing.Process(target=run_lidar_viewer, daemon=True)
+            proc = multiprocessing.Process(target=Lidar.run_viewer, daemon=True)
             proc.start()
             self.viewer_procs.append(proc)
             print("[Control] Launched lidar viewer")

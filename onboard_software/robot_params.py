@@ -24,7 +24,6 @@ class RobotConfig:
     # Subsystem configuration
     useDrivetrain = True
     drivetrainMode = DriveMode.ARCADE
-    dead_zone_threshold = 0.08
 
     useAuger = True
     useLidar = True

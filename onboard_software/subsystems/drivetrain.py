@@ -24,6 +24,9 @@ _LOG_COLUMNS = [
     "BR Duty Cycle", "BR Velocity (RPM)", "BR Position (ticks)", "BR Current (A)", "BR Temp (°C)", "BR Bus Voltage (V)",
 ]
 
+# Subsystem Parameters
+dead_zone_threshold = 0.08
+
 class Drivetrain:
 
     def __init__(self, mc):
@@ -105,10 +108,9 @@ class Drivetrain:
             self._drive_task_arcade(left_forward, left_strafe, right_strafe)
 
     def _drive_task_arcade(self, y_axis, x_axis, turning_axis):
-        dz = robot_params.RobotConfig.dead_zone_threshold
-        y_axis = Util.apply_deadzone(y_axis, dz)
-        x_axis = Util.apply_deadzone(x_axis, dz)
-        turning_axis = Util.apply_deadzone(turning_axis, dz)
+        y_axis = Util.apply_deadzone(y_axis, dead_zone_threshold)
+        x_axis = Util.apply_deadzone(x_axis, dead_zone_threshold)
+        turning_axis = Util.apply_deadzone(turning_axis, dead_zone_threshold)
 
         y = -(math.atan(5 * y_axis) / math.atan(5))
         x = (math.atan(5 * x_axis) / math.atan(5)) * 1.1 # Strafing compensation
@@ -126,11 +128,10 @@ class Drivetrain:
         self.set_power(front_left_power, front_right_power, back_left_power, back_right_power)
 
     def _drive_task_tank(self, left_forward, right_forward, left_strafe, right_strafe):
-        dz = robot_params.RobotConfig.dead_zone_threshold
-        left_forward = Util.apply_deadzone(left_forward, dz)
-        right_forward = Util.apply_deadzone(right_forward, dz)
-        left_strafe = Util.apply_deadzone(left_strafe, dz)
-        right_strafe = Util.apply_deadzone(right_strafe, dz)
+        left_forward = Util.apply_deadzone(left_forward, dead_zone_threshold)
+        right_forward = Util.apply_deadzone(right_forward, dead_zone_threshold)
+        left_strafe = Util.apply_deadzone(left_strafe, dead_zone_threshold)
+        right_strafe = Util.apply_deadzone(right_strafe, dead_zone_threshold)
 
         left = -(math.atan(5 * left_forward) / math.atan(5))
         right = -(math.atan(5 * right_forward) / math.atan(5))
