@@ -23,7 +23,7 @@ Every time you write code, review the implementation to ensure it is efficient, 
 
 ## Build & Run
 
-Code is developed on a Windows laptop or via SSH into the Jetson computer running Ubuntu Linux. Many files and commands are Linux-specific and will only run correctly on the Jetson. 
+Code is developed on a Windows laptop or via SSH into the Jetson computer running Ubuntu Linux. Many files and commands are Linux-specific and will only run correctly on the Jetson.
 Note: all files exist on both devices as long as the GitHub repo is synced.
 
 **Robot (on Jetson):**
@@ -47,7 +47,57 @@ make
 ```
 The C++ module uses pybind11 to expose `MotorController` to Python.
 
+**Warning:** `library/motor_controller/CMakeLists.txt` has hardcoded paths (e.g. `/home/luna01/...`). These must be updated if the Jetson username or Python version changes.
+
 **Python dependencies:** `pip install -r requirements.txt`
+
+**Important:** Scripts must be run from their own directory (`cd onboard_software` or `cd mission_control`) because they manipulate `sys.path` relative to `__file__` to find the `library/` package.
+
+## Competition Rules (Software-Relevant)
+
+Full guidebook: `lunabotics-guidebook-2025-2026.txt` — **do not read the full guidebook unless specifically asked.** The software-relevant rules are summarized below. The guidebook is mostly administrative (applications, papers, eligibility, awards) and will waste context window.
+
+### Arena
+- 6.8m long x 5.0m wide, divided into: Starting Zone (2m) → Obstacle Zone (4.38m) → Excavation Zone (2.5m) → Construction Zone (berm target area)
+- Regolith: ~45cm deep BP-1 crushed basalt simulant
+- Berm target area: 1.7m x 0.8m (red box: 2.2m x 0.9m)
+
+### Robot Constraints
+- Max mass: 80 kg, stowed volume: 150cm x 75cm x 75cm
+- E-stop button required (40mm min, highest practical location, must stop motion AND disable power)
+
+### Timing
+- 10 min setup, 30 min competition run, 5 min removal
+- Robot must move within 5 min of timer start or attempt is terminated
+- Loss of locomotion for 5 min = attempt terminated
+- Two attempts allowed per team
+
+### Communications
+- IEEE 802.11 WiFi only, assigned SSID "Team_##", encryption required
+- Max average bandwidth: 4 Mbps (+ 500 Kbps per NASA situational awareness camera used)
+- At arena: all comms through NASA-provided WAP to MCC only — **no backchannel wireless connections** (disqualification)
+- Bluetooth: Class 2 & 3 only (max 2.5 mW). Class 1, Zigbee, power amplifiers all prohibited
+- External WiFi antenna required
+
+### Autonomy Rules
+**Allowed sensors:** IMUs, cameras, fiducial targets/beacons on arena frame
+
+**Prohibited for autonomy:** GPS, compasses (analog/digital), touch sensors, ultrasonic proximity sensors, infrared sensors, **using walls for navigation/mapping** (disqualification)
+
+**Autonomy scoring tiers:**
+- Excavation only: 75 pts
+- Excavation + dump (traversal via remote control): 125 pts
+- Excavation + dump + travel: 375 pts
+- Full autonomy (one cycle): 450 pts
+- Full autonomy (entire run): 600 pts
+
+**During autonomous operation:** telemetry allowed for health monitoring only, no control input, all team members hands-free, cannot update autonomy program between runs to account for obstacle locations
+
+### Berm Scoring
+- Scored by volume within target area (volumetric scan before/after)
+- Productivity by mass: cm³ berm / min / kg × 4.4 coefficient
+- Productivity by energy: cm³ berm / min / Wh × 1.5 coefficient
+- Regolith must come from excavation zone, must be carried through obstacle zone (no bulldozing)
 
 ## Hardware
 
@@ -83,6 +133,19 @@ Laptop (Mission Control)                        Jetson (Onboard)
                         └── motor_controller/  (C++ pybind11 / SparkCAN)
 ```
 
+### Command Flow
+
+```
+control.py (pygame input) → client.send_command() → TCP/IP → server.py
+→ robot.py main loop calls server.get_command()
+→ controller.process_controller_inputs(cmd)
+  ├── Axis data → controller.process_axes() → drivetrain drive task (TELEOP only)
+  └── Button press → teleop.on_button_event() or auto.on_button_event()
+      → subsystem methods (drivetrain, auger)
+```
+
+Commands are tuples: either `(mode, axis_data)` or `(mode, button, action)` or simple enums (`Command.READY`, `Command.SHUTDOWN`).
+
 ### Library
 
 Lives at the project root. Contains season-agnostic shared infrastructure: networking protocol, gamepad abstraction, and low-level hardware wrappers used by both sides of the system. Code belongs here when it is used by both mission control and onboard software — it will generally take the form of support utilities or shared abstractions that both sides build on top of.
@@ -90,6 +153,12 @@ Lives at the project root. Contains season-agnostic shared infrastructure: netwo
 #### Client/Server Protocol
 
 The Jetson and mission control laptop communicate over TCP/IP using a custom ACK-based protocol defined in `library/protocol.py`. Message types: COMMAND, TELEMETRY, ACK. JSON-encoded with message ID deduplication and 500ms ACK timeout with automatic resend.
+
+**Protocol enums:**
+- `Command`: READY, SHUTDOWN
+- `Mode`: TELEOP, AUTO
+- `Button`: A, B, X, Y, LB, RB, DPAD_UP, DPAD_DOWN, DPAD_LEFT, DPAD_RIGHT
+- `ButtonAction`: PRESSED, RELEASED
 
 ### Onboard Software
 
@@ -99,7 +168,7 @@ Jetson/robot side of the repository.
 
 Define each hardware device on the robot and set up functionality and utilities for them. This is where all sensors and motors are declared.
 
-- **drivetrain.py**: Archimedean screw drive (4 motors: FL=7, FR=4, BL=1, BR=2). Supports ARCADE and TANK drive modes. Max speed: 0.2.
+- **drivetrain.py**: Archimedean screw drive (4 motors: FL=7, FR=4, BL=1, BR=2). The screws are mechanically arranged to behave like mecanum wheels, so the code uses mecanum-style math (strafe + rotation). Supports ARCADE and TANK drive modes.
 - **auger.py**: Sample collection motor (ID=3). Methods: intake(), outtake(), stop().
 - **perception.py**: LiDAR (RPLidar A1M8 on /dev/ttyUSB0) + camera streams. StreamMode: REMOTE (port 5000), LOCAL, or NONE.
 
@@ -107,9 +176,22 @@ Define each hardware device on the robot and set up functionality and utilities 
 
 The heart of the robot — all subsystem init methods are called here to set up subsystems. CAN bus and WiFi settings are configured here. Commands received from control.py are decided and dispatched from here.
 
+**Initialization order:**
+1. `setup_network()` (nmcli WiFi connection)
+2. `init_can_bus()` (brings up CAN interface — **requires sudo**, exits on failure)
+3. Motor controller singleton initialized
+4. Drivetrain, Auger subsystems init (configure motors, reset positions)
+5. Perception starts (daemon thread)
+6. Server starts (daemon thread)
+7. Controller, TeleOp, Auto init
+8. Waits for `Command.READY` from mission control (60-second timeout)
+9. Main loop begins
+
 #### Auto & TeleOp
 
 Where the robot is told to move. They run using a button press collection process, a fast-running loop, and a slower 50Hz periodic loop.
+
+**Important:** Both modes track `_last_update_time` and only call `periodic_loop()` when the 50Hz period (20ms) has elapsed. `motor_controller.update()` is called inside `periodic_loop()` — this is required every cycle to send heartbeat and refresh cached motor feedback. Without it, motors stop responding.
 
 ### Mission Control
 
@@ -119,18 +201,73 @@ Command center / laptop side.
 
 The control side where the user provides inputs to control the robot. Also sets up the viewer for the LiDAR stream.
 
+## Xbox Controller Mapping
+
+```
+Axes (pygame index):
+  0: Left Stick X   (-1=Left, +1=Right)
+  1: Left Stick Y   (-1=Up, +1=Down)
+  2: Right Stick X  (-1=Left, +1=Right)
+  3: Right Stick Y  (-1=Up, +1=Down)
+  4: LT trigger     (-1=released, +1=pressed)
+  5: RT trigger     (-1=released, +1=pressed)
+
+Buttons (pygame index):
+  0: A    1: B    2: X    3: Y
+  4: LB   5: RB
+  6: Select/Menu — toggles TELEOP ↔ AUTO mode
+  7: Start — triggers SHUTDOWN
+
+D-Pad (hat):
+  (0,1): UP   (0,-1): DOWN   (-1,0): LEFT   (1,0): RIGHT
+```
+
+**TeleOp button actions:**
+- D-Pad UP/DOWN/LEFT/RIGHT: drive forward / backward / strafe left / strafe right
+- LB/RB: turn left / turn right
+- X: fold out
+- Y: auger intake
+- A: auger outtake
+- B: auger stop
+
+**Auto mode:** The structure and loop are set up, but action methods for autonomous programs have not been added yet.
+
+## Drivetrain Drive Modes
+
+**Arcade drive** (default): Takes 3 axes (forward/backward, strafe, rotation). Uses a non-linear response curve and deadzone.
+
+**Tank drive**: Left/right forward axes are independent, strafe is averaged. Same response curve as arcade.
+
 ## Key Configuration
+
+All in `onboard_software/robot_params.py`:
 
 - **CAN bus**: `can0` at 1Mbps
 - **Robot IP**: 100.87.109.7, port 8080
-- **LiDAR stream**: port 5000
+- **LiDAR stream**: port 5000, Camera stream: port 5001
 - **Update rate**: 50Hz control loop (20ms period)
 - **Motor controller is a singleton** per CAN bus — one instance shared across subsystems
-- **Central config**: `onboard_software/robot_params.py`
+- **Feature toggles**: `useDrivetrain`, `useAuger`, `useLidar` — booleans to enable/disable subsystems for partial testing
+- **Drive mode**: `drivetrainMode` — `DriveMode.ARCADE` or `DriveMode.TANK`
+- **Telemetry toggles**: `useTelemetry`, `logDrivetrainTelemetry`, `logAugerTelemetry`, `logLiDarTelemetry`
+
+## Adding a New Subsystem
+
+1. Create a file in `onboard_software/subsystems/`
+2. Constructor takes `mc` (motor controller singleton) as parameter
+3. Implement `shutdown()` and `log_data()` methods
+4. Use `TelemetryLogger` from `library/telemetry_logger.py` for CSV logging
+5. Register and initialize in `robot.py.__init__()`
+6. Add enable/telemetry toggles in `robot_params.RobotConfig`
 
 ## Code Conventions
 
 - Python 3.10+ with `from __future__ import annotations`
 - Type hints throughout
-- Daemon threads for server, perception, and motor heartbeat
+- Daemon threads for server, perception, and motor heartbeat (no thread synchronization — be careful adding shared state)
 - Telemetry logs written as CSV to `onboard_software/logs/`
+- `TYPE_CHECKING` guards used to avoid circular imports
+
+## Development Status
+
+See `.claude/STATUS.md` for what's functional, in progress, and not yet implemented.
