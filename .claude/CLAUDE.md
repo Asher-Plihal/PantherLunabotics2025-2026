@@ -57,10 +57,41 @@ The C++ module uses pybind11 to expose `MotorController` to Python.
 
 Full guidebook: `lunabotics-guidebook-2025-2026.txt` — **do not read the full guidebook unless specifically asked.** The software-relevant rules are summarized below. The guidebook is mostly administrative (applications, papers, eligibility, awards) and will waste context window.
 
-### Arena
-- 6.8m long x 5.0m wide, divided into: Starting Zone (2m) → Obstacle Zone (4.38m) → Excavation Zone (2.5m) → Construction Zone (berm target area)
-- Regolith: ~45cm deep BP-1 crushed basalt simulant
-- Berm target area: 1.7m x 0.8m (red box: 2.2m x 0.9m)
+### Arena Layout
+```
+Top-down view.  Origin (0,0) at bottom-left.  X → right, Y → up.
+Outer dimensions: 6.88 m × 5.0 m.  Interior ≈ 6.8 m × 5.0 m.
+
+           ◄── 2.5 m ──►◄──────────── 4.38 m ────────────►
+           ◄──────────────── 6.88 m ──────────────────────►
+    ┌──────────────┬──────────────────────────────────────┐  ▲
+    │              │                                      │  │
+    │  EXCAVATION  │          OBSTACLE ZONE               │  │
+    │    ZONE      │                                      │  │
+    │              │     ☼ boulders (30-40cm dia, min 3)   │  │
+    │  (dig here,  │     ○ craters (40-50cm w/d, min 3)   │ 5.0 m
+    │   rocks may  │     ▌ central column (permanent)     │  │
+    │   be moved)  │                                      │  │
+    │              │     Randomly placed before each round.│  │
+    │  ┌─────────┐ │         ┌──────────────────┐         │  │
+    │  │ STARTING│ │         │  CONSTRUCTION    │         │  │
+    │  │  ZONE   │ │         │  ┌──BERM───┐     │         │  │
+    │  │ [Robot] │ │         │  │1.7×0.8m │     │         │  │
+    │  └─────────┘ │         │  └─────────┘     │         │  │
+    │  (no rocks)  │         │  Red box 2.2×0.9m│         │  │
+    └──────────────┴─────────┴──────────────────┴─────────┘  ▼
+    (0,0)                     Berm center ≈ (5.38, 0.6)
+```
+
+- Regolith: ~45 cm deep BP-1 crushed basalt simulant (may contain ~2 cm gravel)
+- Regolith must be carried through obstacle zone to construction zone (no bulldozing)
+- Only berm volume inside the red box counts toward scoring
+
+### Obstacles
+- **Boulders:** Min 3, randomly placed each round, ~30-40cm diameter with varying heights
+- **Craters:** Min 3, varying depths/widths up to ~40-50cm
+- **Central support column:** Permanent fixture, must be avoided
+- **Penalty:** 30 pts per rock contact or crater crossing during autonomous operation (max 90 pts)
 
 ### Robot Constraints
 - Max mass: 80 kg, stowed volume: 150cm x 75cm x 75cm
@@ -99,13 +130,9 @@ Full guidebook: `lunabotics-guidebook-2025-2026.txt` — **do not read the full 
 - Productivity by energy: cm³ berm / min / Wh × 1.5 coefficient
 - Regolith must come from excavation zone, must be carried through obstacle zone (no bulldozing)
 
-## Hardware
+## Hardware & Sensors
 
-The robot has an auger for intaking and outtaking regolith (sand/dirt). The drive base uses four Archimedean screws. All motors are REV NEO motors controlled via SparkCAN devices over CAN bus through a USB-to-CAN adapter. The onboard processor (and server side) is a Jetson Orin Nano Super Developer Kit.
-
-## Sensors
-
-RPLIDAR is used for object detection.
+The robot has an auger for intaking and outtaking regolith (sand/dirt). The drive base uses four Archimedean screws. All motors are REV NEO motors controlled via SparkCAN devices over CAN bus through a USB-to-CAN adapter. The onboard processor (and server side) is a Jetson Orin Nano Super Developer Kit. RPLIDAR is used for object detection.
 
 ## Architecture
 
