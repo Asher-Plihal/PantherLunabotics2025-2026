@@ -42,7 +42,7 @@ python control.py
 # TODO:
 
 # Phase 1: TeleOp/Gen:
-1. SSH does not work with local
+1. Test local stream with ssh and not
 2. Add loging for lidar like test_lidar.py
 3. WiFi (NMCLI)
 

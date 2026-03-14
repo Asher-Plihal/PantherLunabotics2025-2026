@@ -122,10 +122,10 @@ class Control:
             pygame.event.pump() # Update joystick states
 
             # Read joystick axes
-            x = self.joystick.get_axis(0)          # Left Stick left and right
-            y = self.joystick.get_axis(1)          # Left Stick up and down
-            yaw_rate = self.joystick.get_axis(2)   # Right Stick left and right
-            pitch_rate = self.joystick.get_axis(3) # Right Stick up and down
+            left_stick_x = self.joystick.get_axis(0)          # Left Stick left and right
+            left_stick_y = self.joystick.get_axis(1)          # Left Stick up and down
+            right_stick_x = self.joystick.get_axis(2)   # Right Stick left and right
+            right_stick_y = self.joystick.get_axis(3) # Right Stick up and down
 
             lt = self.joystick.get_axis(4)  # Left Trigger
             rt = self.joystick.get_axis(5)  # Right Trigger
@@ -165,7 +165,7 @@ class Control:
                             self.client.send_command((self.mode, name, ButtonAction.PRESSED))
                     prev_hat = curr_hat
 
-            commands = (self.mode, x, y, yaw_rate, pitch_rate, lt, rt)
+            commands = (self.mode, left_stick_x, left_stick_y, right_stick_x, right_stick_y, lt, rt)
             if commands != last_command and self.mode == Mode.TELEOP: # For now only TELEOP uses axes
                 self.client.send_command(commands)
                 last_command = commands

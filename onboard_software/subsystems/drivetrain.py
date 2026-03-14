@@ -1,3 +1,4 @@
+from enum import Enum
 import os
 import sys
 import time
@@ -11,8 +12,9 @@ import motor_controller  # type: ignore
 from library import telemetry_logger
 from library.util import Util
 
-# Subsystem Parameters
-logTelemetryData = False
+class DriveMode(Enum):
+    ARCADE = "arcade"
+    TANK = "tank"
 
 # Note: if this is changed, update log_row data in print_telemetry as well
 _LOG_COLUMNS = [
@@ -96,10 +98,17 @@ class Drivetrain:
         self.mc.set_motor_duty_cycle(self.motor_ids[2], Util.clip(back_left_power, -self.max_speed, self.max_speed))
         self.mc.set_motor_duty_cycle(self.motor_ids[3], Util.clip(back_right_power, -self.max_speed, self.max_speed))
 
-    def drive_task(self, y_axis, x_axis, turning_axis):
-        y_axis = Util.apply_deadzone(y_axis, 0.08)
-        x_axis = Util.apply_deadzone(x_axis, 0.08)
-        turning_axis = Util.apply_deadzone(turning_axis, 0.08)
+    def drive_task(self, left_forward, left_strafe, right_forward, right_strafe):  # right_strafe = turning in arcade, strafe component in tank
+        if robot_params.RobotConfig.drivetrainMode == DriveMode.TANK:
+            self._drive_task_tank(left_forward, right_forward, left_strafe, right_strafe)
+        else:
+            self._drive_task_arcade(left_forward, left_strafe, right_strafe)
+
+    def _drive_task_arcade(self, y_axis, x_axis, turning_axis):
+        dz = robot_params.RobotConfig.dead_zone_threshold
+        y_axis = Util.apply_deadzone(y_axis, dz)
+        x_axis = Util.apply_deadzone(x_axis, dz)
+        turning_axis = Util.apply_deadzone(turning_axis, dz)
 
         y = -(math.atan(5 * y_axis) / math.atan(5))
         x = (math.atan(5 * x_axis) / math.atan(5)) * 1.1 # Strafing compensation
@@ -113,6 +122,25 @@ class Drivetrain:
         front_right_power = (y + x + turning) / denominator
         back_left_power = (y + x - turning) / denominator
         back_right_power = (y - x + turning) / denominator
+
+        self.set_power(front_left_power, front_right_power, back_left_power, back_right_power)
+
+    def _drive_task_tank(self, left_forward, right_forward, left_strafe, right_strafe):
+        dz = robot_params.RobotConfig.dead_zone_threshold
+        left_forward = Util.apply_deadzone(left_forward, dz)
+        right_forward = Util.apply_deadzone(right_forward, dz)
+        left_strafe = Util.apply_deadzone(left_strafe, dz)
+        right_strafe = Util.apply_deadzone(right_strafe, dz)
+
+        left = -(math.atan(5 * left_forward) / math.atan(5))
+        right = -(math.atan(5 * right_forward) / math.atan(5))
+        strafe = (math.atan(5 * ((left_strafe + right_strafe) / 2)) / math.atan(5)) * 1.1  # Strafing compensation
+
+        denominator = max(abs(left) + abs(strafe), abs(right) + abs(strafe), 1)
+        front_left_power = (left - strafe) / denominator
+        front_right_power = (right + strafe) / denominator
+        back_left_power = (left + strafe) / denominator
+        back_right_power = (right - strafe) / denominator
 
         self.set_power(front_left_power, front_right_power, back_left_power, back_right_power)
 

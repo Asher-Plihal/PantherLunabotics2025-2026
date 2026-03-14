@@ -1,6 +1,8 @@
 import time
 import sys
 import os
+from subsystems.drivetrain import DriveMode
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from library.streaming import StreamMode
 
@@ -21,12 +23,15 @@ class RobotConfig:
 
     # Subsystem configuration
     useDrivetrain = True
+    drivetrainMode = DriveMode.ARCADE
+    dead_zone_threshold = 0.08
+
     useAuger = True
     useLidar = True
 
     # Telemetry configuration
     useTelemetry = True
-    logLiDarTelemetry = True
+    logLiDarTelemetry = False
     logAugerTelemetry = False
     logDrivetrainTelemetry = False
 

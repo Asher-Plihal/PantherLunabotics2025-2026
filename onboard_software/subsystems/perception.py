@@ -220,6 +220,9 @@ class LidarStream:
     def _run_local(self):
         import pygame
 
+        if "DISPLAY" not in os.environ:
+            os.environ["DISPLAY"] = ":0"
+
         pygame.init()
         screen, clock, overlay = _init_radar_display(pygame)
 
