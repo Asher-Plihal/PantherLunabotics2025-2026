@@ -1,4 +1,3 @@
-from enum import Enum
 import os
 import sys
 import time
@@ -11,10 +10,7 @@ import motor_controller  # type: ignore
 
 from library import telemetry_logger
 from library.util import Util
-
-class DriveMode(Enum):
-    ARCADE = "arcade"
-    TANK = "tank"
+from robot_params import DriveMode
 
 # Note: if this is changed, update log_row data in print_telemetry as well
 _LOG_COLUMNS = [

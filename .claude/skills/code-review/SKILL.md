@@ -31,9 +31,6 @@ Code should be clear to another developer without explanation. Confusing naming,
 ### 4. DRY (Don't Repeat Yourself)
 Duplicated logic, copy-pasted code, repeated constants, multiple sources of truth for the same knowledge. Methods or classes that do the same thing should be combined into one. Logic that serves multiple parts of the code should be extracted into helper methods.
 
-### Security
-Injection risks, unsanitized input, hardcoded secrets, unsafe deserialization, path traversal.
-
 ### Error Handling
 Missing error handling at system boundaries (external APIs, user input, file I/O, hardware communication). Do NOT flag missing error handling for internal function calls.
 

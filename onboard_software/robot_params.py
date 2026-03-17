@@ -1,10 +1,15 @@
 import time
 import sys
 import os
-from subsystems.drivetrain import DriveMode
+from enum import Enum
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from library.streaming import StreamMode
+
+
+class DriveMode(Enum):
+    ARCADE = "arcade"
+    TANK = "tank"
 
 # Global timer instance to be initialized by robot.py on startup
 robot_timer: "RobotTimer | None" = None
@@ -38,12 +43,12 @@ class RobotConfig:
 class NetworkConfig:
     # Select which network to connect to on startup.
     # The key must match one of the entries in NETWORKS below.
-    SELECTED_NETWORK = "competition"
+    SELECTED_NETWORK = "FLTech-Guest"
 
     # Maps a friendly name to the nmcli connection profile name saved on the Jetson.
     # Add or rename entries to match what you see in `nmcli connection show`.
     NETWORKS = {
-        "Florida Tech Guest": "FIT-Competition",
+        "FLTech-Guest": "FLTech-Guest",
         "Ashers hotspot": "MePhone",
     }
 
