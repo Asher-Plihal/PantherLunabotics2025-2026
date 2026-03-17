@@ -45,6 +45,8 @@ python control.py
 1. Test local stream with ssh and not
 2. test new percetpion setup
 3. WiFi (NMCLI) test new wifi connection setup
+4. Rebuild PyBind-11
+5. Determine .STATUS.md
 
 # Phase 2: Auto/Automations:
 1. Order parts

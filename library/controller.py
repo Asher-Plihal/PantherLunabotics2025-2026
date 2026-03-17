@@ -38,10 +38,8 @@ class Controller:
         self.robot = robot
         self.AxisValues = AxisValues()
 
-
     def process_axes(self, cmd):
         self.AxisValues.update(cmd)
-        #print(f"[Controller] {self.AxisValues.__str__()}")
 
     def process_buttons(self, cmd):
         if len(cmd) != 3:
