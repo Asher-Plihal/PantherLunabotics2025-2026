@@ -218,7 +218,8 @@ class Lidar:
 
     def _scan_loop(self, on_points=None):
         """Iterate lidar scans. on_points(pts) is called each frame; return False to stop."""
-        assert self.lidar is not None
+        if self.lidar is None:
+            return
         for scan in self.lidar.iter_scans():
             if not self._running:
                 break

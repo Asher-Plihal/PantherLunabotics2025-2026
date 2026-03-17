@@ -81,7 +81,7 @@ class Robot:
                 self.teleop.run_teleOp_step()
             elif self.current_mode == Mode.AUTO:
                 self.auto.run_auto_step()
-            time.sleep(0.001)
+            time.sleep(0.01)
     
     def stop(self):
         print("[Robot] Stopping robot")
@@ -98,36 +98,36 @@ def setup_network():
 
     if not connection_name:
         raise ValueError(f"[Network] Unknown network key '{selected}' — check NetworkConfig.NETWORKS in robot_params.py")
-    else:
-        # Check if the target profile is already active
-        already_connected = False
-        try:
-            active = subprocess.run(
-                ["nmcli", "-t", "-f", "NAME", "connection", "show", "--active"],
-                capture_output=True, text=True
-            )
-            active_names = [line.strip() for line in active.stdout.splitlines()]
-            already_connected = connection_name in active_names
-        except Exception:
-            pass
 
-        if already_connected:
-            print(f"[Network] Already connected to '{connection_name}'")
-        else:
-            print(f"[Network] Connecting to '{selected}' ({connection_name})...")
-            try:
-                result = subprocess.run(
-                    ["sudo", "nmcli", "connection", "up", connection_name],
-                    capture_output=True, text=True, timeout=20
-                )
-                if result.returncode == 0:
-                    print(f"[Network] Connected to '{connection_name}'")
-                else:
-                    print(f"[Network] nmcli failed: {result.stderr.strip()}")
-            except subprocess.TimeoutExpired:
-                print(f"[Network] Connection attempt timed out for '{connection_name}'")
-            except Exception as e:
-                print(f"[Network] Could not run nmcli: {e}")
+    # Check if the target profile is already active
+    already_connected = False
+    try:
+        active = subprocess.run(
+            ["nmcli", "-t", "-f", "NAME", "connection", "show", "--active"],
+            capture_output=True, text=True
+        )
+        active_names = [line.strip() for line in active.stdout.splitlines()]
+        already_connected = connection_name in active_names
+    except Exception:
+        pass
+
+    if already_connected:
+        print(f"[Network] Already connected to '{connection_name}'")
+    else:
+        print(f"[Network] Connecting to '{selected}' ({connection_name})...")
+        try:
+            result = subprocess.run(
+                ["sudo", "nmcli", "connection", "up", connection_name],
+                capture_output=True, text=True, timeout=20
+            )
+            if result.returncode == 0:
+                print(f"[Network] Connected to '{connection_name}'")
+            else:
+                print(f"[Network] nmcli failed: {result.stderr.strip()}")
+        except subprocess.TimeoutExpired:
+            print(f"[Network] Connection attempt timed out for '{connection_name}'")
+        except Exception as e:
+            print(f"[Network] Could not run nmcli: {e}")
 
     try:
         result = subprocess.run(["iwgetid", "-r"], capture_output=True, text=True)

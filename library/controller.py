@@ -36,10 +36,10 @@ class AxisValues:
 class Controller:
     def __init__(self, robot: Robot):
         self.robot = robot
-        self.AxisValues = AxisValues()
+        self.axis_values = AxisValues()
 
     def process_axes(self, cmd):
-        self.AxisValues.update(cmd)
+        self.axis_values.update(cmd)
 
     def process_buttons(self, cmd):
         if len(cmd) != 3:

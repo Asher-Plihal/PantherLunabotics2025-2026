@@ -17,6 +17,10 @@ PantherLunabotics 2025-2026 is a robotics competition project (NASA Lunabotics) 
 
 Prompts will often contain misspellings. Before taking action, read the prompt carefully and correct any misspellings to determine the intended meaning. If a word or phrase is ambiguous and the intent is unclear, ask for clarification before proceeding. If requirements are missing, ask for them as well.
 
+## Archive
+
+The repository contains an `archive/` directory of old, unused code. **Do not read, reference, or code review anything in `archive/` unless specifically asked.** It is kept for historical reference only and is not part of the active codebase.
+
 ## Code Review
 
 Every time you write code, review the implementation to ensure it is efficient, clean, and correct. Make the smallest viable change — do not modify what does not need to be changed.
@@ -52,6 +56,8 @@ The C++ module uses pybind11 to expose `MotorController` to Python.
 **Python dependencies:** `pip install -r requirements.txt`
 
 **Important:** Scripts must be run from their own directory (`cd onboard_software` or `cd mission_control`) because they manipulate `sys.path` relative to `__file__` to find the `library/` package.
+
+**Cross-boundary imports (intentional):** `mission_control/client.py` and `mission_control/control.py` add `onboard_software/` to `sys.path` so they can import `robot_params`. This is intentional — `robot_params.py` is the single source of truth for all robot configuration and is shared across both sides this way. Similarly, `Lidar.run_viewer()` in `onboard_software/subsystems/perception.py` is a static method that executes on the mission control side; it is co-located with the `Lidar` class intentionally to keep all lidar code together. **Do not refactor these patterns** — they are deliberate decisions, not architectural defects.
 
 ## Competition Rules (Software-Relevant)
 

@@ -15,11 +15,10 @@ class PIDController:
         iZone: float = 0.0
 
         def __post_init__(self):
-            object.__setattr__(self, 'kp', abs(self.kp))
-            object.__setattr__(self, 'ki', abs(self.ki))
-            object.__setattr__(self, 'kd', abs(self.kd))
-            object.__setattr__(self, 'kf', abs(self.kf))
-            object.__setattr__(self, 'iZone', abs(self.iZone))
+            for field, value in [('kp', self.kp), ('ki', self.ki), ('kd', self.kd),
+                                  ('kf', self.kf), ('iZone', self.iZone)]:
+                if value < 0:
+                    raise ValueError(f"PIDCoefficients: '{field}' must be non-negative, got {value}")
 
         def __str__(self):
             return (f"PIDCoefficients(kp={self.kp}, ki={self.ki}, kd={self.kd}, kf={self.kf}, iZone={self.iZone})")
@@ -34,19 +33,20 @@ class PIDController:
         self.no_oscillation = False
         self.debug = debug
 
-        self.reset()
-
-    def reset(self):
-        # Output limits
+        # Output limits (configuration — preserved through reset)
         self.output_min = -1.0
         self.output_max = 1.0
         self.output_limit = 1.0
-        # Input limits
+        # Input limits (configuration — preserved through reset)
         self.input_min = None
         self.input_max = None
         self.input_modulus = None
         self.input_bound = None
-        # State variables
+
+        self.reset()
+
+    def reset(self):
+        # State variables only — output/input limits are preserved
         self.timestamp = None
         self.previous_error = 0.0
         self.error = 0.0

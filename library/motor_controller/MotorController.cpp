@@ -173,28 +173,28 @@ public:
     }
 
     // Set desired duty cycles for multiple motors
-    void SetMotorsDutyCycles(const std::vector<int>& motor_IDs, const std::vector<float>& dutyCycles) 
+    void SetMotorsDutyCycles(const std::vector<int>& motor_IDs, const std::vector<float>& newDutyCycles)
     {
-        if (motor_IDs.size() != dutyCycles.size()) 
+        if (motor_IDs.size() != newDutyCycles.size())
         {
             throw std::invalid_argument("Number of duty cycles does not match the number of motor IDs.");
         }
 
-        for (size_t i = 0; i < motor_IDs.size(); ++i) 
+        for (size_t i = 0; i < motor_IDs.size(); ++i)
         {
-            SetMotorDutyCycle(motor_IDs[i], dutyCycles[i]);
+            SetMotorDutyCycle(motor_IDs[i], newDutyCycles[i]);
         }
     }
 
     // Get the desired duty cycle for a motor
-    float GetCurrentDutyCycle(int motor_ID) const 
+    float GetCurrentDutyCycle(int motor_ID) const
     {
-    auto it = dutyCycles.find(motor_ID);
-    if (it != dutyCycles.end()) 
-    {
-        return it->second;
-    }
-    return 0.0f;  // Default if not found
+        auto it = dutyCycles.find(motor_ID);
+        if (it != dutyCycles.end())
+        {
+            return it->second;
+        }
+        return 0.0f;  // Default if not found
     }
 
     // Get feedback for a single motor
@@ -215,7 +215,7 @@ public:
     }
 
     // Get all feedback for all initialized motors
-    std::map<int, MotorFeedback>& GetAllFeedback()
+    const std::map<int, MotorFeedback>& GetAllFeedback() const
     {
         return motorFeedback;
     }

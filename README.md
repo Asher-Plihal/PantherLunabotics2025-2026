@@ -50,5 +50,7 @@ python control.py
 
 # Phase 2: Auto/Automations:
 1. Order parts
-2. Auto Tasks
-3. Dashboard
+2. Write Auto Tasks
+3. Write Localization code
+4. Setup Dashbaord
+5. Write pathing code

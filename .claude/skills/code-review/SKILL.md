@@ -53,7 +53,7 @@ Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, 
 
 Not every "code smell" is a real problem. Before flagging something, consider whether there's a legitimate reason for it in context — a busy-wait for real-time hardware polling, a broad try/except keeping a daemon thread alive, a duplicated constant avoiding circular imports. When something looks wrong but might be justified, acknowledge the trade-off instead of blindly flagging it.
 
-Before flagging misplaced code, check `CLAUDE.md` or project docs — co-location is sometimes an intentional architectural decision.
+Before flagging misplaced code or cross-boundary imports, **always read `CLAUDE.md` first** — makse sure it is not intentional before flaging it.
 
 ## Output Format
 
