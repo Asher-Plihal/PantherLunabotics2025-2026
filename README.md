@@ -48,3 +48,5 @@ python control.py
 
 # Phase 2: Auto/Automations:
 1. Order parts
+2. Auto Tasks
+3. Dashboard
