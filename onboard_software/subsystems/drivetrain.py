@@ -21,7 +21,7 @@ _LOG_COLUMNS = [
 ]
 
 # Subsystem Parameters
-dead_zone_threshold = 0.08
+DEAD_ZONE_THRESHOLD = 0.08
 
 class Drivetrain:
 
@@ -33,6 +33,7 @@ class Drivetrain:
         self.mc = mc
         self._logger = telemetry_logger.TelemetryLogger("drivetrain")
         self.motor_ids = [7, 4, 1, 2] # FL, FR, BL, BR
+        self.motor_labels = list(zip(["FL", "FR", "BL", "BR"], self.motor_ids))
 
         config = motor_controller.MotorConfig()
         config.idle_mode = motor_controller.IdleMode.BRAKE
@@ -97,16 +98,16 @@ class Drivetrain:
         self.mc.set_motor_duty_cycle(self.motor_ids[2], Util.clip(back_left_power, -self.max_speed, self.max_speed))
         self.mc.set_motor_duty_cycle(self.motor_ids[3], Util.clip(back_right_power, -self.max_speed, self.max_speed))
 
-    def drive_task(self, left_forward, left_strafe, right_forward, right_strafe):  # right_strafe = turning in arcade, strafe component in tank
+    def drive_task(self, left_forward, left_strafe, right_forward, right_strafe):  # right_strafe = turning in arcade, strafe in tank; right_forward unused in arcade
         if robot_params.RobotConfig.drivetrainMode == DriveMode.TANK:
             self._drive_task_tank(left_forward, right_forward, left_strafe, right_strafe)
         else:
             self._drive_task_arcade(left_forward, left_strafe, right_strafe)
 
     def _drive_task_arcade(self, y_axis, x_axis, turning_axis):
-        y_axis = Util.apply_deadzone(y_axis, dead_zone_threshold)
-        x_axis = Util.apply_deadzone(x_axis, dead_zone_threshold)
-        turning_axis = Util.apply_deadzone(turning_axis, dead_zone_threshold)
+        y_axis = Util.apply_deadzone(y_axis, DEAD_ZONE_THRESHOLD)
+        x_axis = Util.apply_deadzone(x_axis, DEAD_ZONE_THRESHOLD)
+        turning_axis = Util.apply_deadzone(turning_axis, DEAD_ZONE_THRESHOLD)
 
         y = -(math.atan(5 * y_axis) / math.atan(5))
         x = (math.atan(5 * x_axis) / math.atan(5)) * 1.1 # Strafing compensation
@@ -124,10 +125,10 @@ class Drivetrain:
         self.set_power(front_left_power, front_right_power, back_left_power, back_right_power)
 
     def _drive_task_tank(self, left_forward, right_forward, left_strafe, right_strafe):
-        left_forward = Util.apply_deadzone(left_forward, dead_zone_threshold)
-        right_forward = Util.apply_deadzone(right_forward, dead_zone_threshold)
-        left_strafe = Util.apply_deadzone(left_strafe, dead_zone_threshold)
-        right_strafe = Util.apply_deadzone(right_strafe, dead_zone_threshold)
+        left_forward = Util.apply_deadzone(left_forward, DEAD_ZONE_THRESHOLD)
+        right_forward = Util.apply_deadzone(right_forward, DEAD_ZONE_THRESHOLD)
+        left_strafe = Util.apply_deadzone(left_strafe, DEAD_ZONE_THRESHOLD)
+        right_strafe = Util.apply_deadzone(right_strafe, DEAD_ZONE_THRESHOLD)
 
         left = -(math.atan(5 * left_forward) / math.atan(5))
         right = -(math.atan(5 * right_forward) / math.atan(5))
@@ -147,14 +148,7 @@ class Drivetrain:
             return
         self._last_telemetry_time = now
 
-        motors = [
-            ("FL", self.motor_ids[0]),
-            ("FR", self.motor_ids[1]),
-            ("BL", self.motor_ids[2]),
-            ("BR", self.motor_ids[3]),
-        ]
-
-        feedbacks = [(label, self.mc.get_motor_feedback(motor_id)) for label, motor_id in motors]
+        feedbacks = [(label, self.mc.get_motor_feedback(motor_id)) for label, motor_id in self.motor_labels]
 
         for label, feedback in feedbacks:
             parts = []
@@ -178,14 +172,8 @@ class Drivetrain:
     def log_data(self):
         if not self._logger.is_logging:
             return
-        motors = [
-            ("FL", self.motor_ids[0]),
-            ("FR", self.motor_ids[1]),
-            ("BL", self.motor_ids[2]),
-            ("BR", self.motor_ids[3]),
-        ]
         row = []
-        for _, motor_id in motors:
+        for _, motor_id in self.motor_labels:
             fb = self.mc.get_motor_feedback(motor_id)
             row.extend([fb.duty_cycle, fb.velocity, fb.position, fb.current, fb.temperature, fb.voltage])
         self._logger.log_row(row)

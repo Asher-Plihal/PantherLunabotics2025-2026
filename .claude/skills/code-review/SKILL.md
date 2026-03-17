@@ -53,6 +53,8 @@ Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, 
 
 Not every "code smell" is a real problem. Before flagging something, consider whether there's a legitimate reason for it in context — a busy-wait for real-time hardware polling, a broad try/except keeping a daemon thread alive, a duplicated constant avoiding circular imports. When something looks wrong but might be justified, acknowledge the trade-off instead of blindly flagging it.
 
+Before flagging misplaced code, check `CLAUDE.md` or project docs — co-location is sometimes an intentional architectural decision.
+
 ## Output Format
 
 This is a **report**, not an action. Do NOT edit or fix any code unless the user explicitly asks you to (e.g., "review and fix"). Output the review and stop.
@@ -64,7 +66,7 @@ Two sentence overall assessment.
 
 ## Issues
 
-- **[severity: high/medium/low]** [dimension]: file_path:line — Description of issue. Suggested fix.
+#. **[severity: high/medium/low]** [dimension]: file_path:line — Description of issue. Suggested fix.
 
 ## Verdict
 

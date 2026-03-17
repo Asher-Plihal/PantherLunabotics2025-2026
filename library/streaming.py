@@ -40,6 +40,10 @@ class Stream:
 
     # === Source side (used by robot/perception subsystems) ===
 
+    def enable(self):
+        """Mark stream as running without starting a thread (for callers that manage their own threads)."""
+        self._running = True
+
     def start_source(self, mode, target):
         """Start a daemon thread running target. No-op if mode is NONE."""
         if mode == StreamMode.NONE:

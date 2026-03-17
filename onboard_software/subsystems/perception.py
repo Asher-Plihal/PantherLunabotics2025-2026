@@ -68,6 +68,7 @@ class Lidar:
 
         @staticmethod
         def polar_to_cartesian(angle_deg, distance_mm):
+            D = Lidar.Display
             angle_rad = math.radians((angle_deg + 180) % 360)
             r = distance_mm * D.SCALE
             x = D.CENTER[0] + int(r * math.cos(angle_rad))
@@ -77,6 +78,7 @@ class Lidar:
         @staticmethod
         def init(pygame):
             """Create pygame window and pre-rendered overlay."""
+            D = Lidar.Display
             screen = pygame.display.set_mode((D.WIDTH, D.HEIGHT))
             pygame.display.set_caption("RPLidar Radar Map")
             clock = pygame.time.Clock()
@@ -96,6 +98,7 @@ class Lidar:
         @staticmethod
         def render(pygame, screen, overlay, points):
             """Render one frame of lidar points onto the screen."""
+            D = Lidar.Display
             screen.fill(D.BLACK)
             screen.blit(overlay, (0, 0))
             for angle, distance in points:
@@ -138,6 +141,7 @@ class Lidar:
         self.stream = Stream(port, "LidarStream")
         self.lidar: RPLidar | None = None
         self._log_data: list = []
+        self._log_lock = threading.Lock()
         self._logging = False
         self._log_dir = os.path.join(os.path.dirname(__file__), '..', 'logs')
         self._running = False
@@ -146,7 +150,7 @@ class Lidar:
     def start(self):
         self._running = True
         if self.mode == StreamMode.REMOTE:
-            self.stream._running = True  # allow accept_viewer() loop and stop()
+            self.stream.enable()  # allow accept_viewer() loop and stop()
         self._thread = threading.Thread(target=self._run, daemon=True)
         self._thread.start()
         print(f"[Lidar] Hardware started (stream={self.mode.value})")
@@ -174,15 +178,17 @@ class Lidar:
         if not self._logging:
             return
         self._logging = False
-        if not self._log_data:
+        with self._log_lock:
+            log_snapshot = self._log_data
+            self._log_data = []
+        if not log_snapshot:
             return
         os.makedirs(self._log_dir, exist_ok=True)
         file_tag = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filepath = os.path.join(self._log_dir, f"lidar_{file_tag}.txt")
-        data = np.array(self._log_data)
+        data = np.array(log_snapshot)
         np.savetxt(filepath, data, header="angle_deg distance_mm", fmt="%.3f")
         print(f"[Lidar] Logging stopped — {len(data)} points saved to {filepath}")
-        self._log_data = []
 
     def log_data(self):
         pass  # Lidar logging is driven by the scan thread; no periodic action needed
@@ -245,7 +251,8 @@ class Lidar:
 
     def _log_scan(self, points):
         if self._logging:
-            self._log_data.extend(points)
+            with self._log_lock:
+                self._log_data.extend(points)
 
 # Module-level alias — defined once after Lidar so all methods can use D
 D = Lidar.Display

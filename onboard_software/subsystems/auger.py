@@ -8,10 +8,7 @@ from library import telemetry_logger
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../library/motor_controller/build'))
 import motor_controller  # type: ignore
 
-# Subsystem Parameters
-logTelemetryData = False
-
-# Note: if this is changed, update print data on line 86 as well
+# Note: if this is changed, update print_telemetry as well
 _LOG_COLUMNS = ["Duty Cycle", "Velocity (RPM)", "Position (ticks)", "Current (A)", "Temp (°C)", "Bus Voltage (V)"]
 
 class Auger:
