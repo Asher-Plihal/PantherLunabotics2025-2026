@@ -44,7 +44,7 @@ class Robot:
 
         # Initialize server
         self.server = server.Server()
-        threading.Thread(target=self.server.start).start()
+        threading.Thread(target=self.server.start, daemon=True).start()
 
         # Initialize controller and run modes
         self.controller = controller.Controller(self)

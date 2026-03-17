@@ -27,7 +27,7 @@ class Drivetrain:
 
     def __init__(self, mc):
         self.slow_turning = False
-        self.max_speed = 0.2
+        self.max_speed = 0.3
         self._last_telemetry_time = 0.0
 
         self.mc = mc
@@ -170,6 +170,8 @@ class Drivetrain:
             print(f"{robot_params.robot_timer.timestamp()} [Drivetrain {label}] " + ", ".join(parts))
 
     def log_data(self):
+        if robot_params.RobotConfig.useTelemetry:
+            self.print_telemetry()
         if not self._logger.is_logging:
             return
         row = []

@@ -85,6 +85,8 @@ class Auger:
         print(f"{robot_params.robot_timer.timestamp()} [Auger] " + ", ".join(parts))
 
     def log_data(self):
+        if robot_params.RobotConfig.useTelemetry:
+            self.print_telemetry()
         if not self._logger.is_logging:
             return
         feedback = self.mc.get_motor_feedback(self.motor_id)

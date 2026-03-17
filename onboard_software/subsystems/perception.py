@@ -250,8 +250,8 @@ class Lidar:
         ]
 
     def _log_scan(self, points):
-        if self._logging:
-            with self._log_lock:
+        with self._log_lock:
+            if self._logging:
                 self._log_data.extend(points)
 
 # Module-level alias — defined once after Lidar so all methods can use D
