@@ -9,7 +9,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "onboard_softwa
 import client
 from library.protocol import Command, Mode, Button, ButtonAction
 from library.streaming import StreamMode
-from subsystems.perception import Lidar
 from robot_params import RobotConfig
 
 '''
@@ -38,7 +37,7 @@ class Control:
         self.running = True
         self.mode = None
         self.viewer_procs: list[multiprocessing.Process] = []
-        self.client = client.Client(server_ip) # Start the TCP server
+        self.client = client.Client(server_ip) # Connect to the robot's TCP server
 
         # Initialize the controller
         pygame.init()
@@ -144,14 +143,14 @@ class Control:
 
                     for name, btn in button_map.items():
                         if event.button == btn:
-                            buttonCommand = (self.mode, name, ButtonAction.PRESSED)
-                            self.client.send_command(buttonCommand)
+                            button_command = (self.mode, name, ButtonAction.PRESSED)
+                            self.client.send_command(button_command)
 
                 elif event.type == pygame.JOYBUTTONUP:
                     for name, btn in button_map.items():
                         if event.button == btn:
-                            buttonCommand = (self.mode, name, ButtonAction.RELEASED)
-                            self.client.send_command(buttonCommand)
+                            button_command = (self.mode, name, ButtonAction.RELEASED)
+                            self.client.send_command(button_command)
 
                 elif event.type == pygame.JOYHATMOTION:
                     curr_hat = event.value
@@ -169,11 +168,11 @@ class Control:
             if commands != last_command and self.mode == Mode.TELEOP: # For now only TELEOP uses axes
                 self.client.send_command(commands)
                 last_command = commands
-                #print(commands)
             time.sleep(0.05) # 20 Hz loop
 
     def _launch_viewers(self):
         if RobotConfig.lidarStream == StreamMode.REMOTE:
+            from subsystems.perception import Lidar
             proc = multiprocessing.Process(target=Lidar.run_viewer, daemon=True)
             proc.start()
             self.viewer_procs.append(proc)

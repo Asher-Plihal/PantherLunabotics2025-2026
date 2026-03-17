@@ -289,7 +289,7 @@ All in `onboard_software/robot_params.py`:
 
 ## Code Conventions
 
-- Python 3.10+ with `from __future__ import annotations`
+- Python 3.10+
 - Type hints throughout
 - Daemon threads for server, perception, and motor heartbeat (no thread synchronization — be careful adding shared state)
 - Telemetry logs written as CSV to `onboard_software/logs/`

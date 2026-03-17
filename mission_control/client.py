@@ -33,5 +33,3 @@ class Client(Connection):
     def send_command(self, data):
         self._send(MessageType.COMMAND, data)
 
-    def get_telemetry(self):
-        return self._receive()
