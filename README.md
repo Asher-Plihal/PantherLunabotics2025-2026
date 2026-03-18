@@ -42,11 +42,9 @@ python control.py
 # TODO:
 
 # Phase 1: TeleOp/Gen:
-1. Test local stream with ssh and not
-2. test new percetpion setup
+1. Check local streaming for Lidar
 3. WiFi (NMCLI) test new wifi connection setup
 4. Rebuild PyBind-11
-5. Determine .STATUS.md
 
 # Phase 2: Auto/Automations:
 1. Order parts
