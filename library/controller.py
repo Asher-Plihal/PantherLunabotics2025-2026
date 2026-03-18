@@ -9,39 +9,37 @@ if TYPE_CHECKING:
 
 @dataclass
 class AxisValues:
-    x: float = 0.0
-    y: float = 0.0
-    yaw_rate: float = 0.0
-    pitch_rate: float = 0.0
+    left_stick_x: float = 0.0
+    left_stick_y: float = 0.0
+    right_stick_x: float = 0.0
+    right_stick_y: float = 0.0
     lt: float = 0.0
     rt: float = 0.0
 
     def update(self, cmd):
-        self.x = cmd[1]
-        self.y = cmd[2]
-        self.yaw_rate = cmd[3]
-        self.pitch_rate = cmd[4]
+        self.left_stick_x = cmd[1]
+        self.left_stick_y = cmd[2]
+        self.right_stick_x = cmd[3]
+        self.right_stick_y = cmd[4]
         self.lt = cmd[5]
         self.rt = cmd[6]
 
     def __str__(self):
         return (f"Axis State:"
-                f"  X: {self.x},"
-                f"  Y: {self.y},"
-                f"  Yaw Rate: {self.yaw_rate},"
-                f"  Pitch Rate: {self.pitch_rate},"
+                f"  Left Stick X: {self.left_stick_x},"
+                f"  Left Stick Y: {self.left_stick_y},"
+                f"  Right Stick X: {self.right_stick_x},"
+                f"  Right Stick Y: {self.right_stick_y},"
                 f"  Left Trigger: {self.lt},"
                 f"  Right Trigger: {self.rt}")
 
 class Controller:
     def __init__(self, robot: Robot):
         self.robot = robot
-        self.AxisValues = AxisValues()
-
+        self.axis_values = AxisValues()
 
     def process_axes(self, cmd):
-        self.AxisValues.update(cmd)
-        #print(f"[Controller] {self.AxisValues.__str__()}")
+        self.axis_values.update(cmd)
 
     def process_buttons(self, cmd):
         if len(cmd) != 3:

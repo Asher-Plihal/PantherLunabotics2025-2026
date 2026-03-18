@@ -1,5 +1,3 @@
-import math
-
 class Util:
 
     # Conversion constants

@@ -42,9 +42,12 @@ python control.py
 # TODO:
 
 # Phase 1: TeleOp/Gen:
-1. Testing everything rebuild everything, everything changed
-2. Add loging for lidar like test_lidar.py
-3. WiFi
+1. Check local streaming for Lidar
+2. Telemtry and rest position not working
 
 # Phase 2: Auto/Automations:
 1. Order parts
+2. Write Auto Tasks
+3. Write Localization code
+4. Setup Dashbaord
+5. Write pathing code

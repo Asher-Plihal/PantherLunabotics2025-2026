@@ -13,63 +13,19 @@ class Auto:
         self._last_update_time = time.monotonic()
 
     # Called only when there is a button event
-    def on_button_event(self, button, is_pressed):
-        if button == 'A':
-            if is_pressed:
-                pass
-            else:
-                pass
-        elif button == 'B':
-            if is_pressed:
-                pass
-            else:
-                pass
-        elif button == 'X':
-            if is_pressed:
-                pass
-            else:
-                pass
-        elif button == 'Y':
-            if is_pressed:
-                pass
-            else:
-                pass
-        elif button == 'LB':
-            if is_pressed:
-                pass
-            else:
-                pass
-        elif button == 'RB':
-            if is_pressed:
-                pass
-            else:
-                pass
-        elif button == 'DPAD_UP':
-            if is_pressed:
-                pass
-            else:
-                pass
-        elif button == 'DPAD_DOWN':
-            if is_pressed:
-                pass
-            else:
-                pass
-        elif button == 'DPAD_LEFT':
-            if is_pressed:
-                pass
-            else:
-                pass
-        elif button == 'DPAD_RIGHT':
-            if is_pressed:
-                pass
-            else:
-                pass
+    def on_button_event(self, _button, _is_pressed):
+        pass  # Autonomous button handling not yet implemented
 
     def periodic_loop(self):
         """Called at 50Hz — put all periodic tasks here."""
 
-        # Update motor controller
+        # Update motor controller (must come before telemetry reads)
         self.robot.motor_controller.update()
+
+        # Print telemetry and log data
+        self.robot.auger.log_data()
+        self.robot.drivetrain.log_data()
+        self.robot.perception.lidar_stream.log_data()
 
     def run_auto_step(self):
 

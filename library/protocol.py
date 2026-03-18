@@ -3,6 +3,7 @@ import threading
 import json
 import queue
 import time
+from collections import deque
 from enum import Enum
 from abc import ABC, abstractmethod
 
@@ -50,6 +51,8 @@ class Connection(ABC):
         self._pending_acks = {}
         self._ack_lock = threading.Lock()
         self._seen_msg_ids: set = set()
+        self._seen_msg_ids_queue: deque = deque()
+        self._max_seen_ids = 1000
         self._ack_timeout = 0.5  # seconds
         self._message_id = 0
         self._message_id_lock = threading.Lock()
@@ -103,6 +106,9 @@ class Connection(ABC):
                 msg_id = msg.get("id")
                 if msg_id not in self._seen_msg_ids:
                     self._seen_msg_ids.add(msg_id)
+                    self._seen_msg_ids_queue.append(msg_id)
+                    if len(self._seen_msg_ids_queue) > self._max_seen_ids:
+                        self._seen_msg_ids.discard(self._seen_msg_ids_queue.popleft())
                     self._data_queue.put(msg)
                 ack = {"type": MessageType.ACK, "id": msg_id}
                 self._output_queue.put(ack)
@@ -194,7 +200,7 @@ class Connection(ABC):
     @property
     def is_connected(self) -> bool:
         """True while the connection is active."""
-        return self._running
+        return self._running and self.connected.is_set()
 
     def stop(self):
         """Gracefully shut down the connection."""

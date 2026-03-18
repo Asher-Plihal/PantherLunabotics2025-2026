@@ -32,7 +32,7 @@ class TelemetryLogger:
 
         self._file = None
         self._writer = None
-        self._filepath = None
+        self._filepath: str | None = None
         self._row_count = 0
         self._start_time = None
 
@@ -82,7 +82,7 @@ class TelemetryLogger:
 
         values: list of raw numbers matching the column order from start_logging()
         """
-        if self._file is None:
+        if self._file is None or self._writer is None:
             return
 
         self._writer.writerow([self.timestamp()] + [str(v) for v in values])
@@ -98,7 +98,8 @@ class TelemetryLogger:
         self._file = None
         self._writer = None
 
-        print(f"[{self.name.capitalize()}] Logging stopped — {self._row_count} rows saved to {self._filepath}")
+        filepath = self._filepath
         self._filepath = None
+        print(f"[{self.name.capitalize()}] Logging stopped — {self._row_count} rows saved to {filepath}")
         self._row_count = 0
         self._start_time = None

@@ -40,6 +40,10 @@ class Stream:
 
     # === Source side (used by robot/perception subsystems) ===
 
+    def enable(self):
+        """Mark stream as running without starting a thread (for callers that manage their own threads)."""
+        self._running = True
+
     def start_source(self, mode, target):
         """Start a daemon thread running target. No-op if mode is NONE."""
         if mode == StreamMode.NONE:
@@ -81,7 +85,8 @@ class Stream:
 
     def send_frame(self, data: bytes) -> bool:
         """Send a length-prefixed frame to the connected viewer."""
-        assert self._client_conn is not None
+        if self._client_conn is None:
+            raise RuntimeError(f"[{self.name}] No viewer connected — call accept_viewer() first")
         try:
             self._client_conn.sendall(len(data).to_bytes(4, "big") + data)
             return True
@@ -106,7 +111,8 @@ class Stream:
         return bytes(self._recv_exact(length))
 
     def _recv_exact(self, n: int) -> bytearray:
-        assert self._viewer_sock is not None
+        if self._viewer_sock is None:
+            raise RuntimeError(f"[{self.name}] Not connected — call connect() first")
         buf = bytearray(n)
         view = memoryview(buf)
         pos = 0

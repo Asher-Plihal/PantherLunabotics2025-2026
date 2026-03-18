@@ -9,7 +9,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "onboard_softwa
 import client
 from library.protocol import Command, Mode, Button, ButtonAction
 from library.streaming import StreamMode
-from subsystems.perception import run_lidar_viewer
 from robot_params import RobotConfig
 
 '''
@@ -38,7 +37,7 @@ class Control:
         self.running = True
         self.mode = None
         self.viewer_procs: list[multiprocessing.Process] = []
-        self.client = client.Client(server_ip) # Start the TCP server
+        self.client = client.Client(server_ip) # Connect to the robot's TCP server
 
         # Initialize the controller
         pygame.init()
@@ -122,10 +121,10 @@ class Control:
             pygame.event.pump() # Update joystick states
 
             # Read joystick axes
-            x = self.joystick.get_axis(0)          # Left Stick left and right
-            y = self.joystick.get_axis(1)          # Left Stick up and down
-            yaw_rate = self.joystick.get_axis(2)   # Right Stick left and right
-            pitch_rate = self.joystick.get_axis(3) # Right Stick up and down
+            left_stick_x = self.joystick.get_axis(0)          # Left Stick left and right
+            left_stick_y = self.joystick.get_axis(1)          # Left Stick up and down
+            right_stick_x = self.joystick.get_axis(2)   # Right Stick left and right
+            right_stick_y = self.joystick.get_axis(3) # Right Stick up and down
 
             lt = self.joystick.get_axis(4)  # Left Trigger
             rt = self.joystick.get_axis(5)  # Right Trigger
@@ -144,14 +143,14 @@ class Control:
 
                     for name, btn in button_map.items():
                         if event.button == btn:
-                            buttonCommand = (self.mode, name, ButtonAction.PRESSED)
-                            self.client.send_command(buttonCommand)
+                            button_command = (self.mode, name, ButtonAction.PRESSED)
+                            self.client.send_command(button_command)
 
                 elif event.type == pygame.JOYBUTTONUP:
                     for name, btn in button_map.items():
                         if event.button == btn:
-                            buttonCommand = (self.mode, name, ButtonAction.RELEASED)
-                            self.client.send_command(buttonCommand)
+                            button_command = (self.mode, name, ButtonAction.RELEASED)
+                            self.client.send_command(button_command)
 
                 elif event.type == pygame.JOYHATMOTION:
                     curr_hat = event.value
@@ -165,16 +164,16 @@ class Control:
                             self.client.send_command((self.mode, name, ButtonAction.PRESSED))
                     prev_hat = curr_hat
 
-            commands = (self.mode, x, y, yaw_rate, pitch_rate, lt, rt)
+            commands = (self.mode, left_stick_x, left_stick_y, right_stick_x, right_stick_y, lt, rt)
             if commands != last_command and self.mode == Mode.TELEOP: # For now only TELEOP uses axes
                 self.client.send_command(commands)
                 last_command = commands
-                #print(commands)
             time.sleep(0.05) # 20 Hz loop
 
     def _launch_viewers(self):
         if RobotConfig.lidarStream == StreamMode.REMOTE:
-            proc = multiprocessing.Process(target=run_lidar_viewer, daemon=True)
+            from subsystems.perception import Lidar
+            proc = multiprocessing.Process(target=Lidar.run_viewer, daemon=True)
             proc.start()
             self.viewer_procs.append(proc)
             print("[Control] Launched lidar viewer")

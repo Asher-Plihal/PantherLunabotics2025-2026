@@ -1,0 +1,2218 @@
+DRAFT Lunabotics 2025-2026 Guidebook
+
+================================================================================
+Section 1: APPLICATION AND ADMINISTRATION
+================================================================================
+
+1. Lunabotics Objectives
+
+The primary objective of Lunabotics is for teams to apply the NASA systems engineering
+process to design, develop, build, and test a prototype lunar robot that supports
+simulated lunar construction operations. Teams must create a robot capable of
+traversing challenging lunar terrain while constructing regolith-based berms—gathering
+valuable data on lunar construction techniques in the process.
+
+These berm structures serve critical functions for the Artemis Mission, including blast
+and ejecta protection during lunar landings and launches, shading for cryogenic
+propellant tank farms, radiation shielding around nuclear power plants, and other
+mission-critical applications.
+
+Lunabotics is a two-semester competition that challenges higher education students to
+design, build, and test prototype lunar construction robots using NASA's systems
+engineering principles. This innovative challenge engages participants in developing
+solutions for future off-world construction while providing practical, hands-on learning
+experiences that complement academic education.
+
+Selected teams can earn points by successfully completing several key deliverables: the
+STEM Industry Plan, the Systems Engineering Paper, the Proof of Life Video, Robot
+Data Specifications Report, an optional Presentation and Demonstration, and developing
+robots that meet all challenge criteria.
+
+The competition actively seeks participation from diverse educational institutions,
+including:
+- Vocational, technical, and trade schools
+- Community, state, and 2-year colleges
+- Colleges and universities (Title IV degree-granting institutions)
+
+Through this multidisciplinary challenge, students gain valuable real-world experience in
+computer coding, engineering, manufacturing, metrology, welding, fabricating, installing,
+and repairing sheet metal. Participants develop both technical expertise in space
+technology development and essential career skills that prepare them for future
+professional opportunities.
+
+Challenge Objectives
+
+Teams will submit deliverables for evaluation by NASA subject matter experts.
+Successful prototype robots should demonstrate capabilities for constructing off-world
+structures that serve critical functions such as:
+- Blast and rocket engine plume ejecta protection during spacecraft landings and launches
+- Radiation shielding for habitation modules and propellant storage
+- Thermal shading for cryogenic propellant storage
+- Environmental and radiation protection for power generation facilities
+- Other mission-critical infrastructure in extraterrestrial environments
+
+Student Benefits
+
+Participants gain valuable career and technical skills through hands-on experience:
+- Creating computer code for autonomous construction operations.
+- Engineering and designing robot frames, mobility, sensors and electronic systems.
+- Using various types of manufacturing processes to create the robot systems.
+- Stress-testing of mechanical components.
+- Troubleshooting, prototyping and iterative design improvement.
+- Applying professional engineering principles to real-world challenges.
+
+
+2. Background
+
+NASA is developing foundational technologies and approaches needed to fulfill Artemis
+missions on the Moon in preparation for human exploration of Mars. Lunabotics plays a
+vital role in this development process. By working in partnership with other government
+agencies in the U.S. and abroad, academia, the private sector, and non-profit
+institutions, NASA can expand technology and maintenance activities initially designed
+for the lunar surface. These collaborative efforts will allow us to explore more of the solar
+system in profound new ways.
+
+Lunabotics is a critical asset to NASA, spurring innovation and providing risk reduction
+for lunar surface system development. It was established to cultivate new ideas, drive
+solutions, and enhance cohesive development of capabilities for productive exploration
+of the extreme lunar environment while developing 21st century workforce skills for the
+next generation of explorers. Through collaboration across public and private sectors,
+NASA and our partners maximize efforts and leverage resources to design and test new
+approaches, technologies, and systems in parallel. This strengthens our ability to
+achieve successful long-duration missions while increasing access to space, providing
+economic benefits to our nation, and creating pathways of discovery for future
+generations.
+
+As NASA embarks on revolutionary exploration in our solar system, initiatives like
+Lunabotics bridge the technological capabilities needed for sustained human exploration
+missions on the Moon that can evolve for other challenging environments in deep space,
+including Mars. From a technology development perspective, the Moon serves as an
+ideal proving ground for complex Red Planet missions while supporting current and
+future lunar science missions. As we enhance our understanding of the challenging lunar
+environment, new knowledge from these pursuits advances technology development
+that informs our plans for Mars exploration and other celestial bodies, while transferring
+applications that can improve everyday life on Earth.
+
+Technologies that enable affordable, advanced manufacturing and autonomous
+construction are critical for NASA missions. These same technologies must also support
+long-term system maintenance, allowing NASA and its partners to carry out a variety of
+missions.
+
+Key technical challenges include excavation of hard regolith and ice materials, as well as
+the ability to travel long distances across uneven terrain with obstacles and other
+hazards. Both capabilities are essential for establishing sustainable operations in
+off-world environments where autonomous systems must function reliably without direct
+human intervention.
+
+A concrete example of progress in excavation technology is the NASA Swamp Works
+ISRU Pilot Excavator (IPEx). This system is designed to reliably excavate and deliver a
+total of 10 metric tons of lunar regolith for pilot-scale in-situ resource utilization
+demonstration over the course of 100 meters and 11 days—representing 200 times
+more operational capacity than the current state of the art.
+
+NASA's Return on Investment
+
+This competition multiplies NASA's research capacity by evaluating numerous design
+approaches simultaneously. By assessing student innovations using the same rigorous
+standards applied to internal prototypes, NASA gains exposure to creative solutions for
+complex off-world construction challenges.
+
+The challenge helps develop a skilled workforce ready to lead in the emerging space
+economy, strengthening America's technological leadership. Technologies developed for
+lunar construction often yield innovations applicable to terrestrial construction and
+manufacturing, creating broader economic benefits. These advances support space
+exploration goals that benefit NASA, America, and humanity's future.
+
+
+3. Lunabotics Events
+
+Event 1 – Project Development Challenge
+
+Required Deliverables:
+To qualify for the Lunabotics onsite competitions the following deliverables will be part of
+the Lunabotics 2026 program development challenge. Teams must submit all required
+deliverables to remain in the challenge.
+
+STEM Industry Plan Report - Due Thursday, February 26, 2026
+Systems Engineering Paper Due - Thursday, April 2, 2026
+Robot Data Specifications Report Due - Thursday, April 30, 2026
+Proof of Life Video Due - Thursday, April 30, 2026
+Optional Deliverable: Presentation and Demonstration Due - Friday, March 20, 2026
+
+Event 2 – University of Central Florida Space Institutes Exolith Lab® Challenge -
+May 12-17, 2026 (Event dates subject to change)
+
+This event is held at UCF's Florida Space Institute's Exolith Lab® in Orlando,
+Florida. During this event, teams will conduct field tests of their robots. The ten highest-
+scoring teams will advance to the Lunabotics Challenge finals at NASA's Kennedy
+Space Center.
+
+Event 3 - NASA's Lunabotics On-Site Challenge - May 19-21, 2026 (Event dates subject to change)
+
+The Lunabotics on-site challenge, hosted at Kennedy Space Center, brings
+together the top 10 teams from the UCF Florida Space Institute's event. Teams will
+conduct field tests of their robots in NASA's Artemis Arena. Please be advised the
+Kennedy Space Center is an active launch range. NASA mission requirements may
+change deadlines and deliverables and/or cancel the event itself without prior notice.
+
+The NASA Chief Judge and Project Manager are responsible for ensuring challenge
+integrity through fair and consistent interpretation, application, and enforcement of the
+Guidebook. The goal is to apply all guidelines equally and objectively to all participants.
+Lead Judges are responsible for creating rules and rubrics for individual events and
+evaluating team deliverables. For matters affecting the overall Lunabotics Challenge, the
+Chief Judge and Project Manager will render the final decision.
+
+Scoring decisions are considered final. If warranted, appeals must be submitted in
+writing by the team advisor or student leader within 30 minutes of score posting. The
+Chief Judge / Project Manager will render a final decision.
+
+Teams should begin by thoroughly reviewing the Lunabotics Guidebook and the
+Challenges Frequently asked Questions (FAQ).
+
+Lunabotics Communication Protocols and FAQ's
+
+Email Requirements:
+- Use only email addresses with ".edu" domains—NASA cannot respond to non-.edu domains
+- Only faculty advisors and team leads may submit FAQs
+
+FAQ Submission Process:
+- Use the format: School Name, Rule/Paragraph Number & Question
+- Send FAQs to: ksc-lunabotics@mail.nasa.gov
+
+Important Guidelines:
+- The Guidebook and FAQs are complementary documents—review both
+- Teams are responsible for monitoring the Lunabotics website for updates
+- Conflicts with exams, commencements, etc. may occur—prioritize deadlines based on the team's needs.
+
+Available Support:
+- Proctoring assistance is available at UCF and KSC
+
+NASA will NOT Respond to:
+- Requests to change deadlines
+- Questions sent from unauthorized email addresses
+- Questions about information already covered in the Guidebook
+- Questions specifically about the UCF onsite challenge
+
+Updating your school/team information
+
+Each team is responsible for updating the application database with changes to
+personnel, email addresses, and/or phone numbers. Maintaining current contact
+information is the only way the Lunabotics team can reach the team if there are issues
+affecting the team's participation in Lunabotics.
+
+Code of Conduct
+
+Lunabotics operates within NASA's commitment to maintaining a positive and safe
+environment. All participants must demonstrate integrity in following rules and
+maintaining professional behavior. Violations of rules or attempts to circumvent their
+intent, unprofessional conduct, or failure to follow staff directions may result in penalty
+points or disqualification from an event or the entire challenge.
+
+Liability Waiver
+
+Participants hereby waive any claims against NASA, its employees, its related entities
+(including, but not limited to, contractors and subcontractors at any tier, grantees,
+investigators, volunteers, customers, users, and their contractors and subcontractors at
+any tier), and employees of NASA's related entities for any injury, death, or property
+damage/loss arising from or related to the NASA Lunabotics Challenge, whether such
+injury, death, or property damage/loss arises through negligence or otherwise, except in
+the case of willful misconduct.
+
+Media Authorization
+
+All participants and visitors to Lunabotics events at Kennedy Space Center or the UCF
+Exolith Lab® Laboratory grant permission to be photographed/videotaped by NASA or
+its representatives for potential use in media products, unconditionally releasing NASA
+from related claims.
+
+--------------------------------------------------------------------------------
+NASA Media Release for Adults (Do Not Use for Minors)
+--------------------------------------------------------------------------------
+
+I, ___________________________, do hereby give permission to be interviewed,
+photographed, and/or videotaped by NASA or its representatives in connection with a
+NASA production.
+
+I understand and agree that the text, photographs, and/or videotapes thereof containing
+my name, likeness, and voice, including transcripts thereof, may be used in the
+production of instructional, promotional materials, and for other purposes that NASA
+deems appropriate and that such materials may be distributed to the public and displayed
+publicly one or more times and in different formats, including but not limited to, websites,
+cablecasting, broadcasting, and other forms of transmission to the public. I also
+understand that this permission to use the text, photographs, videotapes, and name in
+such material is not limited in time and that I will not receive any compensation for
+granting this permission.
+
+I understand that NASA has no obligation to use my name, likeness, or voice in the
+materials it produces, but if NASA so decides to use them, I acknowledge that it may
+edit such materials. I hereby waive the right to inspect or approve any such use, either
+in advance or following distribution or display.
+
+I hereby unconditionally release NASA and its representatives from any and all claims
+and demands arising out of the activities authorized under the terms of this agreement.
+
+By signing below, I represent that I am of legal age, have full legal capacity, and agree
+that I will not revoke or deny this agreement at any time.
+
+I have read the foregoing and fully understand its contents.
+
+Accepted by:
+Signature: ___________________________
+Date: ___________________________
+Name and Location of Event: ___________________________
+Address: ___________________________
+Telephone: ___________________________
+Email Address: ___________________________
+
+
+Lunabotics Awards
+
+1. Presentation and Demonstration (1st - $2000, 2nd - $1000, 3rd - $500) – Awarded to
+   teams who best present the objectives, execution, and technical outcome of their
+   design project.
+
+   Presentation and Demonstration First Steps Award – Best Presentation by a First-
+   Year Team – Judge's recognition for standout performance by teams whose
+   college/university has not previously participated in P&D.
+
+2. Systems Engineering Paper (1st - $2000, 2nd - $1000, 3rd - $500) – Awarded to
+   teams who demonstrate the best application of the NASA Systems Engineering
+   process to design, build, test, and evaluate their robot.
+
+   Systems Engineering Nova Award for Stellar Systems Engineering by a First Year
+   Team – Judge's recognition of teams who perform exceptional systems engineering
+   in their college/university's first year in the Lunabotics Challenge as demonstrated in
+   their systems engineering paper.
+
+   Systems Engineering Leaps & Bounds Award - Judge's recognition for significant
+   improvement over the previous year(s) in the team's application of systems
+   engineering to develop their robot system.
+
+3. Lunabotics Innovation Award – ($250) – Awarded to the team with the best design
+   based on creative construction, innovative technology, and overall architecture.
+
+4. Lunabotics Efficient Use of Communications Power Award - ($250)
+
+5. The Caterpillar Autonomy Award (1st - $2,000, 2nd - $1,250, 3rd - $750, 4th - $500,
+   5th - $250, 6th - $250) - Awarded by Caterpillar for the most successful autonomy
+   implementation.
+
+6. The Lunabotics Construction Award (1st - $2000, 2nd - $1000, 3rd - $500) -
+   Awarded to the teams that score the most points during berm building operations in
+   the Artemis Arena.
+
+7. The Off World Grand Prize ($5000) – Awarded to the team that submits the required
+   items, completes all the events, and scores the most points, a cumulative of the scores.
+
+Point Breakdown:
+1. STEM Industry Plan               10 Points
+2. Systems Engineering Paper        25 Points
+3. Presentations and Demonstrations 25 Points
+4. Robotic Construction             25 Points
+
+Note: The Awards list is not all-inclusive; and is subject to change without notice.
+
+Eligibility
+
+Team Composition Requirements:
+- All team members must be currently enrolled students from accredited institutions of
+  higher learning, career/technical education programs, trade schools, community
+  colleges, or universities located in the United States, its Commonwealths, territories,
+  or possessions.
+- Students may be registered in either fall or spring semester to qualify.
+- Multi-institutional teams are permitted (two schools may collaborate to form one
+  challenge team).
+- Teams from accredited institutions of higher learning (2-year or 4-year
+  colleges/universities) must include a minimum of two (2) undergraduate students.
+  There is no restriction on the number of graduate students.
+- All students must be 18 years or older prior to attending on-site events.
+- Each team must be accompanied by an adult advisor age 21 or older who is
+  employed by the registered institution and will remain on-site for the duration of
+  the challenge.
+
+Participation Standards:
+- All team members must be actively engaged in the robot's design and construction,
+  with clearly defined roles to be communicated during Presentation and Demonstration (P&D).
+- Students must complete 100% of the project work, including design, robot
+  construction, written reports, presentations, and competition preparation.
+  Professional assistance is permitted only for training or safety purposes under
+  student supervision.
+- Excessive re-use of materials from previous Lunabotics Challenge years
+  (vehicles, reports, presentations, etc.) will result in disqualification.
+
+Disqualification Criteria:
+- Unsportsmanlike conduct by any team member or advisor may result in individual
+  or team disqualification.
+- NASA reserves the right to exclude individuals or teams for unauthorized behavior, including:
+    - Impersonating NASA officials
+    - Misusing NASA, sponsoring organization, or commercial logos/trademarks
+    - Failing to follow competition rules or staff instructions
+    - Falsely claiming NASA affiliation or sponsorship
+- Teams not meeting all stated requirements may be disqualified.
+
+Administrative Notes:
+- All requirements for participation are outlined in this guidebook.
+- All times listed are USA Eastern Time.
+
+Applying on the STEM Gateway Website - Applications Open Monday, September 8, 2025
+
+STEM Gateway is the application portal for this challenge. Teams can submit applications here:
+Engagement Opening: Lunabotics 2026. Selected teams will receive an email notification
+regarding their application status to begin participation in the Event 1 of the Challenge.
+
+The number of applications accepted is not pre-determined but based on the quality of the
+applications received and other factors. The entire application process has three steps:
+
+Step 1 - Team Application in Gateway
+
+Application Process:
+- Apply through the NASA Gateway Application Website - Open Monday, September 8,
+  2025, and the entire Applications Due Monday, September 29, 2025
+- Only faculty advisors or team leads may initiate the application process—no other
+  team members or students can apply for the team
+
+Technical Support:
+- For website issues, contact the Gateway Help Desk directly
+- Response time may be 2-3 business days
+- Do not contact Lunabotics staff for website technical issues
+
+Step 2 – Submitting Team Application Deliverables
+
+Submit completed deliverable package via email to: ksc-lunabotics@mail.nasa.gov
+
+Required Deliverables:
+- Statement of Support & Statement of Rights Use    file name: SOS-School Name
+- Project Management Plan                           file name: PMP-School Name
+- Systems Requirements Report - ONLY If more teams qualify for the Lunabotics
+  Challenge through their PMP submission than can be accommodated at the
+  Qualifying Event(s), then the PMP-qualified teams will be required to submit a
+  System Requirements Review (SRR) Report.
+
+Formatting Requirements:
+- Submit all documents as PDF files
+- Use the following naming convention (deliverables not following this format will
+  be rejected): Deliverable Name-School Name (use official school name, not team name)
+
+Examples:
+    SOS-Harrison University
+    PMP-Adams College
+
+Step 3 - Team Application Evaluation and Selection
+
+This completes your application process. Note: Submitting an application does not
+guarantee acceptance into the Lunabotics Challenge.
+
+Applications will be scored and ranked, and all deliverables will be evaluated for compliance.
+
+REMINDER: if more teams qualify for the Lunabotics Challenge through their PMP
+submission than can be accommodated at the Qualifying Event(s), then the PMP-qualified
+teams will be required to submit a System Requirements Review (SRR) Report.
+
+You will be notified of your application status via email.
+
+The following items are required in your application package:
+
+Statement of Support
+
+A statement of support from a faculty/advisor indicating a willingness to supervise and
+work with the team during all stages of NASA's Lunabotics. There will be no consideration
+for teams working without a faculty advisor. The faculty advisor must also sign off on the
+cover of all deliverables as evidence they have seen the application and approves of the
+submission.
+
+The following statement shall appear on an institution letterhead and include the signature
+of the faculty advisor:
+
+Faculty Advisor: ___________________________
+University / College: ___________________________
+
+I concur with the concepts and methods by which the students plan to compete in "NASA
+Lunabotics". I will ensure the student team members complete all project requirements and
+meet deadlines in a timely manner. I understand any default by this team concerning any
+project requirements (including submission of final report materials) could adversely affect
+selection opportunities of future teams from their institution.
+
+Signature and Date: ___________________________
+
+Statement of Rights of Use
+
+These two statements grant NASA, acting on behalf of the U.S. Government, rights to use
+the team's technical data and design concept, in part or in entirety, for government
+purposes. This statement is not required. However, teams with a Statement of Rights of
+Use may receive greater consideration in the application selection. If choosing to include
+these statements, all team members and faculty advisors must sign.
+
+Statement of Rights of Use - Agreement 1
+
+As a team member for a(n) application entitled "NASA Lunabotics" proposed by a team of
+students the undersigned will and hereby do grant the U.S. Government a royalty-free,
+nonexclusive and irrevocable license to use, reproduce, distribute (including distribution
+by transmission) to the public, perform publicly, prepare derivative works, and display
+publicly, any data contained in this application in whole or in part and in any manner for
+Federal purposes and to have or permit others to do so for Federal purposes only.
+
+~OR~
+
+Statement of Rights of Use - Agreement 2
+
+As a team member for a(n) application entitled "NASA Lunabotics" proposed by a team of
+students, the undersigned will and hereby do grant the U.S. Government a nonexclusive,
+nontransferable, irrevocable, paid-up license to practice or have practiced for or on behalf
+of the United States an invention described or made part of this application throughout
+the world.
+
+Sign-In Sheet for either Agreement 1 or Agreement 2:
+University/College: ___________________________
+
+Name (Print) | Signature/Date | Faculty/Student
+1. ___________|_______________|_______________
+
+
+PROJECT MANAGEMENT PLAN (PMP) - Due Monday, September 29, 2025
+
+Each team shall submit a complete Project Management Plan (PMP) electronically in one
+PDF file. This is an initial plan. As you execute your project, things will change and your
+project will evolve, which is okay and expected. In your Systems Engineering Paper you
+can discuss the changes to your plan and how your project adapted.
+
+Include your school's name on the PMP.
+The maximum length of the plan is 5 pages. If you include a cover page, it will not count
+towards the page limit. Any content over 5 pages will not be judged and will not be scored.
+
+Format: The Project Management Plan shall be formatted professionally, organized clearly
+so that each required rubric element is easy to find, with correct spelling and grammar,
+with text no smaller than size 12-point font in the main body, with text no smaller than
+size 9-point font in graphics and tables, and using professional margins.
+
+Scoring Rubric - Project Management Plan
+
+Element: Initial Project Schedule                                    Points: 3 total for 6 elements
+  Provide a Gantt Chart or equivalent that shows the project's major
+  due dates and events to include at least:
+  1. Start Date
+  2. Completion Date (after project decommissioning)
+  3. Dates for Major Review milestones (minimum):
+     - Systems Requirements Review
+     - Preliminary Design Review
+     - Critical Design Review
+     - others as appropriate
+  4. Product delivery dates including:
+     - Systems Engineering Paper delivery
+     - Planned date to submit "Proof of Life"
+  5. Critical milestones related to Project Cost Budget
+  6. Critical milestones related to Technical Performance Measures
+  7. (Optional) Major Systems Engineering activities
+
+  Discuss how you will manage the evolution of the schedule during the life of the project.
+
+Element: Initial Project Cost Budget                                 Points: 3 total for 3 elements
+  Provide an estimate of the Total Project Cost, inclusive of all possible costs
+  throughout the project life cycle.
+
+  Include:
+  1. Breakdown of total project cost for at least:
+     a. System Hierarchy cost estimates:
+        1. Labor costs, if any
+        2. Material costs
+     b. Travel costs including UCF and KSC
+  Identify critical scheduling milestones for budget items.
+  Discuss how you will manage budget evolution.
+
+Element: Project Technical Objectives                                Points: 1 point for 1 element
+  List and discuss specific technical criteria your team intends to achieve.
+
+Element: Initial Technical Performance Measures (Technical Budgets) Points: 3 total for 5 elements
+  Provide a Table of Technical Performance Measures including:
+  1. Identification of TPMs chosen to monitor and manage
+  2. Initial Target Value for each TPM
+  Provide allocation of each TPM value across elements of the system hierarchy.
+  Discuss critical schedule milestones for achieving critical technical performance levels.
+  Discuss how you will manage the evolution of TPM budgets.
+
+Resources available:
+Project Management and Systems Engineering educational videos can be viewed at:
+NASA Lunabotics Videos
+
+These videos include:
+- Systems Engineering for University Level Engineering Competitions Videos
+- Five project management and systems engineering seminars recorded live at Lunabotics Challenges
+- Most relevant seminar: "How to Develop the Perfect Lunabotics Systems Engineering Paper:
+  And Win the Whole Competition" - recommended at the very start of your project.
+
+PMP Tips:
+Tip #1 - Make sure your Gantt Chart and tables are readable. If unreadable (less than
+9-point text as viewed in the PDF), ensure rubric elements are discussed in the main body.
+
+Tip #2 - Initial Project Schedule: Major Reviews. At least 3 must appear on your schedule:
+SRR, PDR, and CDR. If using alternate review names, identify which replaces each.
+
+Tip #3 - Developing any management plan boils down to two things: making decisions and
+writing them down. Document decisions at the beginning of the project and share with your
+team. Update your plan as you learn more.
+
+Tip #4 - Initial Project Budget: Budget evolution. Set up periodic reviews of your cost budget.
+Decide how you will address budget shortfalls and what you will do with budget excesses.
+
+Tip #5 - Initial Technical Performance Measures (TPM): Allocation to System Hierarchy.
+At the very start, the hierarchy may only consist of two levels. That early decomposition
+allows you to allocate time, money, and TPM values across each sub-element.
+
+
+Rubric for System Requirements Review (SRR) Report
+
+If more teams qualify than can be accommodated at the Qualifying Event(s), PMP-qualified
+teams will be required to submit an SRR Report within a week of notification.
+
+It is advised to conduct your SRR and prepare this SRR Report before the announcement
+of PMP-qualified teams.
+
+SRR Report Requirements:
+1. Include your School Name and Team Name.
+2. Maximum length: 4 pages (cover page does not count toward limit).
+   Any content over 4 pages will not be judged or scored.
+3. The rubric is very prescriptive. Pay close attention to required content, format, and
+   location. Non-compliance all but assures a low score and elimination.
+4. Format: Professionally formatted, organized clearly, correct spelling and grammar,
+   text no smaller than 12-point font in main body, 9-point in graphics/tables,
+   professional margins of at least 0.75 inches on all sides.
+
+Scoring Rubric - Systems Requirements Review Report
+
+Page 1 Content: Mission Analysis                                     Points: 5
+  1. Functional Mission Statement for the System [1 point]
+  2. All Stakeholders and Customers (internal/external, their roles) [1 point]
+  3. System Boundary Sketch (Functional Block Diagram) identifying all top-level
+     functional elements and external elements [3 points]
+
+Page 2 Content: Integrated Operational Scenario                      Points: 5
+  1. Explain how system elements will be operated to accomplish the mission,
+     including all Stakeholders. Scenario begins at formal baseline through
+     transport to competition and ending with final disposal of the system. [5 points]
+
+Page 3 Content: Systems Requirements Baselined at the SRR            Points: 5
+  1. Table including:
+     a. Key requirements (functional and performance) derived from customer
+        documentation, stated in proper "shall" language. [2 points]
+     b. All additional requirements necessary to execute the Integrated
+        Operational Scenario, in proper "shall" language. [2 points]
+     c. Planned Verifications for each SRR baselined requirement including:
+        i. When verification will occur
+        ii. How verification will be executed
+        iii. Success criteria for the verification [0.5 point]
+  2. Identify requirements related to reliability, maintainability, logistics,
+     transportation, human factors/operations, training, and safety. [0.5 point]
+
+Page 4 Content: Systems Requirements Review                          Points: 5 for 10 elements
+  1. Explain how the SRR was conducted:
+     a. Identify reviewers (internal/external)
+     b. How the proposed problem space baseline was presented
+     c. How reviewer comments were collected
+     d. How responses to reviewer comments were developed and presented
+     e. How consensus was achieved
+     f. How baseline approval was obtained
+  2. Explicit examples of Changes resulting from reviewer comments:
+     a. Changes to Schedule
+     b. Changes to Cost Budget and Allocations
+     c. Changes to TPMs and Allocations
+     d. Changes to System Requirements (added, deleted, modified) and verifications
+
+
+Requirements for Teams that make it through the Application process:
+
+For accepted teams, to maintain participation, the following must be completed:
+- Complete student and faculty registration in Gateway and Liability Waiver
+- STEM Industry Engagement Plan
+- Team Photos and NASA Media Release for each photo submitted
+- Presentations and Demonstrations (optional but required for Grand Prize eligibility)
+- Systems Engineering Paper
+- Proof of Life Video (pass/fail requirement)
+- Robot Data Files
+- Updated Student/Faculty Registration in Gateway for KSC on-site attendance
+- List of potential participants (students/faculty) attending UCF and KSC sent to:
+  ksc-lunabotics@mail.nasa.gov
+- KSC Lunabotics Regulated Waste Management Overview (bring to KSC)
+
+Timeline and Deadlines: All Lunabotics deadlines are posted at:
+https://www.nasa.gov/learning-resources/lunabotics-challenge/timeline/
+
+- Deliverables are accepted via the Lunabotics email up to seven (7) days prior to each deadline
+- All deadlines are 5:00 PM Eastern Time
+- Dates are subject to change
+
+Submission Guidelines:
+- Lunabotics will review the most recent file received prior to the deadline
+- NASA reserves the right to question or reject any item submitted by unauthorized representatives
+- Team leads are responsible for sending all deliverables to: ksc-lunabotics@mail.nasa.gov
+
+
+================================================================================
+Section 2: TECHNICAL
+================================================================================
+
+RoboPits
+
+The RoboPits are located in the Astronauts Memorial Foundation's (AMF) Center for
+Space Education (CSE) Building, room M6-306. This is where teams will meet with
+competitors from across the country and prepare robots before competing in the Artemis
+Arena. Robots will be inspected before each competition attempt, and teams are
+permitted to repair or modify their robots while the RoboPits are open.
+
+The RoboPits are equipped with emergency eyewash stations and disposal containers
+for used aerosol cans, batteries, degreasers, and cleaning wipes. Teams are encouraged
+to bring additional LED lighting, floor coverings or mats to facilitate cleaning, power
+strips, and a first-aid kit to enhance their workspace.
+
+Teams are responsible for creating team pit identification sign. Signs must be under 6
+feet tall and may include LED light strings. KSC Fire/Safety personnel may require
+modifications or removal if a sign is deemed unsafe.
+
+RoboPits Check-in Procedures
+
+Spectators must follow the same rules as participants.
+
+Step 1: Check-in and Setup
+
+Upon arrival, the Pit Boss will assign teams pit location and explain the inspection
+process, run sign-up procedures, and other competition protocols. Please remain
+professional and patient during busy periods.
+
+Contact Information:
+Teams must provide two contact phone numbers for emergency communication during
+the competition. These numbers will remain confidential and be deleted at the
+competition's conclusion.
+
+Pit Specifications, Guidelines & Shared Equipment:
+Teams assigned 10' x 10' pit includes two chairs, one table, and two power outlets with
+provided power strips. Do not daisy-chain power strips. Keep all team members and
+equipment within assigned pit boundaries, ensuring walkways and hallways remain clear.
+
+Vacuums are provided for shared use by all teams. Return vacuums to the designated
+area after use and notify the Pit Boss of any safety concerns.
+
+KSC Prototype Development Laboratory (PDL) Bot Shop:
+The PDL is staffed by KSC engineering technicians who specialize in designing,
+fabricating, and testing prototypes and test equipment. This mobile machine shop is
+equipped with grinding, sanding, mini-mill and mini-lathe, band saw, drill press, and
+hand tools (welding is not available). Only PDL mechanics are authorized to operate the
+equipment. First-come, first-served basis. Protective eyewear required at all times.
+
+Step 2: Clean-up and Check-out
+
+The RoboPit must be kept neat each night with nothing outside the pit boundaries.
+Unplug all equipment before leaving. Each team must leave their RoboPit in the same
+condition as found and request a final inspection from the Pit Boss.
+
+Industrial Waste Protocol
+
+Teams must comply with Federal and Kennedy Space Center hazardous and controlled
+waste program requirements. Coordinate with the RoboPit Chief before disposing of:
+- Batteries (Alkaline, Lithium, Ni-Cd)
+- Spray paint, spray foam, spray adhesives
+- Oily wipes, IPA solvent wipes, acetone wipes
+- Solder waste
+- PVC cement/primer (brushes, wipes, cans)
+- Lubricants (WD40, PB Blaster, 3-in-1 oil)
+- Adhesives (super glue, epoxy tubes)
+- Aerosol cans
+- Any other items as required by regulations
+
+Regolith Simulant - Black Point-1 (BP-1)
+
+BP-1 is a crushed lava basalt aggregate with particle size distribution similar to lunar
+soil. Important safety considerations:
+- BP-1 is alkaline and may cause skin and eye irritation
+- Contains a small percentage of crystalline silica, which is a respiratory irritant
+- If a person is allergic to talcum powder, they may be allergic to BP-1
+- All participants must wear ANSI-approved, UL-Listed, CE EN166 rated, AS/NZS
+  certified, or CSA rated PPE when in contact with BP-1
+- Respiratory protection is required
+
+Stop Work Order (SWO)
+
+Lunabotics staff may issue an SWO for any suspected safety issue. Teams must
+immediately stop all activity. The Faculty Advisor must meet with the Pit Boss to resolve
+the issue. The SWO remains in effect until the Pit Boss makes a final ruling.
+
+Robot Inspections - Safety and Communications
+- Inspection stations will be clearly identified
+- Inspections operate on a first-come, first-served basis (no scheduling)
+- Return to the Pit Boss after passing both Safety and Communications inspections
+- An escort will retrieve teams before each competition run—do not leave without the escort
+
+IMPORTANT: ROBOTS MUST PASS BOTH SAFETY AND COMMUNICATIONS
+INSPECTIONS BEFORE ENTERING THE ARTEMIS ARENA.
+
+NOTICE TO TEAMS
+
+Teams must resolve all questions and rule clarifications pertinent to a competition run
+before entering the Artemis Arena and Mission Control Center. The competition schedule
+will not be delayed to accommodate last-minute requests of this nature.
+
+Pre-Competition Personal Protective Equipment (PPE) Preparation Notification and Setup
+
+Teams will receive notification approximately 45 minutes before their scheduled start time.
+Up to four (4) students will proceed to the PPE preparation area to don required protective
+equipment. An escort will then accompany them to the Artemis Arena and Mission Control
+Center. Teams that are not ready or cannot be located at the designated time will forfeit
+their competition opportunity.
+
+PPE Provision and Team Responsibilities
+
+NASA will provide the following standard PPE for use in the Artemis Arena:
+- Safety goggles
+- N-95 masks
+- Protective coverall suits (bunny suits)
+- Rubber gloves
+- Protective booties
+
+Teams and schools are responsible for providing any additional PPE required by OSHA,
+ANSI, or equivalent standards.
+
+Respiratory Protection Requirements
+
+OSHA 1910.134 - Occupational Safety and Health Standards, Subpart I: Personal
+Protective Equipment, Standard Number: 1910.134, Title: Respiratory Protection.
+
+Facial Hair Restrictions
+
+Per OSHA Standard 1910.13, respirators cannot be worn when facial hair interferes with
+the sealing surface of the facepiece or valve function. Loose-fitting hoods or helmets
+that accommodate facial hair are acceptable alternatives. Schools/teams are responsible
+for providing any specialized respiratory equipment required by regulation.
+
+Eye/Face Protection
+
+Mandatory: ANSI-approved protective eyewear must be worn without exception in
+individual pits, the Bot Shop, and Artemis Arena.
+
+Additional Protection Recommended for:
+- Robot work including grinding, drilling, soldering, cutting, and welding
+- Activities with risk of flying particles or chemical exposure
+
+Available Protection Options: Safety glasses with side shields, goggles, face shields.
+
+Important Restrictions:
+- Reflective lenses are prohibited; eyes must be clearly visible
+- Accommodations available for prescription tinted safety glasses
+
+Prescription Glasses: Non-safety-rated prescription glasses require ANSI-approved
+safety goggles worn over them.
+
+Additional PPE Requirements
+
+Hand Protection:
+Use appropriate gloves and mechanical tool guards to protect against heat, electrical,
+chemical, laceration, and mechanical hazards.
+
+Hearing Protection:
+Provide and use hearing protection devices (such as earplugs) in areas with
+objectionable or questionable sound levels.
+
+Foot Protection:
+Wear completely enclosed shoes covering the instep, preferably leather that can be
+wiped clean.
+
+Clothing Requirements
+
+Required Clothing:
+- Shirts/tops covering the upper torso
+- Long pants covering to the ankle
+- Completely enclosed shoes covering the instep (preferably leather, wipeable)
+- Baseball caps and headgear (positioned to avoid vision impairment)
+
+Prohibited Clothing:
+- Flowing garments and loose neckwear (ties, scarves)
+- Caps worn low over eyes that impede vision
+- Cropped shirts, plunging necklines, spaghetti straps, or damaged shirts
+- Damaged jeans, shorts, capris, or skirts
+- Loose or wide/bell-sleeved tops, coats, or shawls
+- Open-toe, open-back, open-weave shoes, or shoes with holes
+
+Hair Requirements:
+Hair must not impede vision or contact work surfaces. Long hair must be tied back, and
+hair longer than 6 inches from the neck must be pinned up (hair nets or hats acceptable).
+
+Artemis Arena PPE Requirements
+
+PPE is mandatory when placing robots in the Artemis Arena (Room 9010) and during
+robot operation involving regolith material disturbance.
+
+Participant PPE (entering Artemis Arena):
+- N-95 filtering facepiece
+- Full-body protective suit with hood and booties
+- Nitrile gloves
+
+Judges/Regolith Assistants PPE (during robot operation):
+- Full-face respirator with P100 filters OR full-face powered air purifying respirator (PAPR)
+- Full-body protective suit with hood and booties
+- Rubber boots
+- Nitrile gloves
+
+Donning Protocol - Participants:
+- Select appropriately sized Tyvek coverall and put on over shoes
+- Don appropriate gloves, overlapping the Tyvek suit
+- Tape gloves to coverall overlap to prevent skin exposure
+- Apply tape above ankles and waist as needed
+- Place N-95 filtering facepiece over nose and mouth
+  Note: Clean-shaven face required for proper mask/respirator use
+- Place dust goggles over eyes and cover head with Tyvek hood
+
+Judges/Assistants:
+- Don full-face negative pressure respirator with P-100 filters OR full-face PAPR
+- Cover head with Tyvek suit hood
+- Don rubber boots over Tyvek booties when working in regolith pit
+
+Doffing Protocol (After Robot Run Completion):
+- Remove hood, then remove Tyvek coverall by rolling down from inside
+- Remove gloves taped to suit and place coveralls in designated waste container
+- Participants: Remove eye protection and return to PPE attendant; remove and discard N-95 facepiece
+- Judges: Maintain PAPR equipment in accordance with manufacturer's specifications
+
+Arena Specifications at the Kennedy Space Center
+
+1. Arena Composition and Dimensions
+   1. Interior dimensions: approximately 6.8 m long x 5.0 m wide (measured between interior ducts)
+   2. Contains Black Point-1 (BP-1), a crushed basalt lunar regolith simulant to a depth of approximately 45 cm
+   3. Additional material: Random distribution of gravel (approximately 2 cm diameter) may be mixed with BP-1
+
+2. Obstacle Zone
+   The obstacle zone is designed to test:
+   1. Obstacle detection capabilities
+   2. Mapping functions
+   3. Navigation planning abilities
+
+3. Obstacle Types
+
+   Boulder Obstacles:
+   1. Quantity: Minimum of three (3)
+   2. Placement: Randomly positioned before each competition round
+   3. Size: Approximately 30-40 cm in diameter with varying heights
+   4. Note: Boulders may also appear in the excavation zone but will not exceed
+      the dimensions of those in the obstacle zone
+
+   Crater Obstacles:
+   1. Quantity: Minimum of three (3)
+   2. Dimensions: Varying depths and widths, not exceeding ~40-50 cm in either measurement
+
+   Fixed Infrastructure:
+   - Central support column: Permanent obstacle that must be avoided
+
+Arena Layout (Figure 1):
+   Total Arena: 6.88 m wide
+   Excavation Zone: 2.5 m
+   Obstacle Zone: 4.38 m
+   Arena Height: ~4.5 m, ~5 m depth
+   Starting Zone: 2 m
+   Construction Zone location: far end of arena
+
+   Lunabotics Rover: 1.5 m x 0.75 m x 0.75 m, 80 kg Maximum Mass
+   Target Berm Size: 1.7 m x 0.8 m (approximately 1.5 m target area)
+   Coordinate reference: X: 5.38 m, Y: 0.6 m
+
+   Notes:
+   - Robots may excavate material in the Excavation Zone only
+   - Rocks may be moved and craters filled in the Excavation Zone only
+   - Must build targeted berm in the defined location
+   - Berm volume outside the target area will not be counted
+
+Artemis Arena Protocol
+
+1. Once competition runs begin, the Artemis Arena is an operational area with restricted access.
+2. Students shall follow instructions of the Arena Chief and Arena personnel promptly.
+3. Faculty/advisors are not permitted in the Arena during competition.
+4. Access restricted to currently active competing team members only.
+5. Artemis Arena is defined as all areas within room 9010/9020 of building M6-306 at Kennedy Space Center Visitor Complex.
+6. Active competing team members = up to 4 PPE-equipped members placing/removing robot + up to 4 Mission Control team members.
+7. Photography and personal electronic devices will be restricted in the Artemis Arena.
+8. Team members placing the robot will don PPE in the RoboPits staging area.
+9. When properly attired, they and Mission Control teammates will be escorted to the Artemis Arena entrance.
+10. The Arena Chief will grant access when ready.
+11. Student cell phones, cameras, tablets, and other restricted devices brought into the Artemis Arena shall be placed on the Arena Chief's station. No exceptions.
+12. Team members will be given a Pre-Task Briefing (PTB) with specific information for the run.
+13. At the end of the PTB, Mission Control team members will immediately exit and proceed directly to Mission Control staging area.
+14. Team members in PPE shall remain with their robot in the designated Arena staging area until directed otherwise.
+15. Approaching the Competition Arena before instructed is not permitted.
+16. The Arena Chief will inform team members when the Competition Arena is ready.
+17. Team members will place their robot in the Arena and perform setup activities. Robot will be placed in a randomly selected starting position and direction. Assume there are positive and negative obstacles. Assume robots cannot drive over obstacles.
+18. When complete, team members will promptly exit the Arena.
+19. Only team members in PPE may observe from the designated area. Must remain there for the duration of the run.
+20. Photos may be permitted at the Arena Chief's discretion, limited to construction zone and berm construction. Any photos shall not be shared, posted, or transmitted while in the Artemis Arena. Violation may result in disqualification.
+21. When the run ends, team members in PPE shall promptly retrieve their robot and proceed to the HEPA station.
+22. At the HEPA station:
+    a. Vacuum excess BP-1 from robot
+    b. Doffing Protocol:
+       i. Remove hood then remove Tyvek coverall rolling down from inside
+       ii. Remove gloves taped to suit; place coveralls in designated waste container
+       iii. Participants: Remove eye protection and return to PPE attendant
+       iv. Remove N-95 filtering face piece and discard
+       v. Judges: Maintain PAPR equipment per manufacturer's specifications
+       vi. Properly discard all used PPE
+       vii. Return goggles for cleaning and reuse
+       viii. Remain in the HEPA area until directed to exit by the Arena Chief
+23. Practice situational awareness at all times.
+
+
+ROBOTS AND ROBOTIC OPERATIONS
+
+1. Robots
+
+Lunar bulk regolith construction requires teams to consider several design and operation
+factors such as high robot dust tolerance and minimizing dust projection, efficient
+communications, minimizing vehicle mass, minimizing energy/power required, and
+maximizing autonomy. Each team will have the opportunity to complete two construction
+competition runs to demonstrate their design.
+
+Students on the team shall perform 100% of this project (including design, construction,
+and operations task components of their vehicle and deliverables, and including performing
+or supervising work that is supported by a professional machinist for the purpose of
+training or safety). Components are not required to be space qualified for atmospheric,
+electromagnetic, thermal, or Lunar environments.
+
+2. Robot Requirements
+
+1. The robot(s) shall be contained within a payload envelope measuring 150 cm length
+   x 75 cm width x 75 cm height. The orientation of these dimensions may be chosen
+   by the team.
+2. The robot may deploy or expand beyond the envelope after the start of each attempt
+   but shall not exceed 175 cm in additional height (250 cm above the regolith surface).
+3. Multiple robot systems are allowed but the starting dimensions of the whole system
+   shall comply with the volumetric dimensions given in this rule.
+4. Robots will be inspected for volumetric dimensions in the stowed configuration during
+   safety inspection. No modifications permitted during this verification.
+5. The robot shall have a maximum mass of 80 kg. Subsystems used to transmit
+   commands/data and video to telerobotic operators are counted toward the mass limit.
+6. The mass of the navigational aid system, including any beacons or targets not
+   attached to the robot, is included in the maximum mining robot mass limit and must
+   be self-powered.
+7. Equipment not on the robot used to receive data from and send commands to the
+   robot for telerobotic operations is excluded from the mass limit.
+8. Multiple robot systems are allowed but total mass of the whole system shall comply
+   with the mass limit. Lower masses will result in lower mission costs—this competition
+   rewards teams that have a lower robot mass.
+9. The launch volume dimensions of the robot may be oriented in any way.
+10. The team must declare robot orientation to the inspection judge:
+    Arrow 1 – length, Arrow 2 – width, Arrow 3 – forward direction of robot.
+11. The judges will use Arrow 3 to orient the robot in the randomly selected direction and position.
+12. Teams may use honeycomb structures as long as they are strong enough to be safe
+    and the edges sealed to prevent dust intrusion.
+13. Teams may NOT use: global positioning systems (GPS), rubber pneumatic tires,
+    air/foam filled tires, open or closed cell foam, ultrasonic proximity sensors, or hydraulics.
+14. Robots shall have a minimum of four (4) designated lifting points, safe for human
+    hands and clearly marked. Minimum of one person per 20 kg of mass; minimum
+    four people to carry the maximum allowed mass of 80 kg.
+15. The robot can separate itself intentionally but all parts must be under the team's
+    control at all times. Unintentional breakage will not be counted against the team.
+16. The robot can run either by telerobotic (remote control) or autonomous operations.
+17. External robot antennas are recommended to reduce potential interference problems.
+18. The robot cannot have any touch sensors to sense and avoid obstacles.
+
+3. E-STOP Button
+
+1. The robot shall be equipped with an E-STOP button. An unmodified "Commercial
+   Off-The-Shelf" (COTS) red button is required. Failure will result in a safety
+   disqualification. Minimum diameter of 40 mm, requiring no additional steps to access.
+2. The E-STOP button shall be placed on the highest practical location on the robot.
+   There shall be only one E-STOP button per robot; multiple robots each need their own.
+3. Disabling the E-STOP button without authorization shall result in a safety disqualification.
+4. Only onboard laptop computers may stay powered on if powered by its own, independent
+   internal computer battery.
+5. OSHA and relevant standards (IEC 60204-1) state that an e-stop must be readily
+   accessible to the operator. It should be unobstructed and easily accessible without
+   having to reach over, under or around it.
+6. Resetting of the e-stop alone shall not resume operation. A second deliberate action
+   is needed (e.g., pressing a reset button or pulling the button back up). It cannot
+   automatically reset.
+7. The E-STOP button shall stop the robot's motion and disable power with one push.
+   It shall disconnect the batteries from all controllers and isolate the batteries from the
+   rest of the active sub-systems.
+
+4. Power Meters/Data Loggers
+
+1. Power Meters/Data Loggers shall be placed on the highest practical location on the
+   robot and be easily visible.
+2. The robot shall provide its own onboard power. No facility power will be provided
+   during the attempt. The data logger shall be schematically located between the
+   battery and kill switch. A 30 point reduction to BCP Energy will be accessed if the
+   robot is not wired in accordance with this requirement.
+3. The energy consumed shall be recorded with a COTS electronic data logger device.
+   Actual energy consumed during each attempt shall be shown to the judges on the
+   data logger immediately after the attempt.
+
+5. Battery Protocol
+
+1. Lithium-Ion/Nic-Cad batteries used in robots must be attended while charging.
+   Chargers shall be unplugged overnight.
+2. Battery containers must be designed for safely storing, charging, and transporting
+   lithium-ion batteries, or approved equivalent.
+3. Batteries must be stored in upright containers; batteries cannot be in contact with each other.
+4. Batteries that have been dropped must be inspected for damage and replaced as needed.
+5. Do not store batteries that are hot to the touch after charging.
+6. If a battery continues to feel hot after charging, if possible, remove from the building
+   and place outside and notify NASA Fire as a non-emergency issue.
+7. No one will fault you if you need to call NASA Fire at 321.867.7911.
+8. To ensure the robot is usable for an actual mission, it cannot employ any fundamental
+   physical processes, gases, fluids, or consumables that would not work in an off-world
+   environment.
+9. Closed loop pneumatic systems are allowed if the gas is supplied by the robot itself.
+10. Examples of allowable components: Sealed Lead-Acid (SLA) or Nickel Metal Hydride
+    (NiMH) batteries; composite materials; rubber or plastic parts; actively fan cooled
+    electronics; motors with brushes; infrared sensors; inertial measurement units;
+    proximity detectors and/or Hall Effect sensors.
+
+6. Robotic Operations
+
+1. The robot cannot be anchored to the regolith simulant prior to the beginning of the demonstration.
+2. At the start of the competition run, the mining robot may not occupy any location outside the defined starting position.
+3. The robot must operate within the Artemis Arena; not permitted to pass beyond the confines of the outside perimeter or hit the walls.
+4. The robot may not use any process that causes the physical or chemical properties of the regolith simulant to be changed.
+5. No ordnance, projectile, far-reaching mechanism, etc. may be used.
+6. Far-reaching mechanism does not include any deployed or extended component as allowed in the dimensions rule.
+7. Beacons or fiducial targets may be attached to the designated arena frame area for navigation purposes only.
+8. Only Class I or Class II laser or low powered lasers (< 5mW) are allowed.
+
+
+SCORING, CONSTRUCTION, NAVIGATION
+
+1. Scoring
+
+The mission of this robot system is to provide a berm that protects astronauts and habitat
+modules from plume ejecta from vehicles lifting off and landing on the opposite side of
+the berm. For this competition, plume ejecta is presumed to move perpendicular to the
+surface and parallel to the short axis of the berm area. Both mass (or volume) of the
+berm and the projected area of the berm normal to the plume ejecta provide this protection.
+
+1. UCF & KSC:
+   a. The berm construction and bandwidth scores from each run will be added together
+      for the final score at each venue (cumulative, not the highest or an average).
+      Scores will NOT be added across the venues.
+   b. The Caterpillar Autonomy Award will be based on the sum of autonomy scores
+      from both UCF runs and runs at KSC.
+
+2. KSC Only:
+   Team scores for construction will be normalized to the maximum construction points
+   achieved by all teams to a scale between 0 and 25 points for the grand prize.
+
+2. Construction Points
+
+1. Pass All Inspections (Comm/Vehicle) - Required before first competition run.
+   Neither inspection is optional; if one cannot be passed, robot will not be permitted
+   in the Arena.
+
+2. Construction Berm Productivity – Normalized for Robot Mass (BCP Mass)
+   A volumetric scan before and after the run will be performed. Only berm volume
+   within the target area (perimeter dimensions 2.2 M x 0.9 M) will be counted.
+   No restriction on shape, height, or number of berms.
+   Points: cm^3 berm / min / kg robot mass  (specific points: 4.4)
+
+3. Construction Berm Productivity – Normalized for Energy (BCP Energy)
+   A volumetric scan before and after the run will be performed. Only berm volume
+   within the target berm location will be counted. Energy consumed must be displayed
+   by COTS electronic data logger and verified by a judge.
+   NOTE: A 30 point penalty will be assessed if your robot energy data logger is not
+   wired in accordance to the Robots and Robotic Operations section 4.
+   Points: cm^3 berm / min / watthour  (specific points: 1.5)
+
+4. Bandwidth Use
+   During each competition attempt, the team will be scored on bandwidth usage:
+   Total average bandwidth (TAB) = ((# arena cameras * 0.5) + avg bandwidth in Mbps)
+   If TAB is greater than 4 then 0, else, (TAB * -30) + 120 = score.
+   
+   Example: (1) arena camera used, 0.7 avg bandwidth Mbps
+   TAB = (1*0.5) + 0.7 = 1.2
+   (1.2 * -30) + 120 = 84 points
+
+5. Dust Tolerant Design - Up to 30 points per attempt:
+   a. Drive train and components enclosed/protected: 15 points
+   b. Active dust control (brushing, electrostatics, etc.): 5 points
+   c. Custom dust sealing features (bellows, seals, etc.): 10 points
+
+6. Dust Free Operation - Up to 30 points per attempt:
+   - Driving without dusting up regolith: 5 points
+   - Digging without dusting up regolith: 20 points
+   - Transferring regolith without dumping on your own robot: 5 points
+
+Berm Size and Target Area:
+                    KSC           UCF
+Berm Size:          2.0m x 0.7m   1.3m x 0.7m
+Target Berm Area:   2.2m x 0.9m   1.5m x 0.9m
+
+Note: Only berm volume inside the red box (target area) will count toward the measurement.
+
+3. Construction Points Calculator (Example based on 30-minute run at KSC)
+
+| Category                              | Units                    | Spec Pts | Example Actuals              | Example Pts |
+|---------------------------------------|--------------------------|----------|------------------------------|-------------|
+| 1. Pass All Inspections               | N/A                      | N/A      | Allowed to Run               | -           |
+| 2. BCP Mass                           | cm^3 berm/min/kg robot   | 4.4      | 77551 cm^3/15min/66kg=78.33  | 344.6       |
+| 3. BCP Energy                         | cm^3 berm/min/watthour   | 1.5      | 77551 cm^3/15min/36whr=143.6 | 215.4       |
+| 4. Bandwidth Use                      | cameras + avg Mbps       | -        | 1 cam, 0.7 Mbps, TAB=1.2    | 84          |
+| 5. Dust Tolerant Design               | -                        | 30       | -                            | 30          |
+| 6. Dust Free Operation                | -                        | 25       | -                            | 25          |
+| 7. Autonomy                           | -                        | varies   | -                            | 75          |
+| 8. Total Points                       |                          |          |                              | 774         |
+
+4. Construction Protocol
+
+1. Robot will be inspected before each competition attempt. Teams may repair or modify
+   robots while RoboPits are open.
+2. Teams are responsible for placement and removal of robot onto the arena surface.
+   One person per 20 kg; minimum four people for maximum 80 kg robot.
+3. Each team is allowed up to 10 minutes to place the construction robot and perform
+   required setups, and 5 minutes to remove the robot after the attempt.
+4. Robot's starting direction and location will be randomly selected immediately before the attempt.
+5. At the start of each attempt, the robot shall not occupy any location outside the defined starting position.
+6. Robot shall move from starting area, across obstacle zone, and into excavation zone.
+   Robot shall NOT acquire regolith for the berm from inside the starting area, obstacle
+   zone, or construction zone. All regolith for berm construction must be acquired from
+   the excavation zone.
+7. The robot shall not push or move any obstacles in the obstacle zone.
+8. Obstacles may only be pushed to the side of the arena in the construction zone.
+9. The robot shall avoid the craters in the obstacle zone (shall not fill in any craters).
+10. Robot may start excavation operations as soon as any part of it crosses into the excavation zone.
+11. Robot may start construction operations as soon as any part of it crosses into the construction zone.
+12. Robot shall operate within the arena; no part permitted to pass beyond the outside wall.
+13. Robot can separate itself intentionally but all parts must remain under team's control.
+14. The robot shall NOT:
+    - Be anchored to the arena surface prior to the beginning of each attempt
+    - Ram the wall (may result in a safety disqualification for that attempt)
+    - Use any aspect of the arena (wall, structure, column, etc.) in attempting any operations
+    - Use any process that causes the physical or chemical properties of the regolith simulant to be changed
+15. Bulldozing (pushing a pile of dirt/rocks) with a bladed dozer-type rover is NOT
+    considered acceptable. All regolith must be carried through the obstacle zone.
+16. Obstacles may not be moved into the excavation zone.
+17. Robot shall end operations immediately when the power-off command is sent.
+
+4. Navigation Protocol
+
+1. Team must declare robot orientation by length and width to the inspection judge.
+   An arrow marking the forward direction is required. Judges will orient the robot in
+   the randomly selected direction (north, east, south, or west).
+2. Compasses (analog, digital, etc.) are not allowed on the robot.
+3. Global Positioning Satellite (GPS) or IMU-enabled GPS devices are not allowed.
+4. The mass of the navigational aid system is included in the 80.0 kg maximum mass limit.
+5. Target Beacons may be attached to the provided mounting system in the starting area.
+6. Target/beacon may be a passive fiducial, or it may send a signal or light beam.
+   Only Class I or Class II lasers or low-powered lasers (< 5mW) are allowed.
+7. Inertial measurement units (IMU) are allowed. Teams must explain how the compass
+   feature will be switched off or subtracted.
+8. During each competition attempt, the robot is limited to autonomous and telerobotic operations only.
+
+5. Autonomy Rules
+
+1. Telemetry to monitor health of construction robot is allowed during the autonomous
+   period. Teams will need to remain "hands free" during any attempts at autonomy points.
+2. Teams shall not touch the controls during the autonomous period. Orientation data
+   cannot be transmitted to the construction robot in the autonomous period.
+3. The walls shall NOT be used for the purposes of mapping autonomous navigation and
+   collision avoidance (there are no walls on off-world locations).
+4. Team must explain to the inspection judges how their autonomous systems work and
+   prove that autonomy sensors do not use the walls.
+5. Teams are allowed to interact with an interface that allows different pieces of telemetry
+   data to be viewed as long as there is no real-time or other interaction to control the robot.
+6. Teams are not permitted to update or alter the autonomy program to account/detect
+   or upload information about obstacle locations.
+7. Failure to divulge the method of autonomy sensing shall result in disqualification.
+
+
+MISSION CONTROL CENTER AND AUTONOMOUS OPERATIONS
+
+Mission Control Center (MCC):
+
+Teams will control or autonomously operate their robots from the Mission Control Center
+(MCC) to simulate operations of a Lunar In-Situ Resource Utilization (ISRU) construction
+mission. Lunabotics Mission Control Judges (MCJs) will supervise team activities in the
+MCC. A Mission Control Director (MCD) will serve as the Lead Judge for the MCC.
+
+1. General Guidelines
+
+1. Each team will be allowed a maximum of 4 team members in the MCC. All members
+   must enter the MCC together when authorized by the MCJ.
+2. Faculty/Advisors are not permitted in the MCC at any time.
+3. Teams are responsible for ensuring they enter the MCC with all mission-critical
+   components and spares they require. Once in the MCC, team members will not be
+   permitted to retrieve forgotten items.
+4. Teams may only bring electronic devices required for robot operations into the MCC.
+   Extraneous laptops, cell phones, smart devices, etc., are prohibited.
+5. Teams that have entered the MCC are not allowed any external communications until
+   the completion of their run. The one exception is communication with their Artemis
+   Arena teammates during the setup period, using equipment provided by Lunabotics.
+6. Teams must resolve all questions and rule clarifications before entering the MCC.
+   The competition schedule will not be delayed accommodating last-minute requests.
+7. MCJs are observers only and are not allowed to provide "help" during robot operations.
+8. Mission Control and Arena judges have the authority to terminate a setup period or
+   competition run at any time if the team is not following the rules.
+9. Teams are expected to conduct themselves in a professional manner.
+10. Teams are expected to use sound engineering practices and principles to operate their robot.
+11. Team members must comply with all directions from the MCJ.
+12. Disputes with MCJ direction or decisions must be elevated through the MCD.
+13. Violation of the intent of a rule is a violation of the rule itself.
+
+2. Mission Setup
+
+1. Teams may not connect or interact with any equipment in the MCC until the setup period begins.
+2. Setup period: Teams have up to 10 minutes to connect their laptops and routers,
+   establish communications with their robot, and perform initial systems checkout.
+3. During setup, the MCJ will provide the team with a handheld radio to communicate
+   with team members in the Artemis Arena. Radio must be returned to the MCJ at the
+   end of setup and may not be used during the competition run.
+4. Arena team members are prohibited from pointing out obstacles, craters, and other
+   arena conditions to the MCC team members.
+5. Teams may use the situational awareness cameras during the setup period without penalty.
+
+3. Mission Operations
+
+1. Teams are allowed 30 minutes per competition run under nominal conditions.
+2. Telerobotic operators will have access to two situational awareness cameras in the
+   Artemis Arena via monitors provided in the MCC. The use of these cameras during
+   the run will factor into the team's construction score.
+3. Telerobotic operators are only allowed to use data and video originating from the robot
+   and the competition video monitors.
+4. It is the sole responsibility of team members in the MCC to communicate effectively
+   with the MCJ to ensure every autonomy attempt is recognized and scored correctly.
+   If the judge is not notified of the attempt in advance, the score will be zero points.
+   Teams are expected to:
+   - Clearly announce and make eye contact with the MCJ when going to autonomous operations
+   - Clearly announce when autonomy has begun and has been completed each time
+5. All autonomy attempts must be "Hands-Free," meaning no team members may touch
+   any components (e.g., laptops, game controllers) until the team has declared
+   autonomy completion or autonomy failure.
+   - If a team member interacts with any equipment while the robot is still moving,
+     the team will receive zero points for the attempt.
+   - In the event of an autonomy failure, announce that the attempt has failed
+     before resuming manual control.
+   - Manipulation of the NASA situational awareness cameras is permitted during
+     autonomy attempts.
+
+4. Mission Anomalies
+
+1. Once the competition timer has started, the robot has 5 minutes to move. If the robot
+   has not moved by the 5-minute mark, the robot is considered inoperable and the run ends.
+2. The team should notify the MCJ if their robot experiences an unrecoverable issue:
+   - Loss of Comm: Robot functional but can no longer communicate properly with MCC
+   - Loss of Locomotion: Robot ceases movement for 5 minutes
+   - Loss of Excavation: Robot can no longer acquire regolith per its design
+   - Loss of Deposition: Robot can no longer offload regolith per its design
+   - Loss of Robot: Robot fully unable to execute the mission
+3. In the event of a mission-ending anomaly that the team does not voluntarily end,
+   Mission Control and Artemis Arena judges have the authority to terminate the attempt.
+4. It is the team's responsibility to ensure they are executing corrective actions
+   efficiently and communicating properly with the MCJ.
+
+5. Mission Conclusion
+
+1. Teams must cease operations when the competition timer ends. If the robot is in the
+   middle of an autonomous activity, teams must send a command to inhibit further actions.
+   Regolith offloading is permitted to be completed only if the robot was actively dumping
+   material prior to the expiration of the competition timer.
+2. Teams may not disconnect communications or begin dismantling MCC equipment
+   until directed by the MCJ.
+3. Teams should remain in the MCC until dismissed by the MCJ.
+4. Teams are responsible for ensuring they leave the MCC with all equipment they brought.
+
+KSC Communications Operations:
+
+1. KSC Finals General Communication System Requirements
+
+1. All teams shall use IEEE 802.11 wireless protocol standards for their wireless connection.
+2. Routers are required to support both the 2.4 and 5 GHz bands.
+3. Routers are required to have the ability to turn off the 2.4 GHz band.
+4. Each team will be assigned an SSID upon checking in that must be used for their wireless equipment. Team's SSID will be written as "Team_##."
+5. Teams are required to broadcast their SSID.
+6. Robots and access points are ONLY allowed to transmit using their designated SSID.
+7. Hidden networks are not allowed.
+8. Wireless encryption is required.
+9. Teams cannot use channel bonding for 2.4 GHz data transmission. Maximum spectral bandwidth setting of 20MHz for all wireless transmission equipment.
+10. All team-provided wireless equipment shall operate legally within FCC requirements for unlicensed wireless equipment in the ISM radio frequency band.
+11. Power amplification devices are NOT allowed in the competition.
+12. Radio frequency power requirements apply to all wireless transmission devices at any ISM frequency.
+13. Bluetooth transmission in the 2.4 GHz range is allowed for sensors and other robot communications at Classes 2 and 3 only (max 2.5 mW EIRP). Class 1 Bluetooth devices are not allowed.
+14. 2.4 GHz Zigbee/IEEE 802.15.4 technology is prohibited.
+15. Technology using other ISM non-licensed radio frequencies (900 MHz or 5 GHz) is allowed for robot or sensor systems but will not be monitored.
+16. Teams can elect to use 5 GHz WiFi during competition but this frequency will not be monitored for wireless interference and will not be grounds for a protest or rematch.
+17. All robots should have an external WiFi antenna.
+18. Use of the NASA-provided situational awareness camera will add 500 Kbps of data use per camera.
+19. The communications link is required to have an average data utilization bandwidth of no more than 4,000 Kbps.
+
+2. KSC Finals General Radio Frequency and Communications Approval (Comm Check)
+
+1. All teams are required to successfully pass a Comm Check prior to entering competition.
+2. Compliance with all rules in Section 1 will be verified during the Comm Check.
+3. Each team must demonstrate that their robot and access point are operating only on the assigned channel. Maximum 15 minutes at the communication judges' station.
+4. Comm checks are to be performed on Channel 1.
+5. Teams in the queue for a comm check may quickly configure to Channel 1, then turn their wireless off until at the comm test station.
+6. Teams must identify and show to the judges all wireless emission equipment on the robot.
+7. If the robot is transmitting low power Bluetooth or any non-2.4 or 5 GHz frequency equipment, printed documentation from the manufacturer must be provided to the judges.
+8. If teams are using Bluetooth, printed documentation of the hardware in use must be provided.
+9. Team must verify they are connected to the robot by remote wireless control.
+10. Team must show they can turn off 2.4 GHz after demonstrating control.
+11. If a team cannot demonstrate the above tasks in the allotted time, the team will be disqualified.
+
+3. KSC Comm Rule Qualifications
+
+Each team is required to command and monitor their robot over the NASA provided Artemis network infrastructure.
+
+4. KSC RoboPits Comm Rules
+
+1. All routers in the RoboPits shall turn off 2.4 GHz by default or power down their wireless equipment.
+2. The RoboPits will have full access to the 5 GHz band and it is the required WiFi frequency band.
+3. Teams may test their robot using 2.4 GHz with prior authorization from the Pit Boss, only on Channel 11, for a short period of time.
+4. Teams in the queue for a comm check may quickly configure to Channel 1, then turn their router off until at the comm test station.
+5. The RoboPits communication environment will be monitored:
+   a. 1st time: warning and announcement to all teams
+   b. 2nd time: 500 point deduction from final score
+   c. 3rd time: disqualification from competition
+
+5. The KSC Artemis Arena Comm Rules
+
+1. Robot operations will be performed only on Channel 1.
+2. Teams must be able to configure to Channel 1 within 15 minutes of being notified.
+3. If a team is on the wrong channel during their competition attempts, the team will be disqualified.
+4. Channel 1 will be monitored during competition.
+5. Situational cameras are staged in the Artemis Arena. Joystick and display will be located with the team in the MCC.
+
+6. KSC Communications [(Artemis Arena – Mission Control Center (MCC)]
+
+1. Handheld radios will be provided to each team in the Artemis Arena during setup.
+2. Each team will provide the wireless link (access point, bridge, or wireless device) to their robot.
+3. Teams must set their own network IP addresses.
+4. In the arena, Artemis will provide an elevated network drop (male RJ-45 Ethernet plug) that extends to the Mission Control Center.
+5. Network connections to the robot are ONLY allowed via the WAP router and the cable going to the MCC. Any backchannel wireless connections are expressly forbidden and will result in disqualification.
+6. A shelf will be set up next to the network drop at a height 0 to 0.5 meter above the walls, placed in a corner area. This is where you will place the Wireless Access Point (WAP).
+7. KSC Artemis will provide a standard US NEMA 5-15 type, 110 VAC, 60 Hz electrical jack by the network drop.
+8. Teams are strongly encouraged to develop a dust protection cover for their WAP.
+9. During setup, teams will set up their access point and verify communication with their robot.
+
+Autonomous Operations:
+
+During each competition attempt, the team will earn up to 600 Construction points for
+autonomous operation. The Caterpillar Autonomy Award will be based on the sum of
+autonomy scores from both UCF runs and runs at KSC.
+
+General Rules:
+- "Hands-free" means all team members in mission control must not engage any components.
+- Teams must announce the start and completion of every autonomy point attempt.
+- If your autonomy attempt has failed, announce failure before beginning manual control.
+
+Construction points for autonomous activities:
+
+1. Excavation Automation: 75 pts
+   1. The Excavation Zone overlaps with the Starting Zone. Teams may excavate anywhere in the Excavation Zone.
+   2. Team must indicate to the MCJ that they are going hands-free for the excavation attempt.
+   3. The robot must execute machine control commands itself during the excavation task.
+   4. A discernable amount of regolith must be collected for transport. Hands-free operation must begin before the robot engages the regolith.
+   5. Excavation mechanisms must be completely removed from contact with the regolith before returning to remote control.
+   6. Once excavation is complete, team must indicate they are going to remote control.
+
+2. Dump Automation - Full Run: 50 pts
+   1. Teams are allowed to traverse the Obstacle Zone via remote control.
+   2. Prior to crossing into the Construction zone, they must indicate to MCJ they are going hands-free.
+   3. The robot must execute machine control commands itself during the dump task.
+   4. A discernable amount of regolith must be placed at the berm location.
+   5. Once dumping is complete, team must indicate they are going to remote control.
+
+3. Travel Automation: 250 pts
+   Teams must indicate to the MCJ they are going hands-free while still in the excavation zone.
+   The robot must remain hands-free while crossing the obstacle field and crossing into the construction zone.
+   Requirements:
+   1. Localization across the entire competition arena
+   2. Object detection and location relative to the robot
+   3. Navigational planning based on location and obstacles
+   4. The obstacle field will be constructed to require obstacle detection, mapping, and navigation planning.
+      Teams shall NOT architect a "Point and traverse" approach.
+   5. If the robot contacts a rock or drives across a crater, a 30-point reduction will be applied (one-time penalty).
+   6. For maximum points, the attempt must be made at the start of the run on the first time leaving the excavation zone.
+      A penalty of 50 points will be applied to any attempt that occurs after traversing the obstacle zone in remote control.
+
+4. Full Autonomy (One Cycle): 450 pts
+   1. Robot must be in hands-free control for one entire cycle.
+   2. Attempt must be made at the beginning of the competition run.
+   3. Teams may begin in remote control and move the robot within the starting zone only to localize.
+      Teams must begin hands-free from the starting area and remain hands-free while:
+      - Excavating
+      - Crossing the obstacle field
+      - Crossing into the construction zone
+      - Dumping the regolith for the berm
+      - Crossing the obstacle field and returning to the excavation zone
+   4. If the robot comes in contact with a rock or drives across a crater, a 30-point reduction per occurrence,
+      up to maximum of 90 points. The robot is allowed to move rocks and fill in craters in the excavation zone.
+
+5. Full Autonomy: 600 pts
+   1. The attempt must be made from the beginning of the competition run.
+   2. The robot must be in hands-free control for the entire competition run.
+   3. At least two complete cycles must be completed. Berm construction points must be achieved.
+   4. If the robot comes in contact with a rock or drives across a crater, a 30-point reduction per occurrence,
+      up to maximum of 90 points. Robot is allowed to move rocks and fill in craters in the excavation zone.
+
+Allowable Combinations:
+Ex: 1 - Excavation only:              75 pts
+Ex: 2 - Dump only:                    50 pts
+Ex: 3 - Travel only:                 250 pts
+Ex: 4 - Excavation + Dump:           125 pts
+Ex: 5 - Dump + Travel:               300 pts
+Ex: 6 - Excavation + Dump + Travel:  375 pts
+Ex: 7 - Full Autonomy (One Cycle):   450 pts
+Ex: 8 - Full Autonomy:               600 pts
+
+Note: Excavation, Dump, Travel automation points will NOT be combined with Full
+Autonomy (One Cycle) or Full Autonomy.
+
+
+================================================================================
+SECTION 3: DELIVERABLES AND RUBRICS
+================================================================================
+
+Deliverable due dates are posted on the Timeline located on the Lunabotics website at:
+https://www.nasa.gov/learning-resources/lunabotics-challenge/
+
+You must score a minimum of 70% on each deliverable. Teams failing to meet this
+requirement will be removed from the challenge.
+
+Submit your Deliverables:
+- Submit to: ksc-lunabotics@mail.nasa.gov
+- Submit as a PDF file
+- Naming format: Deliverable Name-School Name (not your team's name)
+  Example: SEP-Harrison University
+
+List of Deliverables:
+
+- Team Photos and NASA Media Release for each photo submitted
+  (Due: Wednesday, February 4, 2026)
+  File name: PHOTOS-School Name
+
+- STEM Industry Plan
+  (Due: Thursday, February 26, 2026)
+  File name: STEM-School Name
+
+- Presentations and Demonstrations (optional but required for Grand Prize eligibility)
+  (Due: Friday, March 20, 2026)
+  File name: PD-School Name
+
+- Systems Engineering Paper
+  (Due: Thursday, April 2, 2026)
+  File name: SEP-School Name
+
+- Proof of Life Video Link
+  (Due: Thursday, April 30, 2026)
+  File name: POL-School Name
+
+- Robot Data Specifications Report
+  (Due: Thursday, April 30, 2026)
+  File name: RDF-School Name
+
+- List of Students/Faculty attending the Challenge at KSC
+  (Due: Wednesday, May 6, 2026)
+  File name: KSC-School Name
+
+- Liability Waiver – Artemis Arena
+  (Due: Prior to KSC Challenge)
+  File name: LIA-School Name
+
+- Regulated Waste Management Overview
+  (Due: Prior to KSC Challenge)
+  File name: RWM-School Name (bring a hard copy to KSC)
+
+
+2. STEM Industry Plan (Due: Thursday, February 26, 2026)
+
+Provide a plan for how your team will engage with industry professionals and community
+leaders to enhance your project's impact and educational value while developing
+meaningful connections that could lead to future workforce opportunities for your team
+members. Maximum: 1 page.
+
+1. Audit local community and create a list of potential partners and alignment with project goals.
+   Consider technical expertise, mentorship, skills development, certifications or resources.
+
+2. Assess the team's Professional Development Strategy (choose at least one):
+   a. Summarize mentorship arrangements with industry experts/partners
+   b. Identify skills development and certification opportunities (e.g. welding, safety, electrical, software)
+   c. Explain how industry connections would support team members' career goals
+   d. Identify potential internship, fellowship, apprenticeship, or career opportunities
+
+3. Assess the team's Community Leadership Outreach (choose at least one):
+   a. Describe how your team will engage with local civic and community leaders
+   b. Summarize the method your team will use to raise awareness about NASA challenge participation
+   c. Identify and outline connections your team has and/or will seek with community leaders
+
+
+2. Presentation and Demonstration (P&D) Rubric (Due: Friday, March 20, 2026)
+
+Teams must participate in this event to qualify for the Lunabotics grand prize. It is
+otherwise optional, and teams will not be penalized for choosing not to participate.
+
+1. NASA will request an Intent to Present from all teams approximately one month before
+   P&D submissions are due. Only teams that provide a "yes" response by the
+   Participation Intent deadline will be guaranteed a presentation time slot.
+
+2. Competing teams shall deliver a completed Presentation and Demonstration slideshow
+   in one PDF file. Teams are not permitted to modify their slides between submission and
+   presentation.
+
+3. P&D will occur virtually prior to the UCF Qualifiers.
+
+4. Each team is allotted 25 minutes in front of the judging panel. Recommended: ~20 minutes
+   presentation with 5 minutes for Q&A. Hard cut-off at 25-minute mark.
+
+5. A panel of engineering professionals will judge on content coverage, team performance,
+   and overall slide quality. AI recording and transcription is not permitted.
+
+6. Live demonstration is preferred. If parts or entire robot cannot be controlled, it is
+   acceptable to move them by hand (robot powered off), show video from practice runs, etc.
+
+7. Each team must provide a safety plan immediately prior to their demonstration.
+
+8. Teams who do not present an acceptable safety plan will not be allowed to demonstrate.
+   Teams who fail to adhere to their safety plan may have their demonstration cut short.
+
+SCORING RUBRIC – PRESENTATION AND DEMONSTRATION
+
+Scoring Element 1: Content Coverage                                  15 points
+1. Project Objectives: Qualitative technical objectives and quantitative TPMs
+2. Design Process: Systems Engineering approach and execution
+3. Project Management: Budget and schedule evolution, team management, risk mitigation
+4. Concept Development: System trades, reuse decisions, and planned configuration
+5. Design Maturation: Subsystem trades, reuse decisions, and final configuration
+6. System Testing: Test plan, test progress, test results relative to project objectives
+7. Safety: Considerations in design, development, and test; implemented safety features
+
+Scoring Element 2: Presentation Execution                            5 points
+1. Slide Quality: Organization, grammar, spelling, formatting, graphics, aesthetics
+2. Preparedness: Team cohesion, time management, consideration of virtual format
+3. Delivery: Body language, cadence, enthusiasm, comfort with material, camera awareness
+4. Question and Answer Session: Understanding of questions and quality of responses
+
+Scoring Element 3: Demonstration                                     5 points
+1. Demonstration Safety Plan: Clearly communicated, suitable for the type of demo, followed
+2. Preparedness: Organization, flow, consideration of virtual format, explanation quality
+3. Scope: Systems demonstrated and their associated depth of coverage
+
+
+4. Systems Engineering Paper Rubric (Due: Thursday, April 2, 2026)
+
+Resources available:
+1. A video series introducing key systems engineering products and techniques: [NASA Lunabotics Videos]
+2. Additional Project Management and Systems Engineering educational videos
+3. Systems Engineering for University Level Engineering Competitions Videos
+4. Seminar: "How to Develop the Perfect Lunabotics Systems Engineering Paper: And Win the
+   Whole Competition" - recommended at the very start of your project
+5. Undergraduate course materials in systems engineering available online
+
+Directions:
+1. Submit a complete Systems Engineering Paper in one PDF file.
+2. The purpose is to demonstrate how the team used the systems engineering process
+   in designing, building, and testing their system. At least one explicit, clear, and
+   preferably numerical example should be provided for every assertion related to the rubric.
+3. A minimum score of 20 out of 25 possible points must be achieved to qualify to win.
+4. Either one-column or two-column formatting is acceptable.
+5. Deliverables must comply with expectations of academic honesty at your host university.
+6. Plagiarism of a team's previous Systems Engineering Paper is still plagiarism.
+
+SCORING RUBRIC – SYSTEMS ENGINEERING PAPER
+
+CONTENT SECTION                                                      Points: 3 (one each)
+
+1. Format:
+   - Provide a cover page.
+   - Cover page shall include: team name, title, full names of all team members,
+     university name, and faculty advisor's full name.
+   - Maximum 25 pages (letter size) not including cover page, title page, table of
+     contents, and references pages. Appendices are included in the 25-page count.
+   - Only the first 25 pages will be judged.
+   - Formatted professionally as if for a professional journal:
+     * Organized clearly for each rubric element
+     * Correct grammar and spelling
+     * Text no smaller than 12-point font in main body and appendices
+     * Text no smaller than 9-point font in graphics and tables
+     * Professional journal margins, single spaced
+
+2. Faculty Signature:
+   - Cover or title page shall include the signature of the sponsoring faculty advisor
+     and a statement that he/she has read and reviewed the paper.
+
+3. Reason for using Systems Engineering:
+   - A statement explaining the reason the team used systems engineering in this
+     Engineering Competition (beyond that it is required).
+
+PROJECT MANAGEMENT MERIT                                             Points: 9 (+ 1 bonus possible)
+
+1. Is your system a New Design or Design Update?
+   Clearly state that the system is an entirely new clean-sheet-of-paper design, or
+   that it is a substantial update to a design from a previous year.
+   [3 points]
+
+   If substantially updated, specifically address:
+   a. Provide the system hierarchy for the previous system and clearly identify
+      which hierarchy elements were changed or added/deleted.
+   b. Explain how you arrived at your decisions to change/add/delete these
+      hierarchy elements.
+
+2. Major Reviews:
+   At a minimum, describe how you conducted the SRR, PDR, and CDR.
+   Clearly demonstrate that these reviews served as control gates.
+   Identify the external reviewers.
+   Provide examples of comments at each Major Review from external reviewers
+   that led to changes to:
+   - The system design (explicit, preferably numerical examples)
+   - The schedule (explicit, preferably numerical examples)
+   - The cost budget (explicit, preferably numerical examples)
+   - Technical Performance Measurements values or allocation
+   [4 points]
+
+3. Schedule of work:
+   Discuss the project schedule and how it evolved from inception to disposal.
+   Provide the original planned schedule (from the PMP).
+   Provide the actual final schedule (or schedule at time of paper delivery).
+   Provide examples of:
+   - What changed between the original and subsequent schedules
+   - Why it changed
+   - When it changed
+   - How schedule changes produced changes to cost budget and/or technical requirements
+   [1 point]
+
+4. Cost budget:
+   Discuss the cost budget for total project costs and how it evolved from inception to disposal.
+   Provide the original Total Estimated Project Cost (from the PMP) and the actual final cost.
+   Provide examples of:
+   - What changed between provided cost budgets
+   - Why it changed
+   - When it changed
+   - How cost budget changes produced any changes to schedule and/or technical requirements
+   [1 point]
+
+SYSTEMS ENGINEERING MERIT                                            Points: 8 (+ up to 4 additional)
+
+1. System Hierarchy:
+   Provide top-down breakdowns of the system design at each control gate or major
+   review (SRR, PDR, CDR).
+
+2. Requirements:
+   Identify the key driving requirements for robot system design, operations, interfaces,
+   testing, safety, reliability, etc., stated in proper "shall" language.
+
+3. Interfaces:
+   Identify the key important interfaces between elements in the system hierarchy.
+   Identify the type of each interface (mechanical, electrical, human, signal, data, etc.)
+   Identify key important interfaces that are external to the system.
+   Demonstrate how consideration of the interfaces affected system design.
+
+4. Engineering Specialties:
+   Identify the engineering specialties important in your system.
+   Discuss how considerations of these specialties affected design and operations.
+   Examples (discuss only those important to your system):
+   - Reliability
+   - Maintainability
+   - Logistics
+   - Transportability
+   - Safety
+
+5. Concept of Operations (ConOps):
+   Describe how the team will operate the elements of the system hierarchy to
+   accomplish the robot system mission.
+   Indicate which key driving requirements are operations requirements.
+
+6. Technical Performance Measurement:
+   Identify and discuss technical measures important to accomplishing the mission
+   that you used to manage the project.
+   Provide the allocation of TPM values to elements of the system hierarchy.
+   Discuss how allocation of TPM values changed as the system design evolved.
+
+7. Trade Studies:
+   Discuss how important system decisions were made using trade studies.
+   Indicate which key driving requirements resulted from trade studies.
+
+8. Verification of system meeting requirements:
+   Discuss how you assured that the as-built system satisfies each of the key driving requirements.
+   Provide the success criterion for each verification.
+   Discuss how key important interfaces were verified in the system build processes.
+
+
+5. Proof of Life Video (Due: Thursday, April 30, 2026)
+
+Maximum Points: N/A – This is required. Failure to submit will result in removal from the challenge.
+
+A video recording of the faculty advisor verifying the following:
+- The robot being weighed on a scale
+- The dimensions being verified using a measuring tape
+- The "Commercial Off-The-Shelf" (COTS) E-STOP button red button with a minimum diameter of 40 mm
+- Demonstrate the router(s) are required to be able to turn on/off the 2.4 GHz band
+- The video shall be of one complete cycle of operations
+- A safe, functional robot
+
+Your operations area can use beach, play, construction, or outdoor volleyball sand as an
+acceptable granular material.
+
+Submit a YouTube link to your video recording. Present what you can by the due date.
+The spirit and intent is that you have a safe robot to present to the NASA judging staff.
+
+
+6. Robot Data Specifications Report (Due: Thursday, April 30, 2026)
+
+The purpose of this form is to collect data about your team's robot. One for each robot.
+Information on this deliverable will be provided prior to the on-site events.
+
+
+7. KSC Regulated Waste Management Overview and Liability Waiver Artemis Arena
+   (Due: Prior to KSC Challenge)
+
+Students and faculty advisors attending the on-site must read the following and sign the
+RWMO Acknowledgement and LIA waiver document.
+
+NASA Environmental Protection Specialist - Environmental Assurance Branch (SI-E2)
+Note: This is not formal/official RCRA training. This is a basic overview of KSC waste
+management policy.
+
+KSC Hazardous Waste Subject Matter Expert – Al Gibson
+Contact: albert.e.gibson@nasa.gov / 321-861-0863
+Will be in the pit area throughout the event and visiting each team.
+
+Background & Regulatory Requirements:
+- Federal Law: Resource Conservation & Recovery Act (RCRA)
+- Regulations: Code of Federal Regulations, Title 40, Parts 240-299 (EPA)
+- Regulations: Florida Administrative Code Chapter 62-730 (FDEP)
+- EPA delegated its authority to enforce RCRA regulations to FDEP
+
+Hazardous Waste Types:
+- Characteristic (flammable, corrosive, toxic, or reactive)
+- Listed (from a specific source)
+
+KSC is a "Large Quantity Generator" of Hazardous Waste - stricter management
+and reporting requirements; must comply with 40 CFR 262.15 and 40 CFR 262.17.
+
+Hazardous waste sites are either Satellite Accumulation Area (SAA) or Central
+Accumulation Area (CAA).
+
+Controlled Waste: Non-hazardous wastes not regulated by other laws (e.g., used oil dry).
+
+Universal Waste: Certain wastes exempt from hazardous waste rules if recycled/reused/reclaimed properly.
+
+Examples of Waste:
+Hazardous Waste Examples:
+- PVC primer, cleaner and cement
+- Hypergolic scrubber liquor
+- Spent isopropyl alcohol & cleaning solvents
+- Solvent wipes
+- Paint thinners & unused paint
+- Acetone
+- Super glue
+
+Controlled Waste Examples:
+- Used oil & oily wipes
+- Petroleum contaminated material
+
+Universal Waste Examples:
+- Aerosol cans
+- Batteries
+
+Waste Site and Locations:
+- There will be a SAA waste site in the "Pit Area" and one in the "Bot Shop"
+- Place your waste in the appropriate container; if unsure, see the Pit Boss
+
+Waste Generators Training Requirements:
+- Know hazardous waste has been generated (hazardous material = hazardous waste)
+- Know the waste must be managed in accordance with RCRA regulations
+- If you are not sure about your waste, let the Pit Boss know
+- If you see an issue, report it to the Pit Boss
+
+If you don't know the KSC way, ask – we are here to help you.
+
+Acknowledgement and Liability Waiver Artemis Arena
+
+By signing, you affirm you have read this document and will abide by KSC policy
+and procedures for handling hazardous waste while attending Lunabotics.
+
+WAIVER OF LIABILITY AND HOLD HARMLESS AGREEMENT
+FOR ACCESS TO THE ARTEMIS ARENA
+
+1. In consideration of the permission granted by NASA/KSC to enter the Artemis Arena,
+   I hereby release NASA, KSC, their officers and personnel, agents, servants, employees,
+   representatives, successors, assigns, from liability for any loss, damage, injury, or death
+   that may be sustained by me, or any property belonging to me, while participating in such
+   activity and caused or alleged to be caused in whole or in part by the negligence of the
+   RELEASEES.
+
+2. I also waive all claims, demands, damages, actions and suits against the United States of
+   America and RELEASEES, arising out of or related to any loss, damage, injury, or death
+   that may be sustained by me, or any property belonging to me, while participating in such
+   activity.
+
+3. I am fully aware of the risks involved and the hazards connected with activities associated
+   with the Artemis Arena, and I hereby elect to voluntarily participate with full knowledge
+   that said activities may be hazardous to me and my property.
+
+4. It is my express intent that this Waiver of Liability and Hold Harmless Agreement shall
+   bind the members of my family and spouse, if I am alive, and my heirs, assigns,
+   executors, administrators and personal representative, if I am deceased. I agree to
+   abide by all safety and security regulations of NASA KSC and the State of Florida.
+
+5. I certify that I have not been advised against participation in these types of activities by
+   a health professional and that I am physically able to participate. I hereby authorize
+   emergency medical treatment in the event of injury or illness.
+
+6. In signing this release, I acknowledge and represent that I have read the foregoing
+   Waiver of Liability and Hold Harmless Agreement, that I understand it and that I sign
+   it voluntarily.
+
+Signed on this _____ day of _________, 20 _____.
+
+Participant's Name (printed): ___________________________
+Participant's Signature: ___________________________
+
+
+================================================================================
+Section 4: Lunabotics Week at The Kennedy Space Center (KSC)
+================================================================================
+
+CONSTRUCTION – TWO ON-SITE EVENTS
+
+The task is to gather data on Lunar construction by designing and building a robot that will
+traverse the chaotic Lunar terrain and construct a regolith-based berm. The goal is to build
+a berm structure useful to the Artemis Mission.
+
+Event 1 – Construction Challenge at the University of Central Florida Qualification Challenge
+Location: UCF's Florida Space Institute's Exolith Lab® in Orlando, Florida
+(532 S. Econ Cir, Oviedo, FL 32765)
+
+Event 2 – Construction Challenge at the Kennedy Space Center
+The 10 highest-scoring teams from the UCF Qualifying Event will be invited to bring their
+robot and finish the competition. All other participants are invited to attend the final robot
+runs and participate in lectures, seminars, and workshops.
+
+ON-SITE SAFETY
+
+Calling First Responders:
+- Remain Calm. If you see something, say something.
+- Notify the Pit Boss, Arena Chief, Mission Control Director, Lunabotics Staff.
+- If in doubt, call KSC First Responders at 321.867.7911.
+- Tell them: why you are calling, answer their questions, and that you are located in
+  the Astronauts Memorial Foundation's Center for Space Education, Building M6-306,
+  on the west side of the Kennedy Space Center Visitor Complex.
+- Get people to meet and guide the First Responders to your location.
+
+Marshalling Area:
+If directed to leave the facility, exit immediately and head to the east side of the facility
+designated as the Marshalling Area (under the Apollo-Saturn 1B).
+Advisors and Team Leads account for your participants.
+
+MISCELLANEOUS
+
+1. Fire Exits / Eyewash Stations
+   Know where fire exits, fire extinguishers, and eyewash stations are located.
+
+2. Kennedy Space Center Visitor Complex Accessibility Information Page
+   Available for students/faculty/guests with special needs. You are under no obligation
+   to self-identify, but if you want to discuss accessibility issues, send inquiries to
+   ksc-lunabotics@mail.nasa.gov.
+
+3. Military Containers (ammo cans)
+   Spray paint or cover up the former military content signage to avoid any extra
+   security checks.
+
+4. Controlled Substances
+   The consumption of alcoholic beverages or use of any controlled substances by a
+   participant during the event is prohibited. Violation is grounds for disqualification.
+
+5. Weapons
+   No weapons of any kind are permitted inside Kennedy Space Center Visitor Complex.
+   Contact John Stubbe, KSC Protective Services at john.w.stubbe@nasa.gov for more info.
+   Please leave items secured within your vehicle. Violation is grounds for disqualification.
+
+6. Unmanned Aerial Vehicles (UAV), Unmanned Aerial Systems
+   The use of Unmanned Aircraft Systems (Drones) is prohibited at the Kennedy Space
+   Center Visitor Complex and the Astronauts Memorial Foundation Center for Space
+   Education. The UAV/UAS will be confiscated and not returned. Violation is grounds
+   for disqualification of the team.
+
+7. Wildlife
+   There are alligators, ants, armadillos, mosquitoes, raccoons, snakes, and wild hogs.
+   Do not attempt to feed or interact with the wildlife in any manner.
+
+8. Florida Weather
+   Stay hydrated, drink plenty of water. Be prepared for heat, humidity, wind, and rain.
+   You are responsible for protecting your robot from the elements while outdoors.
+   Remember to have hats, sunglasses, insect repellent, sunscreen (SPF 50 or better),
+   and a raincoat/poncho on hand for the competition.
+
+   Lightning Conditions:
+   - Phase I Lightning Condition: prepare to seek shelter
+   - Phase II Lightning Condition: seek shelter NOW in any building
+
+
+DAILY SCHEDULE (Subject to Change)
+
+Time       | May 20           | May 21           | May 22
+-----------|------------------|------------------|------------------
+0630 AM    | Staff Check-In   | Staff Check-In   | Staff Check-In
+0700 AM    | Check-In         | Pits Open        | Pits Open
+0800 AM    | Judges Meeting   | Judges Meeting   | Judges Meeting
+0900 AM    | Opening Ceremony | Construction Run 6 | Construction Run 4
+1000 AM    | Robot Inspections | Construction 7  | Construction 5
+1100 AM    | Robot Inspections | Construction 8  | Construction 6
+1200 PM    | Lunch            | Lunch            | Lunch
+1300 PM    | Construction Run 1 | Construction Run 9 | Construction Run 7
+1400 PM    | Construction Run 2 | Construction Run 10 | Construction Run 8
+1500 PM    | Construction Run 3 | Construction Run 1 | Construction Run 9
+1600 PM    | Construction Run 4 | Construction Run 2 | Construction Run 10
+1700 PM    | Construction Run 5 | Construction Run 3 |
+1800 PM    | Pits Close       | Pits Close       | Award Ceremony
+
+
+ON-SITE WEEK
+
+Day 1, 0700 – 0800 Tuesday, May 19, 2026
+College Team Check-In, opening ceremony, seminars, run construction robots.
+10 teams and 120 students and faculty will check in from 0700 – 0800.
+An additional 200 students and faculty members are expected to attend.
+
+Day 2, 0700 – 0800 Wednesday, May 20, 2026
+Seminars, run construction robots.
+
+Day 3, 0700 – 1800 Thursday, May 21, 2026
+Seminars, run construction robots, award ceremony.
+
+Lunabotics participants who want to attend the on-site event at KSC must:
+Have your faculty advisor/team lead of record send one list of names (last, first, middle
+Initial) to ksc-lunabotics@mail.nasa.gov by Wednesday, May 06, 2025.
+Each team will be allocated 15 tickets.
+
+Kennedy Space Center Visitor Complex, Florida
+
+Day 1 – Check-In:
+Enter the KSCVC entrance, show your parking pass, and proceed to Parking Lot 4.
+Go to the check-in tent, located on the left side of the main entrance, next to the picnic
+benches. The faculty advisor and team members shall check in together at the same time,
+with no exceptions.
+
+Acceptable Photo Identification:
+- Foreign passport
+- Permanent resident card or alien registration receipt card (Form I-551)
+- PIV card
+- State-issued driver's license or ID card
+- Tribal ID card
+- U.S. military dependent's ID card
+- U.S. military ID card
+- U.S. passport
+
+Note: School ID cards cannot be accepted. Damaged ID cards and blurred images cannot
+be accepted. For students walking into the Complex through security and the
+magnetometers, leave your equipment tools, wire cutters, nibblers, etc., in your vehicle.
+
+Check-in Process:
+1. Check-in staff will direct students to proceed to the KSCVC Main Entrance and then
+   on to the CSE unloading area.
+2. Check-in staff will direct the robots/gear/etc., and one driver will remain with the vehicle.
+3. Meet your vehicle(s), unload gear, and proceed to the CSE main entrance located on
+   the east side of the building. Proceed to the RoboPits.
+
+Days 2 and 3 – Competition Days:
+Show the parking pass to the parking attendant and proceed to the KSCVC Main Entrance.
+Team members shall show their tickets to enter the Complex's main entrance and proceed
+to the CSE.
+
+1. Check-Out Robots and Equipment:
+   There is only one check-in. Robots can check-out at any time but will not be allowed
+   back into the challenge.
+
+2. Tours/Groups:
+   There may be press, elected officials, NASA HQ representatives, families, STEM 8-12
+   students, and others touring the CSE during the challenge. Remember, remain professional.
+
+
+ADDITIONAL ACTIVITIES
+
+Seminars/workshops throughout the week may include:
+
+Systems Engineering Seminar:
+- How to Produce a Perfect Lunabotics SE Paper (and How to Win the Whole Competition)
+- Systems 'design' - How All the Systems Engineering Tools Work Together
+
+IPEX Overview:
+- KSC Swamp Works lunar rover designed for excavation
+- Overview of the ISRU Pilot Excavator (IPEx)
+- Design of the IPEx
+- Mission Concept of Operations
+- Simulation work of IPEx in lunar environment collaboration with Caterpillar
+- Demonstration of IPEx's predecessor RASSOR in the Competition Arena
+- IPEx on display (possible)
+- Announcement of new student competition involving IPEx
+
+Autonomy Seminars:
+- Q&A with Caterpillar Autonomy Technologists
+- 30-minute segments (15 mins students present, 15 mins Q&A)
+- First come first serve signup
+
+UCF - Bootstrapping of the Solar System Economy through the use of Space Resources
+KSC - Tech Transfer University
+KSC - NASA Internships
+...and many more!
+
+
+================================================================================
+GLOSSARY OF TERMS
+================================================================================
+
+1. Arena: Located in the Astronaut Memorial Foundation's Center for Space Education (CSE)
+   where the robots will perform each competition attempt.
+
+2. Astronaut Memorial Foundation's Center for Space Education (CSE):
+   Located adjacent to the northwest end of the Kennedy Space Center Visitor Complex (KSCVC),
+   at the Eastern terminus of Florida S.R. 405 in building M6-306.
+   https://www.amfcse.org/about-cse
+
+3. Autonomous: The operation of a robot with no human interaction.
+
+4. Basaltic Regolith Properties: This competition will assume that basaltic regolith properties
+   are similar to the Lunar regolith as stated in the "Lunar Sourcebook: A User's Guide to the
+   Moon", edited by G. H. Heiken, D. T. Vaniman, and B. M. French, copyright 1991,
+   Cambridge University Press. https://www.lpi.usra.edu/lunar_sourcebook/
+
+5. Black Point-1 (BP-1) (https://ares.jsc.nasa.gov/projects/simulants/bp-1.html):
+   - It does not behave like sand.
+   - The coefficient of friction has not been measured.
+   - There are naturally occurring rocks in the aggregate.
+   - BP-1 is made from crushed basalt fines and not commercially available.
+   - The density of the compacted BP-1 aggregate will be between 1.5 g/cm3 and 1.8 g/cm3.
+   - BP-1 behaves like a silty powder soil with most particles under 100 microns in diameter.
+   - Will be compacted; the top layer will be raked to a fluffy condition of approximately
+     0.75 g/cm3, similar to the Lunar surface.
+   - Teams are encouraged to develop or procure simulants based on basaltic minerals
+     and lunar surface regolith particle size, shape, and distribution.
+
+6. Black Point-1 (BP-1) Reflectivity: NASA performed tests to answer questions about BP-1
+   reflectivity for LIDAR (or other LASER-based) navigation systems. The laser is spread out
+   as a sheet oriented in the vertical direction. The three images are for three angles of the laser.
+   - Note the BP-1 is mounded so teams need to account for the fact that it is not a flat surface.
+   - Three pictures were shot with the camera at 10, 16, and 21 degrees relative to the surface.
+   - The laser was at an angle of 15 degrees. Camera settings (manual mode): 1/8 s, f/4.5.
+
+7. Bot Shop: The Prototype Development Laboratory's (PDL) Bot Shop is a "mobile machine shop"
+   with grinding, sanding, mini-mill and mini-lathe, band saw, drill press, and hand tools.
+   No welding capability. Can help teams repair broken robots but cannot finish a started robot.
+   https://public.ksc.nasa.gov/partnerships/capabilities-and-testing/testing-and-labs/prototype-development-laboratory/
+
+8. Center for Lunar & Asteroid Surface Science (CLASS): At the intersection of NASA science
+   and exploration for rocky, atmosphereless bodies.
+   https://sciences.ucf.edu/class/
+
+9. Exolith Lab® (https://exolithsimulants.com/): Enables space development and growth by
+   providing high-fidelity analogs to researchers and educators globally.
+
+10. In-Situ Resource Utilization (ISRU) (https://beta.nasa.gov/mission/in-situ-resource-utilization-isru/):
+    To live and work in deep space for months or years may mean crew members have less
+    immediate access to life-sustaining elements. The farther humans go into deep space, the
+    more important it will be to generate products with local materials.
+
+11. Kennedy Space Center Visitor Complex (KSCVC) (https://www.kennedyspacecenter.com/):
+    A Smithsonian Affiliate offering exhibits and attractions that tell the NASA story, with
+    artifacts from Mercury, Gemini, Apollo and Space Shuttle Programs.
+
+12. Lunar Highlands Simulant (LHS-1): Developed by the CLASS Exolith Lab. A high-fidelity,
+    mineral-based simulant appropriate for a generic or average highlands location on the Moon.
+    https://sciences.ucf.edu/class/simulant_lunarhighlands/
+
+13. Lunar Regolith Density: The density of regolith at the Apollo 15 landing site averages
+    approximately 1.35 g/cm3 for the top 30 cm, and approximately 1.85 g/cm3 at a depth of
+    60 cm. About half the weight of lunar soil is less than 60 to 80 microns in size.
+
+14. Mission Control: Operations area where teams will operate or autonomously control their
+    robotic excavator. Located outside of the Artemis Arenas.
+
+15. NASA Application Website:
+    https://stemgateway.nasa.gov/s/courseoffering/a0BSJ000003pitJ/lunabotics-2026
+    The Team Lead starts the team application process and then invites students and faculty
+    advisor(s) to apply. For issues on the NASA Gateway OSTEM application website, send
+    inquiries to the website Help Desk.
+
+16. Regolith Construction Robot: An autonomous or tele-operated robotic excavator including
+    mechanical and electrical equipment, batteries, gases, fluids, and consumables delivered by
+    a team to compete in the competition.
+
+17. Regolith Construction Points: Points earned from the competition attempt will be used to
+    determine ranking in the on-site robotic operations category.
+
+18. Reference Point: A fixed location signified by an arrow showing the forward direction on the
+    mining robot that will serve to verify the starting orientation of the mining robot within the mining arena.
+
+19. RoboPits: Equipped with emergency eyewash stations and disposal containers for industrial
+    waste. Teams are advised to bring additional LED lighting, power strips, and first-aid kits.
+    This is where teams will work on their robots, meet other competitors, and have their robot
+    inspected before it goes to work.
+
+20. Rock/Gravel: The gravel is #57 limestone gravel (~2 cm in diameter) intended to simulate
+    the icy-regolith buried in the South Polar region of the Moon. May be mixed in with BP-1.
+
+21. Swamp Works: A lean-development, rapid innovation environment at NASA's Kennedy Space Center.
+    Founded in 2012 when four laboratories in the Surface Systems Office were merged.
+    https://public.ksc.nasa.gov/partnerships/capabilities-and-testing/technical-capabilities/swamp-works/
+
+22. Telerobotic: The area of robotics concerned with the control of semi-autonomous robots
+    from a distance, using television, wireless networks (Wi-Fi, Bluetooth, Deep Space Network)
+    or tethered connections. Communication with and control of the mining robot during each
+    competition attempt must be performed solely through the provided communications link,
+    which is required to have a total average bandwidth of no more than 5.0 megabits/second
+    on all data and video sent to and received from the mining robot.
+
+23. University of Central Florida (UCF) (https://www.ucf.edu/): A public research university
+    with its main campus in unincorporated Orange County, Florida. Part of the State University
+    System of Florida.
+
+
+================================================================================
+READINGS
+================================================================================
+
+1. NASA's Plan for Sustained Lunar Exploration and Development
+   https://www.nasa.gov/sites/default/files/atoms/files/a_sustained_lunar_presence_nspc_report4220final.pdf
+
+2. Nasa Lunabotics Robotic Mining Competition 10th Anniversary (2010-2019): Taxonomy Technology Review
+   https://ntrs.nasa.gov/citations/20200003009
+
+3. Novel Approaches to Drilling and Excavation on the Moon
+   https://arc.aiaa.org/doi/pdf/10.2514/6.2009-6431
+
+4. Preparing for Mars: Evolvable Mars Campaign "Proving Ground" approach
+   https://ieeexplore.ieee.org/abstract/document/7119274
+
+5. NASA Human Spaceflight Architecture Team: Lunar Surface Exploration Strategies
+   https://ntrs.nasa.gov/citations/20120008182
+
+6. NASA Centennial Challenge: 3D-Printed Habitat
+   https://ntrs.nasa.gov/api/citations/20170009010/downloads/20170009010.pdf
+
+7. Lunar Spaceport: Construction of Lunar Landing & Launch Pads
+   https://commons.erau.edu/cgi/viewcontent.cgi?article=1017&context=spaceport-summit
+
+8. Towards In-Situ Manufacture of Magnetic Devices from Rare Earth Materials Mined from Asteroids
+   https://robotics.estec.esa.int/iSAIRAS/isairas2018/Papers/Session%2010c/1_iSAIRAS_Ellery_2018_final-11-40Ellery-Alex.pdf
+
+9. NASA Centennial Challenge: 3D Printed Habitat, Phase 3 Final Results
+   https://ntrs.nasa.gov/citations/20190032473
+
+10. A Process Plant for Producing Rocket Fuel from Lunar Ice
+    https://asmedigitalcollection.asme.org/IMECE/proceedings-abstract/IMECE2019/V006T06A108/1073266
+
+11. Robotic Construction on the Moon
+    https://ntrs.nasa.gov/api/citations/20210018912/downloads/Design%20for%20Robotic%20Construction%20on%20the%20Moon%20ISU%20SSP%2021%20STRIVES.pdf
+
+12. ISRU: The Basalt Economy
+    https://www.researchgate.net/profile/Rodrigo-Romo2/publication/322567782_ISRU_The_Basalt_Economy/links/5a5fff9c458515b4377b89cb/ISRU-The-Basalt-Economy.pdf
+
+13. RASSOR - Regolith Advanced Surface Systems Operations Robot
+    https://ntrs.nasa.gov/citations/20150022134
+
+14. Building a Vertical Take Off and Landing Pad Using in situ Materials
+    http://ssi.org/2010/SM14-proceedings/Building-a-Vertical-Take-Off-and-Landing-Pad-using-in-situ-MaterialsHintze.pdf
+
+15. Mars Water In-Situ Resource Utilization (ISRU) Planning (M-WIP) Study
+    https://mepag.jpl.nasa.gov/reports/Mars_Water_ISRU_Study.pdf
+
+16. Affordable, Rapid Bootstrapping of the Space Industry and Solar System Civilization
+    https://arxiv.org/abs/1612.03238
+
+17. Additive Construction with Mobile Emplacement (ACME)
+    https://www.researchgate.net/profile/Rodrigo-Romo2/publication/322567924_Additive_Construction_with_Mobile_Emplacement_ACME/links/5a5ffe7faca2727352458863/Additive-Construction-with-Mobile-Emplacement-ACME.pdf
+
+18. A Review of Extra-Terrestrial Mining Concepts
+    https://ntrs.nasa.gov/citations/20120008777
+
+================================================================================
+END OF DOCUMENT
+================================================================================

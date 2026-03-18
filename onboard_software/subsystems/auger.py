@@ -8,10 +8,7 @@ from library import telemetry_logger
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../library/motor_controller/build'))
 import motor_controller  # type: ignore
 
-# Subsystem Parameters
-logTelemetryData = False
-
-# Note: if this is changed, update print data on line 86 as well
+# Note: if this is changed, update print_telemetry as well
 _LOG_COLUMNS = ["Duty Cycle", "Velocity (RPM)", "Position (ticks)", "Current (A)", "Temp (°C)", "Bus Voltage (V)"]
 
 class Auger:
@@ -88,6 +85,8 @@ class Auger:
         print(f"{robot_params.robot_timer.timestamp()} [Auger] " + ", ".join(parts))
 
     def log_data(self):
+        if robot_params.RobotConfig.useTelemetry:
+            self.print_telemetry()
         if not self._logger.is_logging:
             return
         feedback = self.mc.get_motor_feedback(self.motor_id)
