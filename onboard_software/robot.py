@@ -29,6 +29,7 @@ class Robot:
 
         # Initialize global timer
         robot_params.robot_timer = robot_params.RobotTimer()
+        robot_params.print_config()
 
         # Bring up CAN bus before accessing hardware
         init_can_bus(robot_params.RobotConfig.Robot_CAN_Interface, 1_000_000)
@@ -117,17 +118,20 @@ def setup_network():
         print(f"[Network] Connecting to '{selected}' ({connection_name})...")
         try:
             result = subprocess.run(
-                ["sudo", "nmcli", "connection", "up", connection_name],
+                ["nmcli", "connection", "up", connection_name],
                 capture_output=True, text=True, timeout=20
             )
             if result.returncode == 0:
                 print(f"[Network] Connected to '{connection_name}'")
             else:
-                print(f"[Network] nmcli failed: {result.stderr.strip()}")
+                print(f"[Network] ERROR: Failed to connect to '{selected}' ({connection_name}): {result.stderr.strip()}")
+                sys.exit(1)
         except subprocess.TimeoutExpired:
-            print(f"[Network] Connection attempt timed out for '{connection_name}'")
+            print(f"[Network] ERROR: Connection attempt timed out for '{connection_name}'")
+            sys.exit(1)
         except Exception as e:
-            print(f"[Network] Could not run nmcli: {e}")
+            print(f"[Network] ERROR: Could not run nmcli: {e}")
+            sys.exit(1)
 
     try:
         result = subprocess.run(["iwgetid", "-r"], capture_output=True, text=True)

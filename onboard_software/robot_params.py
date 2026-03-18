@@ -28,10 +28,10 @@ class RobotConfig:
 
     # Subsystem configuration
     useDrivetrain = True
-    drivetrainMode = DriveMode.ARCADE
-
     useAuger = True
     useLidar = True
+
+    drivetrainMode = DriveMode.ARCADE
 
     # Telemetry configuration
     useTelemetry = True
@@ -43,13 +43,13 @@ class RobotConfig:
 class NetworkConfig:
     # Select which network to connect to on startup.
     # The key must match one of the entries in NETWORKS below.
-    SELECTED_NETWORK = "FLTech-Guest"
+    SELECTED_NETWORK = "Ashers-hotspot"
 
     # Maps a friendly name to the nmcli connection profile name saved on the Jetson.
     # Add or rename entries to match what you see in `nmcli connection show`.
     NETWORKS = {
         "FLTech-Guest": "FLTech-Guest",
-        "Ashers hotspot": "MePhone",
+        "Ashers-hotspot": "Me phone ",
     }
 
 
@@ -74,6 +74,12 @@ class RobotTimer:
         minutes = int(e) // 60
         seconds = e % 60
         return f"[T+{minutes:02d}:{seconds:05.2f}]"
+
+
+def print_config():
+    cfg = RobotConfig
+    print(f"[Config] Subsystems:  Drivetrain: {cfg.useDrivetrain}  Auger: {cfg.useAuger}  Lidar: {cfg.useLidar}")
+    print(f"[Config] Telemetry:   Enabled: {cfg.useTelemetry}  Drivetrain: {cfg.logDrivetrainTelemetry}  Auger: {cfg.logAugerTelemetry}  Lidar: {cfg.logLiDarTelemetry}")
 
 
 class Telemetry:
