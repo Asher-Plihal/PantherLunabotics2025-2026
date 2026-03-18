@@ -19,13 +19,13 @@ class Auto:
     def periodic_loop(self):
         """Called at 50Hz — put all periodic tasks here."""
 
+        # Update motor controller (must come before telemetry reads)
+        self.robot.motor_controller.update()
+
         # Print telemetry and log data
         self.robot.auger.log_data()
         self.robot.drivetrain.log_data()
         self.robot.perception.lidar_stream.log_data()
-
-        # Update motor controller
-        self.robot.motor_controller.update()
 
     def run_auto_step(self):
 

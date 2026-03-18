@@ -40,15 +40,12 @@ class TeleOp:
                         self.robot.drivetrain.stop()
         elif button == Button.Y:
             if is_pressed:
-                print("Intake Auger")
                 self.robot.auger.intake()
         elif button == Button.A:
             if is_pressed:
-                print("Outtake Auger")
                 self.robot.auger.outtake()
         elif button == Button.B:
             if is_pressed:
-                print("Stop Auger")
                 self.robot.auger.stop()
 
     def periodic_loop(self):
@@ -60,13 +57,13 @@ class TeleOp:
                 axes.right_stick_y, axes.right_stick_x
             )
 
+        # Update motor controller (must come before telemetry reads)
+        self.robot.motor_controller.update()
+
         # Print telemetry and log data
         self.robot.auger.log_data()
         self.robot.drivetrain.log_data()
         self.robot.perception.lidar_stream.log_data()
-
-        # Update motor controller
-        self.robot.motor_controller.update()
 
     def run_teleOp_step(self):
 

@@ -43,7 +43,7 @@ class RobotConfig:
 class NetworkConfig:
     # Select which network to connect to on startup.
     # The key must match one of the entries in NETWORKS below.
-    SELECTED_NETWORK = "Ashers-HS"
+    SELECTED_NETWORK = "FLTech-Guest"
 
     # Maps a friendly name to the nmcli connection profile name saved on the Jetson.
     # Add or rename entries to match what you see in `nmcli connection show`.
