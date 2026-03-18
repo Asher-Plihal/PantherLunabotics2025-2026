@@ -118,7 +118,7 @@ def setup_network():
         print(f"[Network] Connecting to '{selected}' ({connection_name})...")
         try:
             result = subprocess.run(
-                ["nmcli", "connection", "up", connection_name],
+                ["sudo", "nmcli", "connection", "up", connection_name],
                 capture_output=True, text=True, timeout=20
             )
             if result.returncode == 0:
