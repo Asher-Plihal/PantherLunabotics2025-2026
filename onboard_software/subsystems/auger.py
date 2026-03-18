@@ -31,7 +31,7 @@ class Auger:
 
         self.mc.initialize_motor(self.motor_id, config)
         self.mc.reset_motor_position(self.motor_id)
-        
+
         if robot_params.RobotConfig.logAugerTelemetry:
             self.start_logging()
 
@@ -57,7 +57,7 @@ class Auger:
         self.stop()
         self.stop_logging()
 
-    def print_telemetry(self, duty_cycle=True, velocity=True, position=True, current=True, temperature=False, voltage=True, interval=1):
+    def print_telemetry(self, duty_cycle=True, velocity=True, position=True, current=True, temperature=False, voltage=True, interval=0.1):
         now = time.monotonic()
         if now - self._last_telemetry_time < interval:
             return

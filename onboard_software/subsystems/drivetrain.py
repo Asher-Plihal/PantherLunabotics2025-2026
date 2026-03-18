@@ -48,7 +48,7 @@ class Drivetrain:
         self.mc.initialize_motors(self.motor_ids, config)
         for motor_id in self.motor_ids:
             self.mc.reset_motor_position(motor_id)
-            
+
         if robot_params.RobotConfig.logDrivetrainTelemetry:
             self.start_logging()
 
@@ -142,7 +142,7 @@ class Drivetrain:
 
         self.set_power(front_left_power, front_right_power, back_left_power, back_right_power)
 
-    def print_telemetry(self, duty_cycle=True, velocity=True, position=True, current=True, temperature=False, voltage=True, interval=1):
+    def print_telemetry(self, duty_cycle=True, velocity=True, position=True, current=True, temperature=False, voltage=True, interval=0.1):
         now = time.monotonic()
         if now - self._last_telemetry_time < interval:
             return

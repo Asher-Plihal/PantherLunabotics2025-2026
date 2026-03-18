@@ -21,6 +21,10 @@ Prompts will often contain misspellings. Before taking action, read the prompt c
 
 The repository contains an `archive/` directory of old, unused code. **Do not read, reference, or code review anything in `archive/` unless specifically asked.** It is kept for historical reference only and is not part of the active codebase.
 
+## Debugging
+
+When investigating a bug, **prove the root cause before implementing a fix.** Do not guess at solutions — use telemetry logs, print statements, CAN bus data, or any other available evidence to confirm what is actually going wrong. Only once you have verified the problem should you implement the fix. A fix without proof is just a guess.
+
 ## Code Review
 
 Every time you write code, review the implementation to ensure it is efficient, clean, and correct. Make the smallest viable change — do not modify what does not need to be changed.
