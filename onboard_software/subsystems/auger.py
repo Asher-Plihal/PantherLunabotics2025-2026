@@ -72,8 +72,9 @@ class Auger(Subsystem):
             self._full_current_start = None
         delta = now - self._full_current_start if self._full_current_start is not None else 0.0
         full = self._full_current_start is not None and delta >= _FULL_DURATION_S
+        start_str = f"{self._full_current_start:.2f}s" if self._full_current_start is not None else "None"
         robot_params.Telemetry.print_t(
-            f"[Auger] current={feedback.current:.2f}A  start={self._full_current_start:.2f}s  delta={delta:.2f}s  is_full={full}",
+            f"[Auger] current={feedback.current:.2f}A  start={start_str}  delta={delta:.2f}s  is_full={full}",
             prints_per_second=10
         )
         return full

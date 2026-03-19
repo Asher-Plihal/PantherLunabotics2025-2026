@@ -34,7 +34,7 @@ class RobotConfig:
     drivetrainMode = DriveMode.ARCADE
 
     # Telemetry configuration
-    useTelemetry = True
+    useTelemetry = False
     logLiDarTelemetry = False
     logAugerTelemetry = False
     logDrivetrainTelemetry = False
