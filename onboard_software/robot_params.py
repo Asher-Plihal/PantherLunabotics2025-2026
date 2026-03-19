@@ -29,7 +29,7 @@ class RobotConfig:
     # Subsystem configuration
     useDrivetrain = True
     useAuger = True
-    useLidar = True
+    useLidar = False
 
     drivetrainMode = DriveMode.ARCADE
 
