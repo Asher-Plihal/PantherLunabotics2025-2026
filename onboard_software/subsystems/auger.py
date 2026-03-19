@@ -1,22 +1,22 @@
 import os
 import sys
-import time
 import robot_params
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 from library import telemetry_logger
+from library.subsystem import Subsystem
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../library/motor_controller/build'))
 import motor_controller  # type: ignore
 
-# Note: if this is changed, update print_telemetry as well
+# Note: if this is changed, update log_data as well
 _LOG_COLUMNS = ["Duty Cycle", "Velocity (RPM)", "Position (ticks)", "Current (A)", "Temp (°C)", "Bus Voltage (V)"]
 
-class Auger:
+class Auger(Subsystem):
 
     def __init__(self, mc):
+        super().__init__()
         self.mc = mc
         self.motor_id = 3
-        self._last_telemetry_time = 0.0
         self._logger = telemetry_logger.TelemetryLogger("auger")
 
         config = motor_controller.MotorConfig()
@@ -35,14 +35,19 @@ class Auger:
         if robot_params.RobotConfig.logAugerTelemetry:
             self.start_logging()
 
-    def set_power(self, power):
+    def set_power(self, owner, power):
+        if not self.check_ownership(owner):
+            return
         self.mc.set_motor_duty_cycle(self.motor_id, power)
 
     def intake(self):
-        self.set_power(0.5)
+        self.set_power(None, 0.5)
 
     def outtake(self):
-        self.set_power(-0.5)
+        self.set_power(None, -0.5)
+
+    def stop(self):
+        self.set_power(None, 0.0)
 
     def start_logging(self):
         self._logger.start_logging(_LOG_COLUMNS)
@@ -50,44 +55,24 @@ class Auger:
     def stop_logging(self):
         self._logger.stop_logging()
 
-    def stop(self):
-        self.set_power(0.0)
-
     def shutdown(self):
+        self.force_release()
         self.stop()
         self.stop_logging()
 
     def print_telemetry(self, duty_cycle=True, velocity=True, position=True, current=True, temperature=False, voltage=True, interval=0.1):
-        now = time.monotonic()
-        if now - self._last_telemetry_time < interval:
+        if not self._check_telemetry_interval(interval):
             return
-        self._last_telemetry_time = now
-
         feedback = self.mc.get_motor_feedback(self.motor_id)
-
-        parts = []
-        if duty_cycle:
-            parts.append(f"Duty Cycle: {feedback.duty_cycle:.4f}")
-        if velocity:
-            parts.append(f"Velocity: {feedback.velocity:.2f} RPM")
-        if position:
-            parts.append(f"Position: {feedback.position:.1f} ticks")
-        if current:
-            parts.append(f"Current: {feedback.current:.2f} A")
-        if temperature:
-            parts.append(f"Temp: {feedback.temperature:.1f} °C")
-        if voltage:
-            parts.append(f"Bus: {feedback.voltage:.2f} V")
-
+        parts = self._format_motor_feedback(feedback, duty_cycle, velocity, position, current, temperature, voltage)
         if not parts or robot_params.robot_timer is None:
             return
-
         print(f"{robot_params.robot_timer.timestamp()} [Auger] " + ", ".join(parts))
 
     def log_data(self):
         if robot_params.RobotConfig.useTelemetry:
             self.print_telemetry()
-        if not self._logger.is_logging:
+        if self._logger is None or not self._logger.is_logging:
             return
         feedback = self.mc.get_motor_feedback(self.motor_id)
         self._logger.log_row(

@@ -65,6 +65,8 @@ class Robot:
 
     def run(self):
 
+        previous_mode = None
+
         while self.running:
 
             cmd = self.server.get_command()
@@ -77,6 +79,13 @@ class Robot:
                 if isinstance(cmd, (list, tuple)):
                     self.current_mode = cmd[0]
                     self.controller.process_controller_inputs(cmd)
+
+            # On mode transition, clear all subsystem ownership so the
+            # incoming mode starts with a clean slate
+            if self.current_mode != previous_mode:
+                self.drivetrain.force_release()
+                self.auger.force_release()
+                previous_mode = self.current_mode
 
             if self.current_mode == Mode.TELEOP:
                 self.teleop.run_teleOp_step()

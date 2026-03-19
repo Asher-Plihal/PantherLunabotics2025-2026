@@ -53,6 +53,7 @@ class TeleOp:
         if robot_params.RobotConfig.useDrivetrain and not self._active_drive_buttons:
             axes = self.robot.controller.axis_values
             self.robot.drivetrain.drive_task(
+                self,
                 axes.left_stick_y, axes.left_stick_x,
                 axes.right_stick_y, axes.right_stick_x
             )
