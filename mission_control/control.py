@@ -171,7 +171,7 @@ class Control:
             time.sleep(0.05) # 20 Hz loop
 
     def _launch_viewers(self):
-        if RobotConfig.lidarStream == StreamMode.REMOTE:
+        if RobotConfig.useLidar and RobotConfig.lidarStream == StreamMode.REMOTE:
             from subsystems.perception import Lidar
             proc = multiprocessing.Process(target=Lidar.run_viewer, daemon=True)
             proc.start()
