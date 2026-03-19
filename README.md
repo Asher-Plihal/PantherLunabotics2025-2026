@@ -44,6 +44,7 @@ python control.py
 # Phase 1: TeleOp/Gen:
 1. Check local streaming for Lidar
 2. Telemtry and rest position not working
+3. Test is full statment
 
 # Phase 2: Auto/Automations:
 1. Order parts

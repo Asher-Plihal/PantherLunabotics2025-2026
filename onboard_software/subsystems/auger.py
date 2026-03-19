@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import robot_params
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 from library import telemetry_logger
@@ -10,6 +11,10 @@ import motor_controller  # type: ignore
 
 # Note: if this is changed, update log_data as well
 _LOG_COLUMNS = ["Duty Cycle", "Velocity (RPM)", "Position (ticks)", "Current (A)", "Temp (°C)", "Bus Voltage (V)"]
+
+# Full-detection tuning parameters
+_FULL_CURRENT_THRESHOLD_A = 15.0  # amps — sustained current above this signals a full auger
+_FULL_DURATION_S = 0.5            # seconds — current must stay above threshold this long
 
 class Auger(Subsystem):
 
@@ -32,6 +37,8 @@ class Auger(Subsystem):
         self.mc.initialize_motor(self.motor_id, config)
         self.mc.reset_motor_position(self.motor_id)
 
+        self._full_current_start: float | None = None
+
         if robot_params.RobotConfig.logAugerTelemetry:
             self.start_logging()
 
@@ -48,6 +55,28 @@ class Auger(Subsystem):
 
     def stop(self):
         self.set_power(None, 0.0)
+
+    @property
+    def is_full(self) -> bool:
+        """
+        Returns True when motor current has been continuously above
+        _FULL_CURRENT_THRESHOLD_A for at least _FULL_DURATION_S seconds.
+        Automatically resets when current drops back below the threshold.
+        """
+        feedback = self.mc.get_motor_feedback(self.motor_id)
+        now = time.monotonic()
+        if feedback.current >= _FULL_CURRENT_THRESHOLD_A:
+            if self._full_current_start is None:
+                self._full_current_start = now
+        else:
+            self._full_current_start = None
+        delta = now - self._full_current_start if self._full_current_start is not None else 0.0
+        full = self._full_current_start is not None and delta >= _FULL_DURATION_S
+        robot_params.Telemetry.print_t(
+            f"[Auger] current={feedback.current:.2f}A  start={self._full_current_start:.2f}s  delta={delta:.2f}s  is_full={full}",
+            prints_per_second=10
+        )
+        return full
 
     def start_logging(self):
         self._logger.start_logging(_LOG_COLUMNS)
