@@ -1,3 +1,4 @@
+import time
 from abc import ABC, abstractmethod
 
 
@@ -8,10 +9,61 @@ class AutoTask(ABC):
     Ownership model
     ---------------
     Tasks may claim subsystems explicitly via claim_subsystem_ownership(),
-    called at the start of start_auto_task(), The subsystem blocks any caller 
+    called at the start of start_auto_task(). The subsystem blocks any caller
     that is not the current owner.
 
+    State timing
+    ------------
+    Call transition_to(state) to immediately enter a new state and reset the timer.
+    Call wait_for_event(next_state, ...) inside run_task_states()
+    to advance to the next state once a condition or timeout is met.
+
+    condition (optional positional):
+      bool       — direct boolean value              e.g. sensor.is_ready
+      callable   — called with *args, returns bool   e.g. sensor.above, threshold
+
+    timeout (keyword, optional):
+      float — seconds since last _transition()       e.g. timeout=3.0
+
+    If both are supplied the state advances when either fires.
+    If only timeout is supplied it acts as pure time-based triggering.
     """
+
+    def __init__(self):
+        self._state_start: float = 0.0
+
+    def transition_to(self, new_state) -> None:
+        """Immediately enter new_state and reset the state timer."""
+        self._state = new_state
+        self._state_start = time.monotonic()
+
+    def wait_for_event(self, next_state, condition=None, *condition_args, timeout: float | None = None) -> bool:
+        """
+        Transition to next_state when a condition or timeout is met.
+
+        Args:
+            next_state:      The state to transition to.
+            condition:       Optional bool or callable. If callable, called with
+                             *condition_args and must return bool.
+            *condition_args: Arguments forwarded to condition if it is callable.
+            timeout:         Optional seconds since last _transition(). If only
+                             timeout is supplied it acts as pure time-based triggering.
+
+        Returns True and transitions if condition or timeout fires, False otherwise.
+        """
+        if condition is None:
+            cond_met = False
+        elif callable(condition):
+            cond_met = condition(*condition_args)
+        else:
+            cond_met = bool(condition)
+
+        timeout_met = timeout is not None and time.monotonic() - self._state_start >= timeout
+
+        if cond_met or timeout_met:
+            self.transition_to(next_state)
+            return True
+        return False
 
     @abstractmethod
     def start_auto_task(self) -> None:
