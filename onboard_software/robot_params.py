@@ -93,5 +93,6 @@ class Telemetry:
         key = (frame.f_code.co_filename, frame.f_lineno)
         now = time.monotonic()
         if now - cls._timers.get(key, 0.0) >= period:
-            print(*args, **kwargs)
+            prefix = robot_timer.timestamp() + " " if robot_timer is not None else ""
+            print(prefix + " ".join(str(a) for a in args), **kwargs)
             cls._timers[key] = now

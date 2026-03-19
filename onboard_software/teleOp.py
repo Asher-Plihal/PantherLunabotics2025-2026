@@ -63,7 +63,8 @@ class TeleOp:
         self.robot.motor_controller.update()
 
         #Test if current will work for auger trigger
-        print(self.robot.auger.is_full)
+        #print(self.robot.auger.is_full)
+        self.robot.auger.is_full
 
         # Print telemetry and log data
         self.robot.auger.log_data()
