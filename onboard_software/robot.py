@@ -168,4 +168,14 @@ def init_can_bus(interface: str = "can1", bitrate: int = 1_000_000):
     print(f"[CAN] {interface} is up at {bitrate} bps")
         
 if __name__ == "__main__":
-    Robot().run()
+    robot = None
+    try:
+        robot = Robot()
+        robot.run()
+    except KeyboardInterrupt:
+        print("\n[Robot] Interrupted by user")
+    except Exception as e:
+        print(f"[Robot] Fatal error: {e}")
+    finally:
+        if robot is not None:
+            robot.stop()

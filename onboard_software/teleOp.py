@@ -57,12 +57,13 @@ class TeleOp:
                 axes.left_stick_y, axes.left_stick_x,
                 axes.right_stick_y, axes.right_stick_x
             )
-
-        #Test if current will work for auger trigger
-        print(self.robot.auger.is_full)
+    
 
         # Update motor controller (must come before telemetry reads)
         self.robot.motor_controller.update()
+
+        #Test if current will work for auger trigger
+        print(self.robot.auger.is_full)
 
         # Print telemetry and log data
         self.robot.auger.log_data()
