@@ -72,22 +72,22 @@ class Drivetrain(Subsystem):
         self.set_power(None, 0, 0, 0, 0)
 
     def drive_forward(self):
-        self.set_power(None, -0.5, -0.5, -0.5, -0.5)
-
-    def drive_backward(self):
-        self.set_power(None, 0.5, 0.5, 0.5, 0.5)
-
-    def strafe_left(self):
-        self.set_power(None, 0.5, -0.5, -0.5, 0.5)
-
-    def strafe_right(self):
-        self.set_power(None, -0.5, 0.5, 0.5, -0.5)
-
-    def turn_left(self):
         self.set_power(None, 0.5, -0.5, 0.5, -0.5)
 
-    def turn_right(self):
+    def drive_backward(self):
         self.set_power(None, -0.5, 0.5, -0.5, 0.5)
+
+    def strafe_left(self):
+        self.set_power(None, -0.5, -0.5, 0.5, 0.5)
+
+    def strafe_right(self):
+        self.set_power(None, 0.5, 0.5, -0.5, -0.5)
+
+    def turn_left(self):
+        self.set_power(None, -0.5, -0.5, -0.5, -0.5)
+
+    def turn_right(self):
+        self.set_power(None, 0.5, 0.5, 0.5, 0.5)
 
     def fold_out(self):
         self.set_power(None, 0.5, 0.5, -0.5, -0.5)
