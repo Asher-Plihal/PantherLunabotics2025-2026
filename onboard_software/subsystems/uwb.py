@@ -26,6 +26,8 @@ class UWBSensor:
 
     def connect(self) -> bool:
         """Open the serial port. Returns True on success."""
+        if self._serial and self._serial.is_open:
+            return True
         import serial
         try:
             self._serial = serial.Serial(self.port, self.baud, timeout=self.READ_TIMEOUT)
@@ -38,7 +40,7 @@ class UWBSensor:
         """Stop read thread and close serial port."""
         self._running = False
         if self._thread:
-            self._thread.join(timeout=2)
+            self._thread.join(timeout=self.READ_TIMEOUT + 1.0)
             self._thread = None
         if self._serial and self._serial.is_open:
             self._serial.close()
@@ -60,6 +62,13 @@ class UWBSensor:
     def is_connected(self) -> bool:
         return self._serial is not None and self._serial.is_open
 
+    def shutdown(self):
+        """Alias for disconnect — called by robot.py on shutdown."""
+        self.disconnect()
+
+    def log_data(self):
+        pass  # UWB logging not yet implemented
+
     def _read_loop(self):
         while self._running:
             try:
@@ -72,6 +81,7 @@ class UWBSensor:
             except Exception as e:
                 print(f"[UWB] Read error on {self.port}: {e}")
                 break
+        self._running = False
 
     @staticmethod
     def _parse(line: str) -> Optional[float]:
