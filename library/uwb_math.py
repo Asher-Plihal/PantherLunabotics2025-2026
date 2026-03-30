@@ -10,8 +10,13 @@ def compute_distance_to_anchor(d_left: float, d_right: float, tag_sep: float) ->
         d_left:   distance from left tag to anchor (metres)
         d_right:  distance from right tag to anchor (metres)
         tag_sep:  fixed separation between left and right tags (metres)
+
+    Returns:
+        Distance from robot center to anchor in metres. Returns 0.0 if inputs
+        violate the triangle inequality (e.g. due to sensor noise).
     """
-    return math.sqrt(2 * d_left**2 + 2 * d_right**2 - tag_sep**2) / 2
+    radicand = 2 * d_left**2 + 2 * d_right**2 - tag_sep**2
+    return math.sqrt(max(radicand, 0.0)) / 2
 
 
 def compute_heading_offset(d_left: float, d_right: float, tag_sep: float) -> float:
@@ -27,7 +32,18 @@ def compute_heading_offset(d_left: float, d_right: float, tag_sep: float) -> flo
         d_left:   distance from left tag to anchor (metres)
         d_right:  distance from right tag to anchor (metres)
         tag_sep:  fixed separation between left and right tags (metres)
+
+    Returns:
+        Heading offset in degrees in the range [-90, 90].
+
+    Raises:
+        ValueError: if tag_sep is not positive.
     """
+    if tag_sep <= 0:
+        raise ValueError(f"tag_sep must be positive, got {tag_sep}")
     d_center = compute_distance_to_anchor(d_left, d_right, tag_sep)
+    if d_center == 0.0:
+        return 0.0
     sin_offset = (d_right**2 - d_left**2) / (2 * d_center * tag_sep)
+    sin_offset = max(-1.0, min(1.0, sin_offset))  # clamp for sensor noise
     return math.degrees(math.asin(sin_offset))
