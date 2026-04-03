@@ -16,8 +16,8 @@ robot_timer: "RobotTimer | None" = None
 
 class RobotConfig:
     # Robot parameters
-    ROBOT_LENGTH = 1.5 # Meters from front to back
-    ROBOT_WIDTH  = 0.75 # Meters from left to right
+    ROBOT_LENGTH = 1.08 # Meters from front to back
+    ROBOT_WIDTH  = 1.108 # Meters from left to right
 
     # Network configuration
     Robot_IP = "100.87.109.7"

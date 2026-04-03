@@ -115,13 +115,18 @@ class Drivetrain(Subsystem):
         if self.slow_turning:
             turning *= 0.5 # Slow down turning
 
+        fl, fr, bl, br = self.calculate_arcade_powers(y, x, turning)
+        self.set_power(owner, fl, fr, bl, br)
+
+    def calculate_arcade_powers(self, y, x, turning):
+
         denominator = max(abs(y) + abs(x) + abs(turning), 1)
         front_left_power = (y - x - turning) / denominator
         front_right_power = (y + x + turning) / denominator
         back_left_power = (y + x - turning) / denominator
         back_right_power = (y - x + turning) / denominator
 
-        self.set_power(owner, front_left_power, front_right_power, back_left_power, back_right_power)
+        return front_left_power, front_right_power, back_left_power, back_right_power
 
     def _drive_task_tank(self, owner, left_forward, right_forward, left_strafe, right_strafe):
         left_forward = Util.apply_deadzone(left_forward, DEAD_ZONE_THRESHOLD)

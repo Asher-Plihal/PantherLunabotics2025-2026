@@ -1,3 +1,4 @@
+import math
 import time
 from dataclasses import dataclass
 from library.util import Util
@@ -32,16 +33,17 @@ class PIDController:
 
         self.no_oscillation = False
         self.debug = debug
+        self._squid = False  # Configuration — not cleared by reset()
 
         # Output limits (configuration — preserved through reset)
         self.output_min = -1.0
         self.output_max = 1.0
         self.output_limit = 1.0
         # Input limits (configuration — preserved through reset)
-        self.input_min = None
-        self.input_max = None
-        self.input_modulus = None
-        self.input_bound = None
+        self.input_min: float | None = None
+        self.input_max: float | None = None
+        self.input_modulus: float | None = None
+        self.input_bound: float | None = None
 
         self.reset()
 
@@ -57,6 +59,13 @@ class PIDController:
         self.settlingStartTime = 0.0
         self.timeoutStartTime = 0.0
         self.timeout = 0.0
+
+    def enable_squid(self):
+        """Scale output by sqrt(|output|)*sign(output) — smoother low-speed response."""
+        self._squid = True
+
+    def disable_squid(self):
+        self._squid = False
 
     def setNoOscillation(self, no_oscillation):
         self.no_oscillation = no_oscillation
@@ -75,8 +84,9 @@ class PIDController:
     def enableWrapTarget(self, min_input, max_input):
         self.input_min = min_input
         self.input_max = max_input
-        self.input_modulus = max_input - min_input
-        self.input_bound = self.input_modulus / 2.0
+        modulus = max_input - min_input
+        self.input_modulus = modulus
+        self.input_bound = modulus / 2.0
 
     def disableWrapTarget(self):
         self.input_min = None
@@ -147,13 +157,18 @@ class PIDController:
         D_Term = self.kd * delta_error
         F_Term = self.kf * target
 
-        self.output = Util.clip(P_Term + I_Term + D_Term + F_Term, -self.output_limit, self.output_limit)
+        clipped = Util.clip(P_Term + I_Term + D_Term + F_Term, -self.output_limit, self.output_limit)
+        if self._squid and clipped != 0.0:
+            normalized = clipped / self.output_limit
+            clipped = math.copysign(math.sqrt(abs(normalized)), normalized) * self.output_limit
+        self.output = clipped
         if self.debug:
             print(f"Output: {self.output} P: {P_Term:.3f} | I: {I_Term:.3f} | D: {D_Term:.3f} | F: {F_Term:.3f}")
 
         return self.output
 
     def inputMod(self, error, lower_bound, upper_bound):
+        assert self.input_modulus is not None
         # Wrap input if its's above the minimum input
         numMax = int((error - lower_bound) / self.input_modulus)
         error -= numMax * self.input_modulus

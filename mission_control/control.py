@@ -189,7 +189,7 @@ class Control:
             self._dashboard_queue = multiprocessing.Queue()
             proc = multiprocessing.Process(
                 target=DashboardView.run,
-                args=(self._dashboard_queue, RobotConfig.ROBOT_LENGTH, RobotConfig.ROBOT_WIDTH),
+                args=(self._dashboard_queue,),
                 daemon=True)
             proc.start()
             self.viewer_procs.append(proc)

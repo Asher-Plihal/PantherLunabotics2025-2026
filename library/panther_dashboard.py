@@ -24,16 +24,24 @@ API
 import math
 import os
 import queue
+import sys
 import pygame
 
 # ── Arena geometry (metres) ───────────────────────────────────────────────────
 ARENA_W = 6.88
 ARENA_H = 5.0
 
-# ── Robot footprint (metres, top-down) ────────────────────────────────────────
-# Max stowed volume per guidebook: 150 cm × 75 cm × 75 cm.
-ROBOT_LENGTH = 1.5
-ROBOT_WIDTH  = 0.75
+# ── Robot footprint — read from RobotConfig; falls back to defaults if unavailable ──
+_onboard = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'onboard_software')
+if _onboard not in sys.path:
+    sys.path.insert(0, _onboard)
+try:
+    from robot_params import RobotConfig as _cfg
+    ROBOT_LENGTH = _cfg.ROBOT_LENGTH
+    ROBOT_WIDTH  = _cfg.ROBOT_WIDTH
+except ImportError:
+    ROBOT_LENGTH = 1.08   # metres front-to-back
+    ROBOT_WIDTH  = 1.108  # metres left-to-right
 
 # ── Default window size ───────────────────────────────────────────────────────
 _DEFAULT_W   = 1400
@@ -161,11 +169,6 @@ class PantherDashboard:
     def set_target(self, x: float, y: float, heading_deg: float = 0.0) -> None:
         """Set the target position and heading the robot is navigating toward."""
         self._target = (x, y, heading_deg)
-
-    def set_robot_size(self, length_m: float, width_m: float) -> None:
-        """Set the robot footprint in metres (length = forward axis, width = lateral)."""
-        self._robot_length = length_m
-        self._robot_width  = width_m
 
     def put(self, key: str, value) -> None:
         """Add or update a telemetry key-value entry."""
@@ -318,10 +321,9 @@ class DashboardView:
     """
 
     @staticmethod
-    def run(q, robot_length: float, robot_width: float) -> None:
+    def run(q) -> None:
         """Entry point for the dashboard process. Reads from queue and renders each frame."""
         dash = PantherDashboard("Panther Dashboard")
-        dash.set_robot_size(robot_length, robot_width)
         while dash.update():
             # Drain all pending updates — only care about the latest state
             data = None
