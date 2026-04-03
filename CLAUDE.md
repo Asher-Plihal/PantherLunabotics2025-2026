@@ -305,6 +305,6 @@ All in `onboard_software/robot_params.py`:
 - Telemetry logs written as CSV to `onboard_software/logs/`
 - `TYPE_CHECKING` guards used to avoid circular imports
 
-## Development Status
+### When devloping 
 
-See `.claude/STATUS.md` for what's functional, in progress, and not yet implemented.
+While the architecture is divided into two sides, `/onboard_software` and `/mission_control`, both computers have access to the full software base. Although each primarily runs its respective side of the code, it is better to keep software implementations simple and implement everything within a single class, rather than creating two classes—one for each side—running the same software implementation. Doing so would only add unnecessary complexity where it is not needed.
