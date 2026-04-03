@@ -15,6 +15,10 @@ class DriveMode(Enum):
 robot_timer: "RobotTimer | None" = None
 
 class RobotConfig:
+    # Robot parameters
+    ROBOT_LENGTH = 1.5 # Meters from front to back
+    ROBOT_WIDTH  = 0.75 # Meters from left to right
+
     # Network configuration
     Robot_IP = "100.87.109.7"
     Robot_Port = 8080
@@ -25,6 +29,7 @@ class RobotConfig:
     lidarStreamPort = 5000
     cameraStream = StreamMode.NONE
     cameraStreamPort = 5001
+    fieldDashboard = True
 
     # Subsystem configuration
     useDrivetrain = True

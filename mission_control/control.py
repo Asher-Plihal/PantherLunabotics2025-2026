@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "onboard_softwa
 import client
 from library.protocol import Command, Mode, Button, ButtonAction
 from library.streaming import StreamMode
+from library.panther_dashboard import DashboardView
 from robot_params import RobotConfig
 
 '''
@@ -37,6 +38,7 @@ class Control:
         self.running = True
         self.mode = None
         self.viewer_procs: list[multiprocessing.Process] = []
+        self._dashboard_queue: multiprocessing.Queue | None = None
         self.client = client.Client(server_ip) # Connect to the robot's TCP server
 
         # Initialize the controller
@@ -168,6 +170,11 @@ class Control:
             if commands != last_command and self.mode == Mode.TELEOP: # For now only TELEOP uses axes
                 self.client.send_command(commands)
                 last_command = commands
+
+            telemetry = self.client.get_telemetry()
+            if telemetry is not None and self._dashboard_queue is not None:
+                self._dashboard_queue.put(telemetry)
+
             time.sleep(0.05) # 20 Hz loop
 
     def _launch_viewers(self):
@@ -177,6 +184,16 @@ class Control:
             proc.start()
             self.viewer_procs.append(proc)
             print("[Control] Launched lidar viewer")
+
+        if RobotConfig.fieldDashboard:
+            self._dashboard_queue = multiprocessing.Queue()
+            proc = multiprocessing.Process(
+                target=DashboardView.run,
+                args=(self._dashboard_queue, RobotConfig.ROBOT_LENGTH, RobotConfig.ROBOT_WIDTH),
+                daemon=True)
+            proc.start()
+            self.viewer_procs.append(proc)
+            print("[Control] Launched field dashboard")
 
     def _stop_viewers(self):
         for proc in self.viewer_procs:

@@ -10,8 +10,8 @@ API
     dash = PantherDashboard()
 
     while True:
-        dash.set_robot(x, y, heading_deg)   # robot position on field
-        dash.set_target(tx, ty)             # target position on field
+        dash.set_robot(x, y, heading_deg)          # robot position on field
+        dash.set_target(tx, ty, heading_deg)       # target position on field
         dash.put("x", f"{x:.3f} m")        # telemetry key-value
 
         if not dash.update():               # renders + handles events
@@ -23,6 +23,7 @@ API
 
 import math
 import os
+import queue
 import pygame
 
 # ── Arena geometry (metres) ───────────────────────────────────────────────────
@@ -63,6 +64,7 @@ class PantherDashboard:
     """Field + telemetry viewer. See module docstring for API."""
 
     def __init__(self, title: str = "Panther Dashboard"):
+        """Initialize the window, fonts, and layout."""
         pygame.init()
         self._screen     = pygame.display.set_mode((_DEFAULT_W, _DEFAULT_H))
         pygame.display.set_caption(title)
@@ -71,7 +73,7 @@ class PantherDashboard:
         self._font_title = pygame.font.SysFont("monospace", 18, bold=True)
 
         self._robot:        tuple[float, float, float] | None = None
-        self._target:       tuple[float, float] | None = None
+        self._target:       tuple[float, float, float] | None = None
         self._robot_length: float = ROBOT_LENGTH
         self._robot_width:  float = ROBOT_WIDTH
         self._telemetry: dict[str, str] = {}
@@ -90,6 +92,7 @@ class PantherDashboard:
     # ── layout ────────────────────────────────────────────────────────────────
 
     def _calc_layout(self, win_w: int, win_h: int) -> None:
+        """Compute arena and panel pixel dimensions from the window size."""
         self._win_w = win_w
         self._win_h = win_h
         avail_w = win_w - _MIN_PANEL_W - _PAD * 3
@@ -108,6 +111,7 @@ class PantherDashboard:
     # ── coordinate helpers ────────────────────────────────────────────────────
 
     def _to_px(self, x_m: float, y_m: float) -> tuple[int, int]:
+        """Convert arena coordinates (metres) to screen pixel coordinates."""
         px = int(x_m / ARENA_W * self._arena_px_w) + self._arena_x
         py = self._arena_px_h - int(y_m / ARENA_H * self._arena_px_h) + self._arena_y
         return px, py
@@ -115,6 +119,7 @@ class PantherDashboard:
     # ── static surface ────────────────────────────────────────────────────────
 
     def _build_static(self) -> pygame.Surface:
+        """Build the background surface: field image (or fallback), border, and panel."""
         surf = pygame.Surface((self._win_w, self._win_h))
         surf.fill(_C["bg"])
 
@@ -153,9 +158,9 @@ class PantherDashboard:
         """Update the robot's current position and heading."""
         self._robot = (x, y, heading_deg)
 
-    def set_target(self, x: float, y: float) -> None:
-        """Set the target position the robot is navigating toward."""
-        self._target = (x, y)
+    def set_target(self, x: float, y: float, heading_deg: float = 0.0) -> None:
+        """Set the target position and heading the robot is navigating toward."""
+        self._target = (x, y, heading_deg)
 
     def set_robot_size(self, length_m: float, width_m: float) -> None:
         """Set the robot footprint in metres (length = forward axis, width = lateral)."""
@@ -189,6 +194,7 @@ class PantherDashboard:
     # ── internal rendering ────────────────────────────────────────────────────
 
     def _render(self) -> None:
+        """Draw one frame: static background, target, robot, then telemetry panel."""
         self._screen.blit(self._static, (0, 0))
         if self._target is not None:
             self._draw_target(*self._target)
@@ -197,18 +203,39 @@ class PantherDashboard:
         self._draw_panel()
         pygame.display.flip()
 
-    def _draw_target(self, x: float, y: float) -> None:
-        px, py = self._to_px(x, y)
-        color = _C["target"]
-        r = 10
-        arm = 14
-        pygame.draw.circle(self._screen, color, (px, py), r, 2)
-        pygame.draw.line(self._screen, color, (px - arm, py), (px + arm, py), 2)
-        pygame.draw.line(self._screen, color, (px, py - arm), (px, py + arm), 2)
-        lbl = self._font_sm.render("Target", True, color)
-        self._screen.blit(lbl, (px + r + 4, py - 8))
+    def _draw_target(self, x: float, y: float, heading_deg: float) -> None:
+        """Draw the target as a scaled-down robot outline with a heading arrow."""
+        _TARGET_SCALE = 0.35
+        cx, cy = self._to_px(x, y)
+        rad = math.radians(heading_deg)
+        color = _C["arrow"]
+
+        half_l = int(self._robot_length * _TARGET_SCALE / ARENA_W * self._arena_px_w / 2)
+        half_w = int(self._robot_width  * _TARGET_SCALE / ARENA_H * self._arena_px_h / 2)
+        corners_local = [
+            ( half_l,  half_w),
+            ( half_l, -half_w),
+            (-half_l, -half_w),
+            (-half_l,  half_w),
+        ]
+        cos_r, sin_r = math.cos(rad), math.sin(rad)
+        corners = [
+            (int(cx + lx * cos_r - ly * sin_r),
+             int(cy - lx * sin_r - ly * cos_r))
+            for lx, ly in corners_local
+        ]
+        pygame.draw.polygon(self._screen, color, corners, 2)
+
+        tip = (int(cx + half_l * cos_r), int(cy - half_l * sin_r))
+        pygame.draw.line(self._screen, color, (cx, cy), tip, 2)
+        for side in (0.4, -0.4):
+            ah = (int(tip[0] - 6 * math.cos(rad - side)),
+                  int(tip[1] + 6 * math.sin(rad - side)))
+            pygame.draw.line(self._screen, color, tip, ah, 2)
+
 
     def _draw_robot(self, x: float, y: float, heading_deg: float) -> None:
+        """Draw the robot rectangle, heading arrow, and line to target."""
         cx, cy = self._to_px(x, y)
         rad = math.radians(heading_deg)
 
@@ -238,10 +265,11 @@ class PantherDashboard:
 
         # Draw line from robot to target if both are set
         if self._target is not None:
-            tx, ty = self._to_px(*self._target)
+            tx, ty = self._to_px(self._target[0], self._target[1])
             pygame.draw.line(self._screen, _C["target"], (cx, cy), (tx, ty), 1)
 
     def _draw_panel(self) -> None:
+        """Render telemetry key-value entries in the right panel."""
         if not self._telemetry:
             return
         x         = self._panel_x + 10
@@ -268,12 +296,63 @@ class PantherDashboard:
                 cur_x  = x
 
 
+# ── DashboardView — runs as a separate process on the laptop ─────────────────
+
+class DashboardView:
+    """
+    Launched by control.py as a daemon process via multiprocessing.
+    Reads telemetry dicts from a multiprocessing.Queue and renders them
+    in PantherDashboard, keeping pygame isolated from the joystick process.
+
+    Expected dict structure from the robot (via Dashboard.send_telemetry):
+        "pose":      {"x": float, "y": float, "heading": float}
+        "target":    {"x": float, "y": float, "heading": float}
+        "telemetry": {"Key": "value", ...}  — shown in the panel
+
+    Usage (in control.py):
+        q = multiprocessing.Queue()
+        p = multiprocessing.Process(target=DashboardView.run, args=(q,), daemon=True)
+        p.start()
+        ...
+        q.put(telemetry_dict)
+    """
+
+    @staticmethod
+    def run(q, robot_length: float, robot_width: float) -> None:
+        """Entry point for the dashboard process. Reads from queue and renders each frame."""
+        dash = PantherDashboard("Panther Dashboard")
+        dash.set_robot_size(robot_length, robot_width)
+        while dash.update():
+            # Drain all pending updates — only care about the latest state
+            data = None
+            try:
+                while True:
+                    data = q.get_nowait()
+            except queue.Empty:
+                pass
+
+            if data is None:
+                continue
+
+            if "pose" in data:
+                pose = data["pose"]
+                dash.set_robot(pose["x"], pose["y"], pose.get("heading", 0.0))
+
+            if "target" in data:
+                target = data["target"]
+                dash.set_target(target["x"], target["y"], target.get("heading", 0.0))
+
+            if "telemetry" in data:
+                for key, val in data["telemetry"].items():
+                    dash.put(key, val)
+
+
 # ── standalone smoke test ─────────────────────────────────────────────────────
 if __name__ == "__main__":
     dash = PantherDashboard("Panther Dashboard — smoke test")
 
     # Berm target position (construction zone centre)
-    dash.set_target(5.38, 0.6)
+    dash.set_target(5.38, 0.6, 90.0)
 
     cx, cy = ARENA_W / 2, ARENA_H / 2
     t = 0.0

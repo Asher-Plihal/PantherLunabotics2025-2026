@@ -11,6 +11,7 @@ import server
 from subsystems import drivetrain
 from subsystems import auger
 from subsystems import perception
+from subsystems import dashboard
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from library import controller
@@ -42,6 +43,9 @@ class Robot:
         # Initialize perception (lidar/camera streams)
         self.perception = perception.Perception()
         self.perception.start()
+
+        # Initialize field dashboard (no-op if RobotConfig.fieldDashboard is False)
+        self.dashboard = dashboard.Dashboard(self.server)
 
         # Initialize server
         self.server = server.Server()
@@ -100,6 +104,7 @@ class Robot:
         self.server.stop()
         self.drivetrain.shutdown()
         self.auger.shutdown()
+        self.dashboard.shutdown()
 
 def setup_network():
     """Connect to the configured network via nmcli (skips if already connected), then print the active SSID."""
