@@ -79,6 +79,7 @@ class PantherDashboard:
         pygame.display.set_caption(title)
         self._clock      = pygame.time.Clock()
         self._font_sm    = pygame.font.SysFont("monospace", 15)
+        self._font_label = pygame.font.SysFont("monospace", 14, bold=True)
         self._font_title = pygame.font.SysFont("monospace", 18, bold=True)
 
         self._robot:        tuple[float, float, float] | None = None
@@ -86,6 +87,8 @@ class PantherDashboard:
         self._robot_length: float = ROBOT_LENGTH
         self._robot_width:  float = ROBOT_WIDTH
         self._telemetry: dict[str, str] = {}
+        self._points:    dict[str, tuple[float, float, tuple, int, tuple[int, int] | None]] = {}
+        self._circles:   dict[str, tuple[float, float, float, tuple, int]] = {}
         self._running    = True
         self.keys_pressed: set[int] = set()
 
@@ -171,9 +174,55 @@ class PantherDashboard:
         """Set the target position and heading the robot is navigating toward."""
         self._target = (x, y, heading_deg)
 
+    def add_point(
+        self,
+        label: str,
+        x: float,
+        y: float,
+        color: tuple[int, int, int] = (255, 200, 0),
+        radius: int = 6,
+        label_offset: tuple[int, int] | None = None,
+    ) -> None:
+        """
+        Place a labelled dot on the field at arena coordinates (x, y).
+        Points are stored by label — calling again with the same label moves the dot.
+        Call clear_points() to remove all dots.
+
+        label_offset: (dx, dy) pixel offset from the dot centre for the label.
+                      None = default placement (right of dot, vertically centred).
+        """
+        self._points[label] = (x, y, color, radius, label_offset)
+
+    def clear_points(self) -> None:
+        """Remove all points added with add_point()."""
+        self._points.clear()
+
+    def add_circle(
+        self,
+        label: str,
+        cx: float,
+        cy: float,
+        radius_m: float,
+        color: tuple[int, int, int] = (255, 255, 255),
+        width: int = 1,
+    ) -> None:
+        """
+        Draw a circle on the field centred at arena coordinates (cx, cy) with
+        radius given in metres. Stored by label — calling again moves the circle.
+        """
+        self._circles[label] = (cx, cy, radius_m, color, width)
+
+    def clear_circles(self) -> None:
+        """Remove all circles added with add_circle()."""
+        self._circles.clear()
+
     def put(self, key: str, value) -> None:
         """Add or update a telemetry key-value entry."""
         self._telemetry[key] = str(value)
+
+    def clear_telemetry(self) -> None:
+        """Remove all telemetry entries added with put()."""
+        self._telemetry.clear()
 
     def update(self) -> bool:
         """Render one frame and process events. Returns False when the window is closed."""
@@ -198,8 +247,12 @@ class PantherDashboard:
     # ── internal rendering ────────────────────────────────────────────────────
 
     def _render(self) -> None:
-        """Draw one frame: static background, target, robot, then telemetry panel."""
+        """Draw one frame: static background, circles, points, target, robot, then telemetry panel."""
         self._screen.blit(self._static, (0, 0))
+        for _, (cx, cy, r, color, width) in self._circles.items():
+            self._draw_circle(cx, cy, r, color, width)
+        for label, (x, y, color, radius, label_offset) in self._points.items():
+            self._draw_point(label, x, y, color, radius, label_offset)
         if self._target is not None:
             self._draw_target(*self._target)
         if self._robot is not None:
@@ -257,8 +310,7 @@ class PantherDashboard:
              int(cy - lx * sin_r - ly * cos_r))
             for lx, ly in corners_local
         ]
-        pygame.draw.polygon(self._screen, _C["robot"], corners)
-        pygame.draw.polygon(self._screen, _C["arrow"], corners, 2)
+        pygame.draw.aalines(self._screen, _C["arrow"], True, corners)
 
         tip = (int(cx + half_l * cos_r), int(cy - half_l * sin_r))
         pygame.draw.line(self._screen, _C["arrow"], (cx, cy), tip, 2)
@@ -271,6 +323,43 @@ class PantherDashboard:
         if self._target is not None:
             tx, ty = self._to_px(self._target[0], self._target[1])
             pygame.draw.line(self._screen, _C["target"], (cx, cy), (tx, ty), 1)
+
+    def _draw_circle(
+        self,
+        cx_m: float,
+        cy_m: float,
+        r_m: float,
+        color: tuple[int, int, int],
+        width: int,
+    ) -> None:
+        """Draw a circle on the field. Radius is in arena metres."""
+        cx, cy = self._to_px(cx_m, cy_m)
+        r_px_x = int(r_m / ARENA_W * self._arena_px_w)
+        r_px_y = int(r_m / ARENA_H * self._arena_px_h)
+        if r_px_x < 1 or r_px_y < 1:
+            return
+        rect = pygame.Rect(cx - r_px_x, cy - r_px_y, r_px_x * 2, r_px_y * 2)
+        pygame.draw.ellipse(self._screen, color, rect, width)
+
+    def _draw_point(
+        self,
+        label: str,
+        x: float,
+        y: float,
+        color: tuple[int, int, int],
+        radius: int,
+        label_offset: tuple[int, int] | None = None,
+    ) -> None:
+        """Draw a labelled dot on the field at arena coordinates (x, y)."""
+        cx, cy = self._to_px(x, y)
+        pygame.draw.circle(self._screen, color, (cx, cy), radius)
+        pygame.draw.circle(self._screen, (0, 0, 0), (cx, cy), radius, 1)
+        txt = self._font_label.render(label, True, color)
+        if label_offset is not None:
+            dx, dy = label_offset
+            self._screen.blit(txt, (cx + dx, cy + dy))
+        else:
+            self._screen.blit(txt, (cx + radius + 3, cy - txt.get_height() // 2))
 
     def _draw_panel(self) -> None:
         """Render telemetry key-value entries in the right panel."""
