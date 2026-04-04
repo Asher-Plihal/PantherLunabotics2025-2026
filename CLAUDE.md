@@ -68,8 +68,11 @@ The C++ module uses pybind11 to expose `MotorController` to Python.
 Full guidebook: `lunabotics-guidebook-2025-2026.txt` — **do not read the full guidebook unless specifically asked.** The software-relevant rules are summarized below. The guidebook is mostly administrative (applications, papers, eligibility, awards) and will waste context window.
 
 ### Arena Layout
+
+**Coordinate system:** Origin (0,0) at arena bottom-left. +X = east (right), +Y = north (up). Heading: 0° = north, positive = clockwise (90° = east). All robot poses, targets, and arena coordinates use this convention.
+
 ```
-Top-down view.  Origin (0,0) at bottom-left.  X → right, Y → up.
+Top-down view.  Origin (0,0) at bottom-left.  X → right (east), Y → up (north).
 Outer dimensions: 6.88 m × 5.0 m.  Interior ≈ 6.8 m × 5.0 m.
 
            ◄── 2.5 m ──►◄──────────── 4.38 m ────────────►

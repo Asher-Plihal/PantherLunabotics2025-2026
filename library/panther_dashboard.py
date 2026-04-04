@@ -3,7 +3,8 @@ PantherDashboard — field viewer + telemetry panel for PantherLunabotics.
 
 Arena: 6.88 m wide × 5.0 m tall.
 Coordinate origin (0, 0) is the bottom-left corner.
-X increases to the right, Y increases upward.
+X increases to the right (east), Y increases upward (north).
+Heading: 0° = north, positive = clockwise (90° = east).
 
 API
 ───
@@ -210,7 +211,7 @@ class PantherDashboard:
         """Draw the target as a scaled-down robot outline with a heading arrow."""
         _TARGET_SCALE = 0.35
         cx, cy = self._to_px(x, y)
-        rad = math.radians(heading_deg)
+        rad = math.radians(90 - heading_deg)  # convert: 0=north CW → standard math angle
         color = _C["arrow"]
 
         half_l = int(self._robot_length * _TARGET_SCALE / ARENA_W * self._arena_px_w / 2)
@@ -240,7 +241,7 @@ class PantherDashboard:
     def _draw_robot(self, x: float, y: float, heading_deg: float) -> None:
         """Draw the robot rectangle, heading arrow, and line to target."""
         cx, cy = self._to_px(x, y)
-        rad = math.radians(heading_deg)
+        rad = math.radians(90 - heading_deg)  # convert: 0=north CW → standard math angle
 
         half_l = int(self._robot_length / ARENA_W * self._arena_px_w / 2)
         half_w = int(self._robot_width  / ARENA_H * self._arena_px_h / 2)
@@ -362,8 +363,8 @@ if __name__ == "__main__":
         t += 0.04
         x   = cx + 1.5 * math.cos(t)
         y   = cy + 1.5 * math.sin(t)
-        # Tangent to circle: velocity direction is 90° ahead of position angle
-        hdg = math.degrees(t + math.pi / 2) % 360
+        # Tangent to circle in 0=north CW system: heading = -t (robot starts at east, moves north)
+        hdg = (-math.degrees(t)) % 360
         dash.set_robot(x, y, hdg)
         dash.put("Position", f"X: {x:.3f} m, Y: {y:.3f} m, Heading: {hdg:.1f} deg")
         if not dash.update():
