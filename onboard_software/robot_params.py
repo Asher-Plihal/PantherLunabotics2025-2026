@@ -5,6 +5,7 @@ from enum import Enum
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from library.streaming import StreamMode
+from library.pid_controller import PIDController
 
 
 class DriveMode(Enum):
@@ -37,6 +38,20 @@ class RobotConfig:
     useLidar = False
 
     drivetrainMode = DriveMode.ARCADE
+    usePIDDrive = False
+
+    # UWB Localizer — anchor positions (metres, arena coordinates) and tag geometry
+    uwbAnchorAX, uwbAnchorAY = 0.0, 2.0
+    uwbAnchorBX, uwbAnchorBY = 2.0, 0.0
+    uwbTagSep:        float = 0.6   # left-to-right physical separation (metres)
+    uwbForwardOffset: float = 0.0   # tag midpoint offset ahead of robot centre (metres)
+    uwbLeftPort:      str   = "/dev/ttyUSB1"
+    uwbRightPort:     str   = "/dev/ttyUSB2"
+
+    # PID Drive coefficients — tune on hardware
+    pidXCoeffs = PIDController.PIDCoefficients(kp=0.5, ki=0.0, kd=0.0)  # lateral (east/west)
+    pidYCoeffs = PIDController.PIDCoefficients(kp=0.5, ki=0.0, kd=0.0)  # longitudinal (north/south)
+    pidHCoeffs = PIDController.PIDCoefficients(kp=0.3, ki=0.0, kd=0.0)  # heading
 
     # Telemetry configuration
     useTelemetry = False

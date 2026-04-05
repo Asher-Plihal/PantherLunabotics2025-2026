@@ -31,6 +31,7 @@ Run directly to test with manual values and visualise in PantherDashboard:
 import math
 import sys
 import os
+import threading
 from typing import Optional
 
 import serial
@@ -79,6 +80,9 @@ class UWBLocalizer:
         self._left_serial:  Optional[serial.Serial] = None
         self._right_serial: Optional[serial.Serial] = None
         self._position:     Optional[Position] = None
+
+        self._thread:     Optional[threading.Thread] = None
+        self._stop_event: threading.Event = threading.Event()
 
         # Last computed tag positions — stored for dashboard / debugging
         self._left_tag:  Optional[tuple[float, float]] = None
@@ -337,18 +341,38 @@ class UWBLocalizer:
         self._position  = Position(cx, cy, heading)
         return self._position
 
-    def get_position(self) -> Optional[Position]:
+    def get_pose(self) -> Optional[Position]:
         """Return the most recently computed Position, or None before first update()."""
         return self._position
+
+    # -----------------------------------------------------------------------
+    # Background thread — for hardware
+    # -----------------------------------------------------------------------
+
+    def start(self) -> None:
+        """
+        Start a daemon thread that calls update() continuously from hardware.
+        Requires use_hardware=True (or a prior call to init_hardware()).
+        PIDDrive reads the result via get_pose() without blocking on the math.
+        """
+        if not self._left_serial or not self._right_serial:
+            raise RuntimeError("Hardware must be initialised before calling start()")
+        self._stop_event.clear()
+        self._thread = threading.Thread(target=self._run, daemon=True, name="uwb_localizer")
+        self._thread.start()
+
+    def stop(self) -> None:
+        """Signal the background thread to exit."""
+        self._stop_event.set()
+
+    def _run(self) -> None:
+        while not self._stop_event.is_set():
+            self.update()
     
     # -----------------------------------------------------------------------
     # Math — helper functions
     # -----------------------------------------------------------------------
 
-    def _anchor_separation(self) -> float:
-        """Distance between Anchor A and Anchor B (metres)."""
-        return math.sqrt((self.bx - self.ax) ** 2 + (self.by - self.ay) ** 2)
-    
     def _tag_separation(
         self,
         lx: float, ly: float,

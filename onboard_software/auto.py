@@ -27,6 +27,9 @@ class Auto:
         self.robot.drivetrain.log_data()
         self.robot.perception.lidar_stream.log_data()
 
+        if robot_params.RobotConfig.usePIDDrive and self.robot.pid_drive is not None:
+            self.robot.pid_drive.update()
+
     def run_auto_step(self):
 
         # Update periodic loop

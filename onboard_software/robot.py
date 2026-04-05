@@ -16,6 +16,10 @@ from subsystems import dashboard
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from library import controller
 from library.protocol import Command, Mode
+from library.pid_drive import PIDDrive
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "tests"))
+from uwb_localizer import UWBLocalizer # type: ignore
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'library', 'motor_controller', 'build'))
 import motor_controller as mc  # type: ignore
@@ -50,6 +54,24 @@ class Robot:
         # Initialize server
         self.server = server.Server()
         threading.Thread(target=self.server.start, daemon=True).start()
+
+        # Initialize PID drive (localizer start is handled inside PIDDrive.__init__)
+        self.pid_drive: PIDDrive | None = None
+        if robot_params.RobotConfig.usePIDDrive and robot_params.RobotConfig.useDrivetrain:
+            cfg = robot_params.RobotConfig
+            localizer = UWBLocalizer(
+                ax=cfg.uwbAnchorAX, ay=cfg.uwbAnchorAY,
+                bx=cfg.uwbAnchorBX, by=cfg.uwbAnchorBY,
+                tag_sep=cfg.uwbTagSep, forward_offset=cfg.uwbForwardOffset,
+                use_hardware=True,
+                left_port=cfg.uwbLeftPort, right_port=cfg.uwbRightPort,
+            )
+            self.pid_drive = PIDDrive(
+                self.drivetrain, localizer,
+                x_coeffs=cfg.pidXCoeffs,
+                y_coeffs=cfg.pidYCoeffs,
+                h_coeffs=cfg.pidHCoeffs,
+            )
 
         # Initialize controller and run modes
         self.controller = controller.Controller(self)
@@ -100,6 +122,8 @@ class Robot:
     def stop(self):
         print("[Robot] Stopping robot")
         self.running = False
+        if self.pid_drive is not None:
+            self.pid_drive.shutdown()
         self.perception.stop()
         self.server.stop()
         self.drivetrain.shutdown()

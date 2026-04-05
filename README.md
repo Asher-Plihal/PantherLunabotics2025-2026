@@ -46,6 +46,9 @@ python control.py
 
 # TODO:
 
+Look at ownership system going to have a problem with teleOp and stick drive and pid drive
+test robot auger is full
+
 1. Finish up the dashbaord
  - Target for dashbaord should having a heading
  - Read and cleanup

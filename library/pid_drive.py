@@ -68,6 +68,8 @@ class PIDDrive:
         self._xy_tolerance: float = self.DEFAULT_XY_TOLERANCE_M
         self._h_tolerance:  float = self.DEFAULT_H_TOLERANCE_DEG
 
+        self.localizer_start()
+
     # ------------------------------------------------------------------
     # Target
     # ------------------------------------------------------------------
@@ -125,6 +127,29 @@ class PIDDrive:
     def on_target(self) -> bool:
         """Returns the on-target state from the last update() call."""
         return self._on_target
+
+    # ------------------------------------------------------------------
+    # Lifecycle
+    # ------------------------------------------------------------------
+
+    def __del__(self) -> None:
+        self.shutdown()
+
+    def localizer_start(self) -> None:
+        """Start the localizer if it supports it (e.g. background polling thread)."""
+        if hasattr(self._localizer, "start"):
+            self._localizer.start()
+
+    def shutdown(self) -> None:
+        """Stop the localizer, clear target, reset all PIDs, and stop motors."""
+        if hasattr(self._localizer, "stop"):
+            self._localizer.stop()
+        self._target    = None
+        self._on_target = False
+        self._x_pid.reset()
+        self._y_pid.reset()
+        self._h_pid.reset()
+        self._drivetrain.stop()
 
     # ------------------------------------------------------------------
     # Control
