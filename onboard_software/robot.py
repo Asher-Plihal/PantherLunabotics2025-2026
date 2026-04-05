@@ -71,6 +71,7 @@ class Robot:
                 y_coeffs=cfg.pidYCoeffs,
                 h_coeffs=cfg.pidHCoeffs,
             )
+            self.dashboard.set_uwb_source(localizer)
 
         # Initialize controller and run modes
         self.controller = controller.Controller(self)
@@ -116,6 +117,7 @@ class Robot:
                 self.teleop.run_teleOp_step()
             elif self.current_mode == Mode.AUTO:
                 self.auto.run_auto_step()
+
             time.sleep(0.01)
     
     def stop(self):

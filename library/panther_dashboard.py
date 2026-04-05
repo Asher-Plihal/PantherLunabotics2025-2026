@@ -438,6 +438,28 @@ class DashboardView:
                 for key, val in data["telemetry"].items():
                     dash.put(key, val)
 
+            if "circles" in data:
+                dash.clear_circles()
+                for label, c in data["circles"].items():
+                    dash.add_circle(
+                        label,
+                        c["cx"], c["cy"], c["r"],
+                        color=tuple(c.get("color", [255, 255, 255])),
+                        width=c.get("width", 1),
+                    )
+
+            if "points" in data:
+                dash.clear_points()
+                for label, p in data["points"].items():
+                    lo = p.get("label_offset")
+                    dash.add_point(
+                        label,
+                        p["x"], p["y"],
+                        color=tuple(p.get("color", [255, 200, 0])),
+                        radius=p.get("radius", 6),
+                        label_offset=tuple(lo) if lo is not None else None,
+                    )
+
 
 # ── standalone smoke test ─────────────────────────────────────────────────────
 if __name__ == "__main__":

@@ -31,6 +31,7 @@ class RobotConfig:
     cameraStream = StreamMode.NONE
     cameraStreamPort = 5001
     fieldDashboard = True
+    uwbDashboard   = False  # send UWB trilateration overlay (circles + points) to the field dashboard
 
     # Subsystem configuration
     useDrivetrain = True
