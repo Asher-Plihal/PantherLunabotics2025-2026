@@ -18,8 +18,7 @@ from library import controller
 from library.protocol import Command, Mode
 from library.pid_drive import PIDDrive
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "tests"))
-from uwb_localizer import UWBLocalizer # type: ignore
+from library.uwb_localizer import UWBLocalizer
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'library', 'motor_controller', 'build'))
 import motor_controller as mc  # type: ignore
