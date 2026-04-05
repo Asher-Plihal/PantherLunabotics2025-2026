@@ -74,6 +74,7 @@ class UWBLocalizer:
         self.by = by
         self.tag_sep        = tag_sep
         self.forward_offset = forward_offset
+        self._anchor_dist   = math.sqrt((bx - ax) ** 2 + (by - ay) ** 2)
 
         self._left_serial:  Optional[serial.Serial] = None
         self._right_serial: Optional[serial.Serial] = None
@@ -136,7 +137,7 @@ class UWBLocalizer:
             r1: Distance from the tag to Anchor A (metres).
             r2: Distance from the tag to Anchor B (metres).
         """
-        d = self._anchor_separation()
+        d = self._anchor_dist
         if d == 0.0:
             return None
 
@@ -201,6 +202,7 @@ class UWBLocalizer:
                 return (mx - prev.x) ** 2 + (my - prev.y) ** 2
             return min(valid, key=dist_to_prev)
 
+        # No previous position to tiebreak with — arbitrarily take the first valid pair.
         return valid[0]
 
     def _robot_center(
@@ -293,6 +295,9 @@ class UWBLocalizer:
             d_LA, d_LB = left_ranges
             d_RA, d_RB = right_ranges
 
+        if any(d <= 0 for d in (d_LA, d_RA, d_LB, d_RB)):
+            return None
+
         self._last_d = (d_LA, d_RA, d_LB, d_RB)
 
         # Step 1 — Trilaterate each tag independently.
@@ -359,9 +364,12 @@ class UWBLocalizer:
     def _read_serial(self, ser: serial.Serial) -> Optional[tuple[float, float]]:
         """
         Read one packet from a serial port and parse it to (dist_A, dist_B) in metres.
-        Returns None if the line is missing or unparseable.
+        Returns None if the line is missing, unparseable, or the port errors.
         """
-        raw = ser.readline()
+        try:
+            raw = ser.readline()
+        except serial.SerialException:
+            return None
         if not raw:
             return None
         return self._parse(raw.decode("utf-8", errors="ignore").strip())
@@ -476,7 +484,7 @@ if __name__ == "__main__":
 
     TEST_CASES = []
     for rx_, ry_, hdg_, lbl_ in RAW_CASES:
-        d_LA_, d_RA_, d_LB_, d_RB_, lx_, ly_, rx2_, ry2_ = _make_synthetic(
+        d_LA_, d_RA_, d_LB_, d_RB_, *_ = _make_synthetic(
             rx_, ry_, hdg_, AX, AY, BX, BY, TAG_SEP, FORWARD_OFFSET
         )
         TEST_CASES.append((d_LA_, d_RA_, d_LB_, d_RB_, rx_, ry_, hdg_, lbl_))
