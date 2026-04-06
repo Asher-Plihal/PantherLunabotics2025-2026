@@ -8,13 +8,16 @@ if TYPE_CHECKING:
     import robot
 
 class TeleOp:
+    """Handles teleoperated robot control: maps gamepad buttons and sticks to subsystem commands."""
 
     def __init__(self, robot: robot.Robot):
+        """Attach to the robot and initialize the loop timer and active drive button state."""
         self.robot = robot
         self._last_update_time = time.monotonic()
         self._active_drive_buttons: set = set()
 
     def on_button_event(self, button, is_pressed):
+        """Dispatch a single gamepad button press or release to the appropriate subsystem."""
         if button in (Button.DPAD_UP, Button.DPAD_DOWN, Button.DPAD_LEFT, Button.DPAD_RIGHT,
                       Button.LB, Button.RB, Button.X):
             if robot_params.RobotConfig.useDrivetrain:
@@ -74,7 +77,7 @@ class TeleOp:
             self.robot.pid_drive.update()
 
     def run_teleOp_step(self):
-
+        """Call periodic_loop() when the 50 Hz period has elapsed."""
         # Update periodic loop
         now = time.monotonic()
         elapsed = now - self._last_update_time

@@ -25,8 +25,10 @@ _LOG_COLUMNS = [
 DEAD_ZONE_THRESHOLD = 0.08
 
 class Drivetrain(Subsystem):
+    """Four-screw Archimedean drive subsystem; supports arcade and tank drive modes."""
 
     def __init__(self, mc):
+        """Configure motors with shared settings, reset position encoders, and optionally start logging."""
         super().__init__()
         self.slow_turning = False
         self.max_speed = 0.3
@@ -55,12 +57,15 @@ class Drivetrain(Subsystem):
             self.start_logging()
 
     def set_slow_turning(self, slow_turning):
+        """Enable or disable half-speed turning for precise manoeuvres."""
         self.slow_turning = slow_turning
 
     def set_max_speed(self, max_speed):
+        """Clamp all motor output to ±max_speed (0.0–1.0)."""
         self.max_speed = max_speed
 
     def set_power(self, owner, front_left_power, front_right_power, back_left_power, back_right_power):
+        """Write individual duty cycles to all four wheels; blocked if owner check fails."""
         if not self.check_ownership(owner):
             return
         self.mc.set_motor_duty_cycle(self.motor_ids[0], Util.clip(front_left_power, -self.max_speed, self.max_speed))
@@ -69,41 +74,52 @@ class Drivetrain(Subsystem):
         self.mc.set_motor_duty_cycle(self.motor_ids[3], Util.clip(back_right_power, -self.max_speed, self.max_speed))
 
     def stop(self):
+        """Set all motors to zero power."""
         self.set_power(None, 0, 0, 0, 0)
 
     def drive_forward(self):
+        """Drive straight forward at 50% speed."""
         self.set_power(None, 0.5, -0.5, 0.5, -0.5)
 
     def drive_backward(self):
+        """Drive straight backward at 50% speed."""
         self.set_power(None, -0.5, 0.5, -0.5, 0.5)
 
     def strafe_left(self):
+        """Strafe left at 50% speed."""
         self.set_power(None, -0.5, -0.5, 0.5, 0.5)
 
     def strafe_right(self):
+        """Strafe right at 50% speed."""
         self.set_power(None, 0.5, 0.5, -0.5, -0.5)
 
     def turn_left(self):
+        """Rotate left in place at 50% speed."""
         self.set_power(None, -0.5, -0.5, -0.5, -0.5)
 
     def turn_right(self):
+        """Rotate right in place at 50% speed."""
         self.set_power(None, 0.5, 0.5, 0.5, 0.5)
 
     def fold_out(self):
+        """Drive the fold-out manoeuvre at 50% speed."""
         self.set_power(None, 0.5, 0.5, -0.5, -0.5)
 
     def drive_task(self, owner, left_forward, left_strafe, right_forward, right_strafe):  # right_strafe = turning in arcade, strafe in tank; right_forward unused in arcade
+        """Route a joystick command to arcade or tank drive based on RobotConfig.drivetrainMode."""
         if robot_params.RobotConfig.drivetrainMode == DriveMode.TANK:
             self._drive_task_tank(owner, left_forward, right_forward, left_strafe, right_strafe)
         else:
             self._drive_task_arcade(owner, left_forward, left_strafe, right_strafe)
 
     def shutdown(self):
+        """Release ownership, stop all motors, and close the log file."""
         self.force_release()
         self.stop()
         self.stop_logging()
 
     def _drive_task_arcade(self, owner, y_axis, x_axis, turning_axis):
+        """Apply deadzone and response curve to axes, then compute and write arcade motor powers."""
         y_axis = Util.apply_deadzone(y_axis, DEAD_ZONE_THRESHOLD)
         x_axis = Util.apply_deadzone(x_axis, DEAD_ZONE_THRESHOLD)
         turning_axis = Util.apply_deadzone(turning_axis, DEAD_ZONE_THRESHOLD)
@@ -119,7 +135,7 @@ class Drivetrain(Subsystem):
         self.set_power(owner, fl, fr, bl, br)
 
     def calculate_arcade_powers(self, y, x, turning):
-
+        """Convert (y, x, turning) inputs to mecanum wheel powers, normalised so no wheel exceeds 1.0."""
         denominator = max(abs(y) + abs(x) + abs(turning), 1)
         front_left_power = (y - x - turning) / denominator
         front_right_power = (y + x + turning) / denominator
@@ -129,6 +145,7 @@ class Drivetrain(Subsystem):
         return front_left_power, front_right_power, back_left_power, back_right_power
 
     def _drive_task_tank(self, owner, left_forward, right_forward, left_strafe, right_strafe):
+        """Apply deadzone and response curve to axes, then compute and write tank motor powers."""
         left_forward = Util.apply_deadzone(left_forward, DEAD_ZONE_THRESHOLD)
         right_forward = Util.apply_deadzone(right_forward, DEAD_ZONE_THRESHOLD)
         left_strafe = Util.apply_deadzone(left_strafe, DEAD_ZONE_THRESHOLD)
@@ -147,12 +164,15 @@ class Drivetrain(Subsystem):
         self.set_power(owner, front_left_power, front_right_power, back_left_power, back_right_power)
 
     def start_logging(self):
+        """Open a CSV log file for drivetrain telemetry."""
         self._logger.start_logging(_LOG_COLUMNS)
 
     def stop_logging(self):
+        """Close the CSV log file."""
         self._logger.stop_logging()
 
     def print_telemetry(self, duty_cycle=True, velocity=True, position=True, current=True, temperature=False, voltage=True, interval=0.1):
+        """Print formatted motor feedback for all four wheels, rate-limited by interval seconds."""
         if not self._check_telemetry_interval(interval):
             return
         for label, motor_id in self.motor_labels:
@@ -163,6 +183,7 @@ class Drivetrain(Subsystem):
             print(f"{robot_params.robot_timer.timestamp()} [Drivetrain {label}] " + ", ".join(parts))
 
     def log_data(self):
+        """Print telemetry if enabled and append a CSV row if logging is active."""
         if robot_params.RobotConfig.useTelemetry:
             self.print_telemetry()
         if not self._logger.is_logging:

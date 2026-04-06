@@ -11,6 +11,8 @@ from library.pid_controller import PIDController
 
 @dataclass
 class Position:
+    """Arena-frame pose snapshot: x/y position in metres and heading in degrees."""
+
     x:       float  # metres, arena coordinate
     y:       float  # metres, arena coordinate
     heading: float  # degrees, from IMU
@@ -86,10 +88,12 @@ class PIDDrive:
 
     @property
     def target(self) -> Position | None:
+        """The most recently set target pose, or None."""
         return self._target
 
     @property
     def current_position(self) -> Position | None:
+        """The position read during the last update() call, or None."""
         return self._current_position
 
     # ------------------------------------------------------------------
@@ -143,6 +147,7 @@ class PIDDrive:
     # ------------------------------------------------------------------
 
     def __del__(self) -> None:
+        """Shut down the controller on garbage collection."""
         self.shutdown()
 
     def localizer_start(self) -> None:
@@ -183,9 +188,11 @@ class PIDDrive:
     # ------------------------------------------------------------------
 
     def set_xy_tolerance(self, tolerance_m: float) -> None:
+        """Override the XY on-target tolerance (metres). Default: DEFAULT_XY_TOLERANCE_M."""
         self._xy_tolerance = tolerance_m
 
     def set_heading_tolerance(self, tolerance_deg: float) -> None:
+        """Override the heading on-target tolerance (degrees). Default: DEFAULT_H_TOLERANCE_DEG."""
         self._h_tolerance = tolerance_deg
 
     def set_max_translation_speed(self, speed: float) -> None:
@@ -213,6 +220,7 @@ class PIDDrive:
     # ------------------------------------------------------------------
 
     def _get_pose(self) -> Position:
+        """Retrieve the current pose from the localizer, supporting both callable and object forms."""
         if callable(self._localizer):
             return cast(Position, self._localizer())
         return cast(Position, self._localizer.get_pose())

@@ -9,6 +9,7 @@ from library.pid_controller import PIDController
 
 
 class DriveMode(Enum):
+    """Drivetrain input interpretation mode."""
     ARCADE = "arcade"
     TANK = "tank"
 
@@ -16,6 +17,8 @@ class DriveMode(Enum):
 robot_timer: "RobotTimer | None" = None
 
 class RobotConfig:
+    """Central configuration for all robot hardware, networking, and software parameters."""
+
     # Robot parameters
     ROBOT_LENGTH = 1.08 # Meters from front to back
     ROBOT_WIDTH  = 1.108 # Meters from left to right
@@ -62,6 +65,8 @@ class RobotConfig:
 
 
 class NetworkConfig:
+    """Network connection profile selection for the Jetson."""
+
     # Select which network to connect to on startup.
     # The key must match one of the entries in NETWORKS below.
     SELECTED_NETWORK = "FLTech-Guest"
@@ -75,22 +80,30 @@ class NetworkConfig:
 
 
 class LoopConfig:
+    """Control loop timing constants."""
+
     UPDATE_RATE_HZ = 50  # Change this to adjust loop frequency
     UPDATE_PERIOD_S = 1.0 / UPDATE_RATE_HZ  # 0.02s at 50Hz
 
 class RobotTimer:
+    """Monotonic timer that starts when the robot receives READY from mission control."""
+
     def __init__(self):
+        """Initialize the timer in the unstarted state."""
         self._start_time = None
 
     def start(self):
+        """Record the current time as the competition start time."""
         self._start_time = time.monotonic()
 
     def elapsed(self):
+        """Seconds elapsed since start(), or 0.0 if not yet started."""
         if self._start_time is None:
             return 0.0
         return time.monotonic() - self._start_time
 
     def timestamp(self):
+        """Formatted elapsed time string (e.g. '[T+00:01.23]') for log prefixes."""
         e = self.elapsed()
         minutes = int(e) // 60
         seconds = e % 60
@@ -98,17 +111,21 @@ class RobotTimer:
 
 
 def print_config():
+    """Print the active subsystem and telemetry configuration to stdout."""
     cfg = RobotConfig
     print(f"[Config] Subsystems:  Drivetrain: {cfg.useDrivetrain}  Auger: {cfg.useAuger}  Lidar: {cfg.useLidar}")
     print(f"[Config] Telemetry:   Enabled: {cfg.useTelemetry}  Drivetrain: {cfg.logDrivetrainTelemetry}  Auger: {cfg.logAugerTelemetry}  Lidar: {cfg.logLiDarTelemetry}")
 
 
 class Telemetry:
+    """Rate-limited print utility that prepends a competition timestamp to each message."""
+
     PRINTS_PER_SECOND = 5  # Change this to adjust how often telemetry prints per second
     _timers = {}  # Per-call-site timers keyed by (filename, lineno)
 
     @classmethod
     def print_t(cls, *args, prints_per_second=PRINTS_PER_SECOND, **kwargs):
+        """Print args at most prints_per_second times per call site; prepends the competition timestamp."""
         period = 1.0 / prints_per_second
         frame = sys._getframe(1)
         key = (frame.f_code.co_filename, frame.f_lineno)

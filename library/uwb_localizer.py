@@ -69,6 +69,7 @@ class UWBLocalizer:
         right_port: Optional[str] = None,
         baud: int = DEFAULT_BAUD,
     ):
+        """Store anchor/tag geometry and optionally open serial ports (see class docstring for args)."""
         self.ax = ax
         self.ay = ay
         self.bx = bx
@@ -200,6 +201,7 @@ class UWBLocalizer:
         if self._position is not None:
             prev = self._position
             def dist_to_prev(pair):
+                """Squared distance from pair midpoint to the last known position."""
                 lp, rp = pair
                 mx = (lp[0] + rp[0]) / 2.0
                 my = (lp[1] + rp[1]) / 2.0
@@ -366,6 +368,7 @@ class UWBLocalizer:
         self._stop_event.set()
 
     def _run(self) -> None:
+        """Loop calling update() from hardware until the stop event is set."""
         while not self._stop_event.is_set():
             self.update()
     
@@ -520,6 +523,7 @@ if __name__ == "__main__":
     idx = 0
 
     def run_case(i):
+        """Run the localizer on TEST_CASES[i] and return all computed and expected values."""
         d_LA, d_RA, d_LB, d_RB, ex, ey, eh, label = TEST_CASES[i]
         return loc.update(d_LA, d_RA, d_LB, d_RB), d_LA, d_RA, d_LB, d_RB, ex, ey, eh, label
 

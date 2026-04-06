@@ -22,6 +22,7 @@ class Perception:
     """Manages sensor streams based on RobotConfig settings."""
 
     def __init__(self):
+        """Instantiate lidar and camera stream objects according to RobotConfig."""
         self.lidar_stream = Lidar(
             RobotConfig.lidarStream, RobotConfig.lidarStreamPort
         )
@@ -30,6 +31,7 @@ class Perception:
         )
 
     def start(self):
+        """Start enabled sensor streams and their loggers."""
         if RobotConfig.useLidar:
             self.lidar_stream.start()
             if RobotConfig.logLiDarTelemetry:
@@ -37,6 +39,7 @@ class Perception:
         self.camera_stream.start()
 
     def stop(self):
+        """Stop all sensor streams."""
         self.lidar_stream.stop()
         self.camera_stream.stop()
 
@@ -68,6 +71,7 @@ class Lidar:
 
         @staticmethod
         def polar_to_cartesian(angle_deg, distance_mm):
+            """Convert a polar lidar reading to pixel coordinates on the radar display."""
             D = Lidar.Display
             angle_rad = math.radians((angle_deg + 180) % 360)
             r = distance_mm * D.SCALE
@@ -137,6 +141,7 @@ class Lidar:
     # ── Instance (robot side) ─────────────────────────────────────────────
 
     def __init__(self, mode: StreamMode, port: int):
+        """Configure the lidar stream mode and port; hardware is not opened until start()."""
         self.mode = mode
         self.stream = Stream(port, "LidarStream")
         self.lidar: RPLidar | None = None
@@ -148,6 +153,7 @@ class Lidar:
         self._thread: threading.Thread | None = None
 
     def start(self):
+        """Open hardware and start the lidar scan thread."""
         self._running = True
         if self.mode == StreamMode.REMOTE:
             self.stream.enable()  # allow accept_viewer() loop and stop()
@@ -156,6 +162,7 @@ class Lidar:
         print(f"[Lidar] Hardware started (stream={self.mode.value})")
 
     def stop(self):
+        """Signal the scan thread to exit, join it, and clean up hardware and logging."""
         if not self._running and self._thread is None:
             return
         self._running = False
@@ -167,6 +174,7 @@ class Lidar:
         self.stop_logging()
 
     def start_logging(self):
+        """Begin buffering lidar scan points for file export."""
         if self._logging:
             print("[Lidar] Logging already active")
             return
@@ -175,6 +183,7 @@ class Lidar:
         print("[Lidar] Logging started")
 
     def stop_logging(self):
+        """Flush buffered scan points to a timestamped .txt file."""
         if not self._logging:
             return
         self._logging = False
@@ -191,9 +200,11 @@ class Lidar:
         print(f"[Lidar] Logging stopped — {len(data)} points saved to {filepath}")
 
     def log_data(self):
+        """No-op — lidar logging is driven by the scan thread, not the periodic loop."""
         pass  # Lidar logging is driven by the scan thread; no periodic action needed
 
     def _run(self):
+        """Entry point for the lidar daemon thread: init hardware, run scan loop, clean up."""
         try:
             self._init_hardware()
             if self.mode == StreamMode.REMOTE:
@@ -229,11 +240,13 @@ class Lidar:
                 break
 
     def _init_hardware(self):
+        """Open the RPLidar device and wait for it to spin up."""
         from rplidar import RPLidar  # type: ignore
         self.lidar = RPLidar(Lidar._PORT)
         time.sleep(1)
 
     def _cleanup_hardware(self):
+        """Stop the lidar motor, disconnect, and clear the handle."""
         if self.lidar:
             try:
                 self.lidar.stop()
@@ -244,6 +257,7 @@ class Lidar:
             self.lidar = None
 
     def _filter_scan(self, scan):
+        """Return (angle, distance) pairs within the display distance range, rounded to 3 dp."""
         return [
             (round(angle, 3), round(distance, 3))
             for _, angle, distance in scan
@@ -251,6 +265,7 @@ class Lidar:
         ]
 
     def _log_scan(self, points):
+        """Append filtered scan points to the in-memory log buffer if logging is active."""
         with self._log_lock:
             if self._logging:
                 self._log_data.extend(points)
@@ -264,16 +279,21 @@ D = Lidar.Display
 # ---------------------------------------------------------------------------
 
 class CameraStream:
+    """Stub camera streaming subsystem — not yet implemented."""
 
     def __init__(self, mode: StreamMode, port: int):
+        """Configure the stream mode and port; no network activity until start()."""
         self.mode = mode
         self.stream = Stream(port, "CameraStream")
 
     def start(self):
+        """Start the camera stream source thread (no-op until _run is implemented)."""
         self.stream.start_source(self.mode, self._run)
 
     def stop(self):
+        """Stop the camera stream."""
         self.stream.stop()
 
     def _run(self):
+        """Camera streaming thread body — not yet implemented."""
         pass  # TODO: implement camera streaming

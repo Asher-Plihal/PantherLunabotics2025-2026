@@ -11,19 +11,23 @@ from abc import ABC, abstractmethod
 # --- Enums (str, Enum so they JSON-serialize as strings) ---
 
 class MessageType(str, Enum):
+    """TCP message type used to route JSON messages between robot and mission control."""
     COMMAND = "command"
     TELEMETRY = "telemetry"
     ACK = "ack"
 
 class Command(str, Enum):
+    """High-level lifecycle commands sent from mission control to the robot."""
     READY = "READY"
     SHUTDOWN = "SHUTDOWN"
 
 class Mode(str, Enum):
+    """Operational mode of the robot."""
     TELEOP = "TELEOP"
     AUTO = "AUTO"
 
 class Button(str, Enum):
+    """Gamepad buttons that can generate press/release events."""
     A = "A"
     B = "B"
     X = "X"
@@ -36,13 +40,22 @@ class Button(str, Enum):
     DPAD_RIGHT = "DPAD_RIGHT"
 
 class ButtonAction(str, Enum):
+    """Whether a button was pressed or released."""
     PRESSED = "PRESSED"
     RELEASED = "RELEASED"
 
 # --- Base Connection Class ---
 
 class Connection(ABC):
+    """Abstract base for the ACK-based JSON-over-TCP protocol.
+
+    Subclasses implement `_establish_connection` (client connects or server accepts)
+    and `_get_role_name` for log labels. Internally runs three daemon threads:
+    sender, receiver, and ACK monitor.
+    """
+
     def __init__(self):
+        """Initialize queues, locks, and connection state."""
         self._input_queue = queue.Queue()
         self._output_queue = queue.Queue()
         self._data_queue = queue.Queue()
@@ -114,6 +127,7 @@ class Connection(ABC):
                 self._output_queue.put(ack)
 
     def _receiver_thread(self):
+        """Read newline-delimited JSON from the socket and push each message onto `_input_queue`."""
         stream = self._socket.makefile("r", encoding="utf-8")
         try:
             while self._running:
@@ -144,6 +158,7 @@ class Connection(ABC):
             stream.close()
 
     def _sender_thread(self):
+        """Drain `_output_queue` and write each message as a newline-delimited JSON string."""
         stream = self._socket.makefile("w", encoding="utf-8")
         try:
             while self._running:
@@ -163,6 +178,7 @@ class Connection(ABC):
             stream.close()
 
     def _ack_monitor_thread(self):
+        """Re-enqueue any pending messages that have exceeded the ACK timeout."""
         while self._running:
             time.sleep(0.1)
             current_time = time.time()
@@ -177,6 +193,7 @@ class Connection(ABC):
                 self._output_queue.put(msg)
 
     def _next_message_id(self) -> int:
+        """Return the next monotonically increasing message ID, thread-safe."""
         with self._message_id_lock:
             self._message_id += 1
             return self._message_id

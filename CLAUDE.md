@@ -307,6 +307,7 @@ All in `onboard_software/robot_params.py`:
 - Daemon threads for server, perception, and motor heartbeat (no thread synchronization — be careful adding shared state)
 - Telemetry logs written as CSV to `onboard_software/logs/`
 - `TYPE_CHECKING` guards used to avoid circular imports
+- All classes, methods, and functions must have docstrings.
 
 ### When devloping 
 

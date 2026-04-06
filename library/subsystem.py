@@ -24,6 +24,7 @@ class Subsystem(ABC):
     """
 
     def __init__(self):
+        """Initialize ownership state and telemetry interval timer."""
         self._owner = None
         self._last_telemetry_time = 0.0
 

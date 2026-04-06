@@ -30,6 +30,7 @@ class AutoTask(ABC):
     """
 
     def __init__(self):
+        """Initialize the state timer."""
         self._state_start: float = 0.0
 
     def transition_to(self, new_state) -> None:

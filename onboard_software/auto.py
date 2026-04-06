@@ -7,13 +7,16 @@ if TYPE_CHECKING:
     import robot
 
 class Auto:
+    """Manages autonomous mode: runs the 50 Hz periodic loop and dispatches button events."""
 
     def __init__(self, robot: robot.Robot):
+        """Attach to the robot and initialize the loop timer."""
         self.robot = robot
         self._last_update_time = time.monotonic()
 
     # Called only when there is a button event
     def on_button_event(self, _button, _is_pressed):
+        """Placeholder for future autonomous button handling; currently a no-op."""
         pass  # Autonomous button handling not yet implemented
 
     def periodic_loop(self):
@@ -31,7 +34,7 @@ class Auto:
             self.robot.pid_drive.update()
 
     def run_auto_step(self):
-
+        """Call periodic_loop() when the 50 Hz period has elapsed."""
         # Update periodic loop
         now = time.monotonic()
         elapsed = now - self._last_update_time

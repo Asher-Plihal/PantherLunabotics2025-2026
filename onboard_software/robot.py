@@ -24,7 +24,10 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'library', 'motor_
 import motor_controller as mc  # type: ignore
 
 class Robot:
+    """Top-level robot orchestrator: initializes hardware, manages modes, and runs the main control loop."""
+
     def __init__(self):
+        """Initialize all subsystems in the required order and block until mission control sends READY."""
         self.current_mode = None
         self.running = True
 
@@ -90,7 +93,7 @@ class Robot:
         print("[Robot] Startup complete!")
 
     def run(self):
-
+        """Main control loop: dispatch incoming commands and step the active mode each iteration."""
         previous_mode = None
 
         while self.running:
@@ -121,6 +124,7 @@ class Robot:
             time.sleep(0.01)
     
     def stop(self):
+        """Gracefully shut down all subsystems and signal the main loop to exit."""
         print("[Robot] Stopping robot")
         self.running = False
         if self.pid_drive is not None:

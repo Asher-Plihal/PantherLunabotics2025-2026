@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 
 class DumpState(Enum):
+    """State machine states for the dump autonomous task."""
     IDLE = auto()
     DRIVING_TO_BERM = auto()
     DUMPING = auto()
@@ -35,6 +36,7 @@ class DumpTask(AutoTask):
     """
 
     def __init__(self, robot: robot.Robot):
+        """Attach to the robot and initialize the task in IDLE state."""
         super().__init__()
         self.robot = robot
         self._state = DumpState.IDLE
@@ -44,10 +46,12 @@ class DumpTask(AutoTask):
     # ------------------------------------------------------------------
 
     def start_auto_task(self) -> None:
+        """Claim subsystem ownership and enter DRIVING_TO_BERM."""
         self.claim_subsystem_ownership()
         self.transition_to(DumpState.DRIVING_TO_BERM)
 
     def stop_auto_task(self) -> None:
+        """Stop all actuators, release ownership, and return to IDLE."""
         self.robot.drivetrain.set_power(self, 0, 0, 0, 0)
         self.robot.auger.set_power(self, 0.0)
         self.release_subsystem_ownership()
@@ -55,6 +59,7 @@ class DumpTask(AutoTask):
 
     @property
     def is_finished(self) -> bool:
+        """True when the task has reached DONE."""
         return self._state == DumpState.DONE
 
     def run_task_states(self) -> None:
@@ -78,12 +83,14 @@ class DumpTask(AutoTask):
                 pass
 
     def claim_subsystem_ownership(self) -> None:
+        """Claim drivetrain, auger, and PID drive (if present)."""
         self.robot.drivetrain.claim_ownership(self)
         self.robot.auger.claim_ownership(self)
         if self.robot.pid_drive is not None:
             self.robot.pid_drive.claim_ownership(self)
 
     def release_subsystem_ownership(self) -> None:
+        """Release drivetrain, auger, and PID drive (if present)."""
         self.robot.drivetrain.release_ownership(self)
         self.robot.auger.release_ownership(self)
         if self.robot.pid_drive is not None:

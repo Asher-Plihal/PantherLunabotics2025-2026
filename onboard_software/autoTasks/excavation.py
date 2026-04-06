@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 
 class ExcavationState(Enum):
+    """State machine states for the excavation autonomous task."""
     IDLE = auto()
     DRIVING_TO_ZONE = auto()
     EXCAVATING = auto()
@@ -38,6 +39,7 @@ class ExcavationTask(AutoTask):
     """
 
     def __init__(self, robot: robot.Robot):
+        """Attach to the robot and initialize the task in IDLE state."""
         super().__init__()
         self.robot = robot
         self._state = ExcavationState.IDLE
@@ -62,6 +64,7 @@ class ExcavationTask(AutoTask):
             self.transition_to(ExcavationState.EXCAVATING)
 
     def stop_auto_task(self) -> None:
+        """Stop all actuators, release ownership, and return to IDLE."""
         self.robot.drivetrain.set_power(self, 0, 0, 0, 0)
         self.robot.auger.set_power(self, 0.0)
         self.release_subsystem_ownership()
@@ -69,6 +72,7 @@ class ExcavationTask(AutoTask):
 
     @property
     def is_finished(self) -> bool:
+        """True when the task has reached DONE."""
         return self._state == ExcavationState.DONE
 
     def run_task_states(self) -> None:
@@ -92,12 +96,14 @@ class ExcavationTask(AutoTask):
                 pass
 
     def claim_subsystem_ownership(self) -> None:
+        """Claim drivetrain, auger, and PID drive (if present)."""
         self.robot.drivetrain.claim_ownership(self)
         self.robot.auger.claim_ownership(self)
         if self.robot.pid_drive is not None:
             self.robot.pid_drive.claim_ownership(self)
 
     def release_subsystem_ownership(self) -> None:
+        """Release drivetrain, auger, and PID drive (if present)."""
         self.robot.drivetrain.release_ownership(self)
         self.robot.auger.release_ownership(self)
         if self.robot.pid_drive is not None:

@@ -34,7 +34,10 @@ Hat 0 - D-Pad (x: L = -1, R = 1 | y: D = -1, U = 1)
 '''
 
 class Control:
+    """Pygame-based operator interface: reads gamepad input and sends commands to the robot over TCP."""
+
     def __init__(self, server_ip):
+        """Initialize pygame, detect the joystick, and create the TCP client."""
         self.running = True
         self.mode = None
         self.viewer_procs: list[multiprocessing.Process] = []
@@ -54,6 +57,7 @@ class Control:
         print("[Control] 🎮 Controller connected!")
 
     def run(self):
+        """Connect to the robot, enter the main gamepad event loop, and forward all input as commands."""
         self.client_t = threading.Thread(target=self.client.connect)
         self.client_t.start()
         if not self.client.connected.wait(timeout=10):
@@ -178,6 +182,7 @@ class Control:
             time.sleep(0.05) # 20 Hz loop
 
     def _launch_viewers(self):
+        """Start lidar viewer and field dashboard subprocesses based on RobotConfig."""
         if RobotConfig.useLidar and RobotConfig.lidarStream == StreamMode.REMOTE:
             from subsystems.perception import Lidar
             proc = multiprocessing.Process(target=Lidar.run_viewer, daemon=True)
@@ -196,6 +201,7 @@ class Control:
             print("[Control] Launched field dashboard")
 
     def _stop_viewers(self):
+        """Terminate and join all viewer subprocesses."""
         for proc in self.viewer_procs:
             proc.terminate()
         for proc in self.viewer_procs:
@@ -205,6 +211,7 @@ class Control:
         self.viewer_procs.clear()
 
     def stop(self):
+        """Signal shutdown, stop viewers, quit pygame, and close the TCP connection."""
         print("[Control] Starting shut down")
         self.running = False
         self._stop_viewers()

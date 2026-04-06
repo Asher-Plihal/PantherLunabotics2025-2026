@@ -17,8 +17,10 @@ _FULL_CURRENT_THRESHOLD_A = 15.0  # amps — sustained current above this signal
 _FULL_DURATION_S = 0.5            # seconds — current must stay above threshold this long
 
 class Auger(Subsystem):
+    """Sample collection motor subsystem (CAN ID 3)."""
 
     def __init__(self, mc):
+        """Configure the auger motor, reset its position encoder, and optionally start logging."""
         super().__init__()
         self.mc = mc
         self.motor_id = 3
@@ -43,17 +45,21 @@ class Auger(Subsystem):
             self.start_logging()
 
     def set_power(self, owner, power):
+        """Write duty cycle to the auger motor; blocked if owner check fails."""
         if not self.check_ownership(owner):
             return
         self.mc.set_motor_duty_cycle(self.motor_id, power)
 
     def intake(self):
+        """Run the auger in the intake direction at 50% power."""
         self.set_power(None, 0.5)
 
     def outtake(self):
+        """Run the auger in the outtake direction at 50% power."""
         self.set_power(None, -0.5)
 
     def stop(self):
+        """Stop the auger motor."""
         self.set_power(None, 0.0)
 
     @property
@@ -80,17 +86,21 @@ class Auger(Subsystem):
         return full
 
     def start_logging(self):
+        """Open a CSV log file for auger telemetry."""
         self._logger.start_logging(_LOG_COLUMNS)
 
     def stop_logging(self):
+        """Close the CSV log file."""
         self._logger.stop_logging()
 
     def shutdown(self):
+        """Release ownership, stop the motor, and close the log file."""
         self.force_release()
         self.stop()
         self.stop_logging()
 
     def print_telemetry(self, duty_cycle=True, velocity=True, position=True, current=True, temperature=False, voltage=True, interval=0.1):
+        """Print formatted motor feedback, rate-limited by interval seconds."""
         if not self._check_telemetry_interval(interval):
             return
         feedback = self.mc.get_motor_feedback(self.motor_id)
@@ -100,6 +110,7 @@ class Auger(Subsystem):
         print(f"{robot_params.robot_timer.timestamp()} [Auger] " + ", ".join(parts))
 
     def log_data(self):
+        """Print telemetry if enabled and append a CSV row if logging is active."""
         if robot_params.RobotConfig.useTelemetry:
             self.print_telemetry()
         if self._logger is None or not self._logger.is_logging:
