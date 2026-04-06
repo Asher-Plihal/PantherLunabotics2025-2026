@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import robot_params
+from collections import deque
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 from library import telemetry_logger
 from library.subsystem import Subsystem
@@ -13,8 +14,9 @@ import motor_controller  # type: ignore
 _LOG_COLUMNS = ["Duty Cycle", "Velocity (RPM)", "Position (ticks)", "Current (A)", "Temp (°C)", "Bus Voltage (V)"]
 
 # Full-detection tuning parameters
-_FULL_CURRENT_THRESHOLD_A = 15.0  # amps — sustained current above this signals a full auger
+_FULL_CURRENT_THRESHOLD_A = 80.0  # amps — sustained current above this signals a full auger
 _FULL_DURATION_S = 0.5            # seconds — current must stay above threshold this long
+_CURRENT_SMA_WINDOW = 20           # samples — moving average window to filter transient current drops
 
 class Auger(Subsystem):
     """Sample collection motor subsystem (CAN ID 3)."""
@@ -40,6 +42,7 @@ class Auger(Subsystem):
         self.mc.reset_motor_position(self.motor_id)
 
         self._full_current_start: float | None = None
+        self._current_window: deque[float] = deque(maxlen=_CURRENT_SMA_WINDOW)
 
         if robot_params.RobotConfig.logAugerTelemetry:
             self.start_logging()
@@ -65,13 +68,16 @@ class Auger(Subsystem):
     @property
     def is_full(self) -> bool:
         """
-        Returns True when motor current has been continuously above
-        _FULL_CURRENT_THRESHOLD_A for at least _FULL_DURATION_S seconds.
-        Automatically resets when current drops back below the threshold.
+        Returns True when the smoothed motor current (SMA over _CURRENT_SMA_WINDOW
+        samples) has been continuously above _FULL_CURRENT_THRESHOLD_A for at least
+        _FULL_DURATION_S seconds. Automatically resets when the smoothed current
+        drops back below the threshold.
         """
         feedback = self.mc.get_motor_feedback(self.motor_id)
+        self._current_window.append(feedback.current)
+        smoothed_current = sum(self._current_window) / len(self._current_window)
         now = time.monotonic()
-        if feedback.current >= _FULL_CURRENT_THRESHOLD_A:
+        if smoothed_current >= _FULL_CURRENT_THRESHOLD_A:
             if self._full_current_start is None:
                 self._full_current_start = now
         else:
@@ -80,7 +86,7 @@ class Auger(Subsystem):
         full = self._full_current_start is not None and delta >= _FULL_DURATION_S
         start_str = f"{self._full_current_start:.2f}s" if self._full_current_start is not None else "None"
         robot_params.Telemetry.print_t(
-            f"[Auger] current={feedback.current:.2f}A  start={start_str}  delta={delta:.2f}s  is_full={full}",
+            f"[Auger] current={feedback.current:.2f}A  smoothed={smoothed_current:.2f}A  start={start_str}  delta={delta:.2f}s  is_full={full}",
             prints_per_second=10
         )
         return full

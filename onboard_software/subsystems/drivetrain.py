@@ -31,7 +31,7 @@ class Drivetrain(Subsystem):
         """Configure motors with shared settings, reset position encoders, and optionally start logging."""
         super().__init__()
         self.slow_turning = False
-        self.max_speed = 0.3
+        self.max_speed = 0.15
         self._last_telemetry_time = 0.0
 
         self.mc = mc
@@ -86,23 +86,18 @@ class Drivetrain(Subsystem):
         self.set_power(None, -0.5, 0.5, -0.5, 0.5)
 
     def strafe_left(self):
-        """Strafe left at 50% speed."""
-        self.set_power(None, -0.5, -0.5, 0.5, 0.5)
+        self.set_power(None, 0.5, -0.5, -0.5, 0.5)
 
     def strafe_right(self):
-        """Strafe right at 50% speed."""
-        self.set_power(None, 0.5, 0.5, -0.5, -0.5)
+        self.set_power(None, -0.5, 0.5, 0.5, -0.5)
 
     def turn_left(self):
-        """Rotate left in place at 50% speed."""
-        self.set_power(None, -0.5, -0.5, -0.5, -0.5)
-
-    def turn_right(self):
-        """Rotate right in place at 50% speed."""
         self.set_power(None, 0.5, 0.5, 0.5, 0.5)
 
+    def turn_right(self):
+        self.set_power(None, -0.5, -0.5, -0.5, -0.5)
+
     def fold_out(self):
-        """Drive the fold-out manoeuvre at 50% speed."""
         self.set_power(None, 0.5, 0.5, -0.5, -0.5)
 
     def drive_task(self, owner, left_forward, left_strafe, right_forward, right_strafe):  # right_strafe = turning in arcade, strafe in tank; right_forward unused in arcade
