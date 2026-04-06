@@ -50,12 +50,12 @@ class Robot:
         self.perception = perception.Perception()
         self.perception.start()
 
-        # Initialize field dashboard (no-op if RobotConfig.fieldDashboard is False)
-        self.dashboard = dashboard.Dashboard(self.server)
-
         # Initialize server
         self.server = server.Server()
         threading.Thread(target=self.server.start, daemon=True).start()
+
+        # Initialize field dashboard (no-op if RobotConfig.fieldDashboard is False)
+        self.dashboard = dashboard.Dashboard(self.server)
 
         # Initialize PID drive (localizer start is handled inside PIDDrive.__init__)
         self.pid_drive: PIDDrive | None = None
