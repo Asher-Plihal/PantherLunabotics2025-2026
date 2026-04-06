@@ -94,8 +94,12 @@ class ExcavationTask(AutoTask):
     def claim_subsystem_ownership(self) -> None:
         self.robot.drivetrain.claim_ownership(self)
         self.robot.auger.claim_ownership(self)
+        if self.robot.pid_drive is not None:
+            self.robot.pid_drive.claim_ownership(self)
 
     def release_subsystem_ownership(self) -> None:
         self.robot.drivetrain.release_ownership(self)
         self.robot.auger.release_ownership(self)
+        if self.robot.pid_drive is not None:
+            self.robot.pid_drive.release_ownership()
 

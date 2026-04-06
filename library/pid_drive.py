@@ -61,6 +61,8 @@ class PIDDrive:
             self._y_pid.enable_squid()
             self._h_pid.enable_squid()
 
+        self._owner = None
+
         self._target:           Position | None = None
         self._current_position: Position | None = None
         self._on_target: bool = False
@@ -94,6 +96,14 @@ class PIDDrive:
     # Main update — call at 50 Hz inside periodic_loop()
     # ------------------------------------------------------------------
 
+    def claim_ownership(self, owner) -> None:
+        """Set the ownership token forwarded to drivetrain.set_power() on each update()."""
+        self._owner = owner
+
+    def release_ownership(self) -> None:
+        """Clear the ownership token so update() passes None to drivetrain.set_power()."""
+        self._owner = None
+
     def update(self) -> None:
         """
         Fetch current position, compute and apply motor powers toward the target.
@@ -119,7 +129,7 @@ class PIDDrive:
         # Mecanum mixing — same sign convention as _drive_task_arcade in drivetrain.py
         fl, fr, bl, br = self._drivetrain.calculate_arcade_powers(-robot_fwd, robot_str, turn)
 
-        self._drivetrain.set_power(self, fl, fr, bl, br)
+        self._drivetrain.set_power(self._owner, fl, fr, bl, br)
         self._on_target = (self._x_pid.isOnTargetDefault(self._xy_tolerance) and
                            self._y_pid.isOnTargetDefault(self._xy_tolerance) and
                            self._h_pid.isOnTargetDefault(self._h_tolerance))

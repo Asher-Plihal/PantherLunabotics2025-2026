@@ -166,7 +166,7 @@ class Control:
                             self.client.send_command((self.mode, name, ButtonAction.PRESSED))
                     prev_hat = curr_hat
 
-            commands = (self.mode, left_stick_x, left_stick_y, right_stick_x, right_stick_y, lt, rt)
+            commands = (self.mode, round(left_stick_x, 2), round(left_stick_y, 2), round(right_stick_x, 2), round(right_stick_y, 2), round(lt, 2), round(rt, 2))
             if commands != last_command and self.mode == Mode.TELEOP: # For now only TELEOP uses axes
                 self.client.send_command(commands)
                 last_command = commands

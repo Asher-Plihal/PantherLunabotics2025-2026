@@ -37,7 +37,7 @@ class AutoTask(ABC):
         self._state = new_state
         self._state_start = time.monotonic()
 
-    def wait_for_event(self, next_state, condition=None, *condition_args, timeout: float | None = None) -> bool:
+    def wait_for_event(self, next_state, condition=None, condition_args: tuple = (), *, timeout: float | None = None) -> bool:
         """
         Transition to next_state when a condition or timeout is met.
 
@@ -45,7 +45,7 @@ class AutoTask(ABC):
             next_state:      The state to transition to.
             condition:       Optional bool or callable. If callable, called with
                              *condition_args and must return bool.
-            *condition_args: Arguments forwarded to condition if it is callable.
+            condition_args:  Tuple of arguments forwarded to condition if it is callable.
             timeout:         Optional seconds since last _transition(). If only
                              timeout is supplied it acts as pure time-based triggering.
 
@@ -89,3 +89,4 @@ class AutoTask(ABC):
     @abstractmethod
     def release_subsystem_ownership(self) -> None:
         """Release ownership of all subsystems used by this task."""
+

@@ -69,7 +69,7 @@ class DumpTask(AutoTask):
                     self.robot.drivetrain.set_power(self, 0, 0, 0, 0)
 
             case DumpState.DUMPING:
-                self.robot.auger.set_power(self, -0.5)
+                self.robot.auger.outtake()
                 if self.wait_for_event(DumpState.DONE, timeout=_DUMP_DURATION_S):
                     self.robot.auger.set_power(self, 0.0)
                     self.release_subsystem_ownership()
@@ -80,7 +80,11 @@ class DumpTask(AutoTask):
     def claim_subsystem_ownership(self) -> None:
         self.robot.drivetrain.claim_ownership(self)
         self.robot.auger.claim_ownership(self)
+        if self.robot.pid_drive is not None:
+            self.robot.pid_drive.claim_ownership(self)
 
     def release_subsystem_ownership(self) -> None:
         self.robot.drivetrain.release_ownership(self)
         self.robot.auger.release_ownership(self)
+        if self.robot.pid_drive is not None:
+            self.robot.pid_drive.release_ownership()
