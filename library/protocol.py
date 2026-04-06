@@ -1,4 +1,5 @@
 import socket
+import sys
 import threading
 import json
 import queue
@@ -86,8 +87,8 @@ class Connection(ABC):
         try:
             self._socket = self._establish_connection()
         except ConnectionRefusedError:
-            print(f"[{self._get_role_name()}] Connection refused — is the other side running?")
-            return
+            print(f"[{self._get_role_name()}] Connection refused — turn on server first")
+            sys.exit(1)
         except OSError as e:
             print(f"[{self._get_role_name()}] Connection failed: {e}")
             return

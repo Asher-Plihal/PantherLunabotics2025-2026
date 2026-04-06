@@ -33,7 +33,7 @@ class RobotConfig:
     lidarStreamPort = 5000
     cameraStream = StreamMode.NONE
     cameraStreamPort = 5001
-    fieldDashboard = True
+    fieldDashboard = False
     uwbDashboard   = False  # send UWB trilateration overlay (circles + points) to the field dashboard
 
     # Subsystem configuration

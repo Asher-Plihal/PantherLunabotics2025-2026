@@ -60,8 +60,7 @@ class Control:
         """Connect to the robot, enter the main gamepad event loop, and forward all input as commands."""
         self.client_t = threading.Thread(target=self.client.connect)
         self.client_t.start()
-        if not self.client.connected.wait(timeout=10):
-            print("[Control] Failed to connect to robot within 10 seconds")
+        if not self.client.connected.wait(timeout=5):
             return
         self.client.send_command(Command.READY) # Notify robot that client is ready
 
