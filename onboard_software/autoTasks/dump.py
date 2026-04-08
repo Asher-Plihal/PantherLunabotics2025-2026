@@ -51,6 +51,7 @@ class DumpTask(AutoTask):
     def start_auto_task(self, drive: bool = True) -> None:
         """Claim subsystem ownership and enter DRIVING_TO_BERM."""
         self._is_finished = False
+        self._is_running = True
         self.claim_subsystem_ownership()
         if drive and self.robot.pid_drive is not None:
             self.transition_to(DumpState.DRIVING_TO_BERM)
@@ -65,6 +66,7 @@ class DumpTask(AutoTask):
         if self.robot.pid_drive is not None:
             self.robot.pid_drive.reset()
         self.release_subsystem_ownership()
+        self._is_running = False
         self._state = DumpState.IDLE
 
     @property

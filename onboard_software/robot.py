@@ -7,6 +7,8 @@ import time
 import teleOp
 import auto
 import robot_params
+from autoTasks.excavation import ExcavationTask
+from autoTasks.dump import DumpTask
 import server
 from subsystems import drivetrain
 from subsystems import auger
@@ -82,6 +84,10 @@ class Robot:
         self.controller = controller.Controller(self)
         self.teleop = teleOp.TeleOp(self)
         self.auto = auto.Auto(self)
+
+        # Initialize auto tasks
+        self.excavation_task = ExcavationTask(self)
+        self.dump_task = DumpTask(self)
 
         startup_timeout = 60 # seconds
         startup_start = time.monotonic()

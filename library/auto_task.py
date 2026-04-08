@@ -30,13 +30,25 @@ class AutoTask(ABC):
     """
 
     def __init__(self):
-        """Initialize the state timer."""
+        """Initialize the state timer and running flag."""
         self._state_start: float = 0.0
+        self._is_running: bool = False
+
+    @property
+    def is_running(self) -> bool:
+        """True while the task is active (between start_auto_task and stop_auto_task)."""
+        return self._is_running
 
     def transition_to(self, new_state) -> None:
-        """Immediately enter new_state and reset the state timer."""
+        """Immediately enter new_state and reset the state timer. Prints the transition."""
+        old_state = getattr(self, '_state', None)
         self._state = new_state
         self._state_start = time.monotonic()
+        task_name = type(self).__name__
+        if old_state is not None:
+            print(f"[{task_name}] {old_state.name} → {new_state.name}")
+        else:
+            print(f"[{task_name}] → {new_state.name}")
 
     def wait_for_event(self, next_state, condition=None, condition_args: tuple = (), *, timeout: float | None = None) -> bool:
         """
