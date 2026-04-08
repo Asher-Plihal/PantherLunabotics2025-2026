@@ -7,6 +7,8 @@ from typing import TYPE_CHECKING
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 from library.auto_task import AutoTask
 
+from robot_params import Positions as pos
+
 if TYPE_CHECKING:
     import robot
 
@@ -20,28 +22,26 @@ class ExcavationState(Enum):
 
 
 # Tunable durations (seconds)
-_DRIVE_DURATION_S = 3.0
+_DRIVE_TIMEOUT_S = 15.0
 _EXCAVATE_DURATION_S = 10.0
 
 
 class ExcavationTask(AutoTask):
     """
-    Auto task: run the auger intake, optionally preceded by autonomous driving.
+    Auto task: drive to the excavation zone and intake regolith with the auger.
 
     Ownership is claimed explicitly in start_auto_task() and released when the
     task finishes or is stopped.
 
-    State machine (drive=True):
+    State machine:
       IDLE → DRIVING_TO_ZONE → EXCAVATING → DONE
-
-    State machine (drive=False):
-      IDLE → EXCAVATING → DONE
     """
 
     def __init__(self, robot: robot.Robot):
         """Attach to the robot and initialize the task in IDLE state."""
         super().__init__()
         self.robot = robot
+        self._is_finished = False
         self._state = ExcavationState.IDLE
 
     # ------------------------------------------------------------------
@@ -49,16 +49,10 @@ class ExcavationTask(AutoTask):
     # ------------------------------------------------------------------
 
     def start_auto_task(self, drive: bool = True) -> None:
-        """
-        Start the excavation task.
-
-        Args:
-            drive: If True the robot drives autonomously to the excavation zone
-                   before running the auger. If False the drivetrain is left to
-                   the driver and only the auger sequence runs.
-        """
+        """Claim subsystem ownership and enter DRIVING_TO_ZONE."""
+        self._is_finished = False
         self.claim_subsystem_ownership()
-        if drive:
+        if drive and self.robot.pid_drive is not None:
             self.transition_to(ExcavationState.DRIVING_TO_ZONE)
         else:
             self.transition_to(ExcavationState.EXCAVATING)
@@ -67,13 +61,15 @@ class ExcavationTask(AutoTask):
         """Stop all actuators, release ownership, and return to IDLE."""
         self.robot.drivetrain.set_power(self, 0, 0, 0, 0)
         self.robot.auger.set_power(self, 0.0)
+        if self.robot.pid_drive is not None:
+            self.robot.pid_drive.reset()
         self.release_subsystem_ownership()
         self._state = ExcavationState.IDLE
 
     @property
     def is_finished(self) -> bool:
-        """True when the task has reached DONE."""
-        return self._state == ExcavationState.DONE
+        """True once the task has reached DONE. Reset to False at the start of each run."""
+        return self._is_finished
 
     def run_task_states(self) -> None:
         """Step the state machine. Called once per 50 Hz cycle."""
@@ -82,18 +78,21 @@ class ExcavationTask(AutoTask):
                 pass
 
             case ExcavationState.DRIVING_TO_ZONE:
-                self.robot.drivetrain.set_power(self, -0.5, -0.5, -0.5, -0.5)
-                if self.wait_for_event(ExcavationState.EXCAVATING, timeout=_DRIVE_DURATION_S):
-                    self.robot.drivetrain.set_power(self, 0, 0, 0, 0)
+                assert self.robot.pid_drive is not None
+                self.robot.auger.set_auger_transport_angle()
+                self.robot.pid_drive.set_target(pos.excavatePos)
+                self.wait_for_event(ExcavationState.EXCAVATING, self.robot.pid_drive.on_target, timeout=_DRIVE_TIMEOUT_S)
 
             case ExcavationState.EXCAVATING:
-                self.robot.auger.set_power(self, 0.5)
+                self.robot.auger.set_auger_intake_angle()
+                self.robot.auger.intake(self)
+                self.robot.drivetrain.drive_forward(0.05, self)
                 if self.wait_for_event(ExcavationState.DONE, timeout=_EXCAVATE_DURATION_S):
-                    self.robot.auger.set_power(self, 0.0)
-                    self.release_subsystem_ownership()
+                    self.robot.auger.set_auger_transport_angle()
 
             case ExcavationState.DONE:
-                pass
+                self._is_finished = True
+                self.stop_auto_task()
 
     def claim_subsystem_ownership(self) -> None:
         """Claim drivetrain, auger, and PID drive (if present)."""
@@ -107,5 +106,4 @@ class ExcavationTask(AutoTask):
         self.robot.drivetrain.release_ownership(self)
         self.robot.auger.release_ownership(self)
         if self.robot.pid_drive is not None:
-            self.robot.pid_drive.release_ownership()
-
+            self.robot.pid_drive.release_ownership(self)
