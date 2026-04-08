@@ -74,6 +74,8 @@ class Robot:
                 y_coeffs=cfg.pidYCoeffs,
                 h_coeffs=cfg.pidHCoeffs,
             )
+            self.pid_drive.set_max_rotation_speed(cfg.drivetrainMaxSpeed)
+            self.pid_drive.set_max_translation_speed(cfg.drivetrainMaxSpeed)
             self.dashboard.set_uwb_source(localizer)
 
         # Initialize controller and run modes

@@ -31,7 +31,7 @@ class Drivetrain(Subsystem):
         """Configure motors with shared settings, reset position encoders, and optionally start logging."""
         super().__init__()
         self.slow_turning = False
-        self.max_speed = 0.15
+        self.max_speed = robot_params.RobotConfig.drivetrainMaxSpeed
         self._last_telemetry_time = 0.0
 
         self.mc = mc

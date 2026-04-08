@@ -4,6 +4,7 @@ import os
 from enum import Enum
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from library.pid_drive import Position
 from library.streaming import StreamMode
 from library.pid_controller import PIDController
 
@@ -42,6 +43,7 @@ class RobotConfig:
     useLidar = False
 
     drivetrainMode = DriveMode.ARCADE
+    drivetrainMaxSpeed = 0.15
     usePIDDrive = False
 
     # UWB Localizer — anchor positions (metres, arena coordinates) and tag geometry
@@ -62,6 +64,12 @@ class RobotConfig:
     logLiDarTelemetry = False
     logAugerTelemetry = False
     logDrivetrainTelemetry = False
+
+class Positions:
+    """ Default position used by pid_drive set_target() """
+
+    dumpPos = Position(x=0.0, y=0.0, heading=0.0)
+    excavatePos = Position(x=0.0, y=0.0, heading=0.0)
 
 
 class NetworkConfig:
