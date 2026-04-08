@@ -118,7 +118,7 @@ class UWBLocalizer:
         Args:
             left_port:  Serial port for TAG_LEFT  (e.g. "/dev/ttyUSB1").
             right_port: Serial port for TAG_RIGHT (e.g. "/dev/ttyUSB2").
-            baud:       Baud rate — 115200 matches the ESP32/DWM1000 default.
+            baud:       Baud rate — 115200 matches the STM32/DWM3000 (ULM3) default.
         """
         self._left_serial  = serial.Serial(left_port,  baud, timeout=1.0)
         self._right_serial = serial.Serial(right_port, baud, timeout=1.0)
@@ -390,41 +390,58 @@ class UWBLocalizer:
 
     def _read_serial(self, ser: serial.Serial) -> Optional[tuple[float, float]]:
         """
-        Read one packet from a serial port and parse it to (dist_A, dist_B) in metres.
-        Returns None if the line is missing, unparseable, or the port errors.
+        Read lines from a serial port until a valid 'mc' packet is found and parsed.
+
+        The ULM3 may emit a '$K...' line (tag-computed position) between 'mc' packets.
+        This method skips non-'mc' lines and parses the first valid ranging packet.
+        Returns None if no valid packet is found or the port errors.
         """
         try:
-            raw = ser.readline()
+            for _ in range(5):  # read up to 5 lines to find a valid mc packet
+                raw = ser.readline()
+                if not raw:
+                    continue
+                line = raw.decode("utf-8", errors="ignore").strip()
+                if line.startswith("mc"):
+                    return self._parse(line)
         except serial.SerialException:
             return None
-        if not raw:
-            return None
-        return self._parse(raw.decode("utf-8", errors="ignore").strip())
+        return None
 
     @staticmethod
     def _parse(line: str) -> Optional[tuple[float, float]]:
         """
-        Parse one serial packet to (dist_anchor_A, dist_anchor_B) in metres.
+        Parse one ULM3 serial packet to (dist_anchor_A, dist_anchor_B) in metres.
 
-        Format (confirmed from UWB.md — Serial Output Format):
-            mc 0f 00000663 000005a3 00000512 000004cb 095f c1 0 a0:0
-                   RANGE0    RANGE1
-        RANGE0 = Anchor A distance in hex millimetres.
-        RANGE1 = Anchor B distance in hex millimetres.
+        ULM3 format (confirmed from manual Section 7.1):
+            mc 0f 00000663 000005a3 00000512 000004cb ffffffff ffffffff ffffffff ffffffff 095f c1 00146fb7 a0:0 22be
+               MASK RANGE0    RANGE1    RANGE2    RANGE3    RANGE4    RANGE5    RANGE6    RANGE7
 
-        Example: 0x663 = 1635 mm = 1.635 m
+        4-anchor firmware (default) omits RANGE4–7, giving fewer fields.
+        MASK is a bitmask of valid ranges: bit 0 = RANGE0, bit 1 = RANGE1, etc.
+        RANGE values are hex millimetres. 0xffffffff = invalid/no anchor.
 
-        *** Verify against live hardware output before relying on this. ***
-        Connect and run:  screen /dev/ttyUSB1 115200
+        For our 2-anchor setup we need RANGE0 (Anchor A) and RANGE1 (Anchor B).
+        Returns None if either range is invalid.
         """
         parts = line.split()
-        if len(parts) < 5 or parts[0] != "mc":
+        # Minimum: mc MASK RANGE0 RANGE1 ... (at least 4 fields for header + mask + 2 ranges)
+        if len(parts) < 4 or parts[0] != "mc":
             return None
         try:
-            dist_a_mm = int(parts[2], 16)
-            dist_b_mm = int(parts[3], 16)
+            mask = int(parts[1], 16)
+            # Verify RANGE0 and RANGE1 are both valid per the mask
+            if (mask & 0x03) != 0x03:
+                return None
+            range0_hex = parts[2]
+            range1_hex = parts[3]
+            # 0xffffffff means invalid/no anchor
+            if range0_hex == "ffffffff" or range1_hex == "ffffffff":
+                return None
+            dist_a_mm = int(range0_hex, 16)
+            dist_b_mm = int(range1_hex, 16)
             return dist_a_mm / 1000.0, dist_b_mm / 1000.0
-        except ValueError:
+        except (ValueError, IndexError):
             return None
 
 
