@@ -46,7 +46,7 @@ python control.py
 
 # TODO:
 
-Look at ownership system going to have a problem with teleOp and stick drive and pid drive
+Make sure joystick drive works with update motor power directions
 test robot auger is full
 
 1. Finish up the dashbaord

@@ -54,19 +54,22 @@ class Auger(Subsystem):
             return
         self.mc.set_motor_duty_cycle(self.motor_id, power)
 
-    def intake(self):
+    def intake(self, owner=None):
         """Run the auger in the intake direction at 50% power."""
-        self.set_power(None, 0.5)
+        self.set_power(owner, 0.5)
 
-    def outtake(self):
+    def outtake(self, owner=None):
         """Run the auger in the outtake direction at 50% power."""
-        self.set_power(None, -0.5)
+        self.set_power(owner, -0.5)
 
-    def stop(self):
+    def stop(self, owner=None):
         """Stop the auger motor."""
-        self.set_power(None, 0.0)
+        self.set_power(owner, 0.0)
 
     def set_auger_angle(self, angle_degrees):
+        pass
+
+    def set_auger_transport_angle(self):
         pass
 
     def set_auger_intake_angle(self):
