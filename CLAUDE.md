@@ -212,6 +212,10 @@ Define each hardware device on the robot and set up functionality and utilities 
 - **auger.py**: Sample collection motor (ID=3). Methods: intake(), outtake(), stop().
 - **perception.py**: LiDAR (RPLidar A1M8 on /dev/ttyUSB0) + camera streams. StreamMode: REMOTE (port 5000), LOCAL, or NONE.
 
+#### Subsystem Ownership
+
+Subsystems (drivetrain, auger) and controllers (PIDDrive) use ownership locks to prevent TeleOp and AutoTasks from simultaneously driving the same hardware. AutoTasks claim ownership when they start and release when they finish, blocking conflicting commands. Telemetry prints all ownership events (CLAIMED, DENIED, RELEASED, FORCE_RELEASED, MOTOR_CALL_DENIED) for debugging.
+
 #### Robot.py
 
 The heart of the robot — all subsystem init methods are called here to set up subsystems. CAN bus and WiFi settings are configured here. Commands received from control.py are decided and dispatched from here.

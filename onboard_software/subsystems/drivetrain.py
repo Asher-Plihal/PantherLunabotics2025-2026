@@ -67,6 +67,7 @@ class Drivetrain(Subsystem):
     def set_power(self, owner, front_left_power, front_right_power, back_left_power, back_right_power):
         """Write individual duty cycles to all four wheels; blocked if owner check fails."""
         if not self.check_ownership(owner):
+            self._print_motor_call_denied(owner)
             return
         self.mc.set_motor_duty_cycle(self.motor_ids[0], Util.clip(front_left_power, -self.max_speed, self.max_speed))
         self.mc.set_motor_duty_cycle(self.motor_ids[1], Util.clip(front_right_power, -self.max_speed, self.max_speed))

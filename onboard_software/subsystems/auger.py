@@ -47,6 +47,7 @@ class Auger(Subsystem):
     def set_power(self, owner, power):
         """Write duty cycle to the auger motor; blocked if owner check fails."""
         if not self.check_ownership(owner):
+            self._print_motor_call_denied(owner)
             return
         self.mc.set_motor_duty_cycle(self.motor_id, power)
 
@@ -61,6 +62,15 @@ class Auger(Subsystem):
     def stop(self):
         """Stop the auger motor."""
         self.set_power(None, 0.0)
+
+    def set_auger_angle(self, angle_degrees):
+        pass
+
+    def set_auger_intake_angle(self):
+        pass
+
+    def set_auger_dump_angle(self):
+        pass
 
     @property
     def is_full(self) -> bool:

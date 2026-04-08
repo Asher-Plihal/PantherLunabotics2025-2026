@@ -100,13 +100,17 @@ class PIDDrive:
     # Main update — call at 50 Hz inside periodic_loop()
     # ------------------------------------------------------------------
 
-    def claim_ownership(self, owner) -> None:
-        """Set the ownership token forwarded to drivetrain.set_power() on each update()."""
-        self._owner = owner
+    def claim_ownership(self, owner) -> bool:
+        """Claim ownership of PIDDrive. Called by AutoTask in start_auto_task(). Returns True if successful."""
+        if self._owner is None:
+            self._owner = owner
+            return True
+        return owner is self._owner
 
-    def release_ownership(self) -> None:
-        """Clear the ownership token so update() passes None to drivetrain.set_power()."""
-        self._owner = None
+    def release_ownership(self, owner) -> None:
+        """Release ownership. Called by AutoTask in stop_auto_task()."""
+        if owner is self._owner:
+            self._owner = None
 
     def update(self) -> None:
         """

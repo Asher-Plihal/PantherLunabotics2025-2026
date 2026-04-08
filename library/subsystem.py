@@ -1,5 +1,13 @@
 import time
+import sys
+import os
 from abc import ABC, abstractmethod
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+try:
+    import robot_params
+except ImportError:
+    robot_params = None
 
 
 class Subsystem(ABC):
@@ -32,6 +40,27 @@ class Subsystem(ABC):
     # Ownership
     # ------------------------------------------------------------------
 
+    def _print_ownership_telemetry(self, event: str, owner) -> None:
+        """Print ownership event to terminal if telemetry is available."""
+        if robot_params is not None:
+            owner_name = owner.__class__.__name__ if owner is not None else "None"
+            subsystem_name = self.__class__.__name__
+            robot_params.Telemetry.print_t(
+                f"[Ownership] {subsystem_name}: {event} by {owner_name}",
+                prints_per_second=10
+            )
+
+    def _print_motor_call_denied(self, owner) -> None:
+        """Print telemetry when a motor command is rejected due to ownership."""
+        if robot_params is not None:
+            owner_name = owner.__class__.__name__ if owner is not None else "None"
+            current_owner = self._owner.__class__.__name__ if self._owner is not None else "None"
+            subsystem_name = self.__class__.__name__
+            robot_params.Telemetry.print_t(
+                f"[Ownership] {subsystem_name}: MOTOR_CALL_DENIED from {owner_name} (currently owned by {current_owner})",
+                prints_per_second=5
+            )
+
     def is_owned(self) -> bool:
         """Returns True if any caller currently owns this subsystem."""
         return self._owner is not None
@@ -50,16 +79,23 @@ class Subsystem(ABC):
         """
         if not self.is_owned():
             self._owner = owner
+            self._print_ownership_telemetry("CLAIMED", owner)
             return True
-        return owner is self.get_owner()
+        already_owner = owner is self.get_owner()
+        if not already_owner:
+            self._print_ownership_telemetry("DENIED", owner)
+        return already_owner
 
     def release_ownership(self, owner) -> None:
         """Release ownership. Ignored if the caller is not the current owner."""
         if owner is self._owner:
+            self._print_ownership_telemetry("RELEASED", owner)
             self._owner = None
 
     def force_release(self) -> None:
         """Unconditionally clear ownership. Use during mode switches."""
+        if self._owner is not None:
+            self._print_ownership_telemetry("FORCE_RELEASED", self._owner)
         self._owner = None
 
     def check_ownership(self, owner) -> bool:
