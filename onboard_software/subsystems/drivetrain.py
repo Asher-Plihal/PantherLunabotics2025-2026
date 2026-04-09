@@ -80,11 +80,11 @@ class Drivetrain(Subsystem):
 
     def drive_forward(self, power: float = 0.5, owner=None):
         """Drive straight forward at the given power (default 50%)."""
-        self.set_power(owner, power, -power, power, -power)
+        self.set_power(owner, -power, power, -power, power)
 
     def drive_backward(self, power: float = 0.5, owner=None):
         """Drive straight backward at the given power (default 50%)."""
-        self.set_power(owner, -power, power, -power, power)
+        self.set_power(owner, power, -power, power, -power)
 
     def strafe_left(self, power: float = 0.5, owner=None):
         """Strafe left at the given power (default 50%)."""
