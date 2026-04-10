@@ -8,13 +8,16 @@ if TYPE_CHECKING:
     import robot
 
 class TeleOp:
+    """Handles teleoperated robot control: maps gamepad buttons and sticks to subsystem commands."""
 
     def __init__(self, robot: robot.Robot):
+        """Attach to the robot and initialize the loop timer and active drive button state."""
         self.robot = robot
         self._last_update_time = time.monotonic()
         self._active_drive_buttons: set = set()
 
     def on_button_event(self, button, is_pressed):
+        """Dispatch a single gamepad button press or release to the appropriate subsystem."""
         if button in (Button.DPAD_UP, Button.DPAD_DOWN, Button.DPAD_LEFT, Button.DPAD_RIGHT,
                       Button.LB, Button.RB, Button.X):
             if robot_params.RobotConfig.useDrivetrain:
@@ -53,6 +56,7 @@ class TeleOp:
         if robot_params.RobotConfig.useDrivetrain and not self._active_drive_buttons:
             axes = self.robot.controller.axis_values
             self.robot.drivetrain.drive_task(
+                None,
                 axes.left_stick_y, axes.left_stick_x,
                 axes.right_stick_y, axes.right_stick_x
             )
@@ -60,13 +64,20 @@ class TeleOp:
         # Update motor controller (must come before telemetry reads)
         self.robot.motor_controller.update()
 
+        #Test if current will work for auger trigger
+        #print(self.robot.auger.is_full)
+        self.robot.auger.is_full
+
         # Print telemetry and log data
         self.robot.auger.log_data()
         self.robot.drivetrain.log_data()
         self.robot.perception.lidar_stream.log_data()
 
-    def run_teleOp_step(self):
+        if robot_params.RobotConfig.usePIDDrive and self.robot.pid_drive is not None:
+            self.robot.pid_drive.update()
 
+    def run_teleOp_step(self):
+        """Call periodic_loop() when the 50 Hz period has elapsed."""
         # Update periodic loop
         now = time.monotonic()
         elapsed = now - self._last_update_time

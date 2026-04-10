@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <thread>
+#include <chrono>
 
 #include "SparkMax.hpp"
 
@@ -220,14 +222,44 @@ public:
         return motorFeedback;
     }
 
-    // Zero the position for a motor — stores current raw tick as the new reference.
-    // All subsequent position values in feedback will be relative to this point.
+    // Wait until a motor has received real CAN feedback (voltage > 0).
+    // Returns true if feedback arrived, false on timeout.
+    bool WaitForFeedback(int motor_ID, float timeout_s = 0.5f)
+    {
+        if (connectedMotors.find(motor_ID) == connectedMotors.end())
+        {
+            throw std::runtime_error("Motor ID " + std::to_string(motor_ID) + " is not initialized.");
+        }
+
+        SparkMax& motor = connectedMotors.at(motor_ID);
+        auto start = std::chrono::steady_clock::now();
+        auto timeout = std::chrono::duration<float>(timeout_s);
+
+        while (std::chrono::steady_clock::now() - start < timeout)
+        {
+            motor.Heartbeat();
+            if (motor.GetVoltage() > 0.0f)
+            {
+                return true;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+
+        std::cerr << "Warning: Timed out waiting for feedback from motor ID " << motor_ID << std::endl;
+        return false;
+    }
+
+    // Zero the position for a motor — waits for real CAN data, then stores
+    // the current raw tick as the new reference. All subsequent position
+    // values in feedback will be relative to this point.
     void ResetMotorPosition(int motor_ID)
     {
         if (connectedMotors.find(motor_ID) == connectedMotors.end())
         {
             throw std::runtime_error("Motor ID " + std::to_string(motor_ID) + " is not initialized.");
         }
+
+        WaitForFeedback(motor_ID);
         positionOffsets[motor_ID] = connectedMotors.at(motor_ID).GetPosition();
     }
 

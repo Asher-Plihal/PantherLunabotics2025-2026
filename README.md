@@ -39,15 +39,23 @@ python robot.py
 python control.py
 ```
 
+# Blockers:
+
+1. Waiting for UWB parts to arrive
+2. Full scale robot to be built
+
 # TODO:
 
-# Phase 1: TeleOp/Gen:
-1. Check local streaming for Lidar
-2. Telemtry and rest position not working
+Make sure joystick drive works with update motor power directions
+test robot auger is full
 
-# Phase 2: Auto/Automations:
-1. Order parts
-2. Write Auto Tasks
-3. Write Localization code
-4. Setup Dashbaord
-5. Write pathing code
+1. Finish up the dashbaord
+ - Target for dashbaord should having a heading
+ - Read and cleanup
+2. Setup UWB
+ - Check math
+ - Cleanup `/uwb_localizer.py` to work well
+ - test it using dashbaord
+ - setup to test the uwbs with dashbaord as well
+3. Write pathing software
+4. Auto Tasks when pathing is done

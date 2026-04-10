@@ -38,6 +38,7 @@ class TelemetryLogger:
 
     @property
     def is_logging(self) -> bool:
+        """True while a log file is open and receiving data."""
         return self._file is not None
 
     def start_logging(self, columns: list):

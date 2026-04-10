@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UWB Localization — Math Reference</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #111;
+      background: #fff;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 36px 48px 60px;
+    }
+
+    header {
+      border-bottom: 2.5px solid #111;
+      padding-bottom: 10px;
+      margin-bottom: 28px;
+    }
+    header h1 { font-size: 22px; letter-spacing: 0.02em; }
+    header .subtitle { font-size: 13px; color: #444; margin-top: 3px; font-style: italic; }
+
+    h2 {
+      font-size: 15px;
+      font-variant: small-caps;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 4px;
+      margin: 32px 0 12px;
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: bold;
+      margin: 20px 0 6px;
+    }
+
+    p { margin-bottom: 10px; }
+    ul { margin: 8px 0 8px 22px; }
+    li { margin-bottom: 4px; }
+
+    /* ── Quick-reference test box ── */
+    .test-box {
+      border: 1.5px solid #111;
+      border-radius: 4px;
+      padding: 14px 20px;
+      margin: 14px 0;
+      background: #fafafa;
+    }
+    .test-box table { border-collapse: collapse; width: 100%; }
+    .test-box td { padding: 3px 10px 3px 0; vertical-align: top; font-size: 13px; }
+    .test-box td:first-child { white-space: nowrap; font-weight: bold; width: 60px; }
+    .test-box .answer { font-weight: bold; white-space: nowrap; }
+    .test-box .setup {
+      font-size: 12.5px;
+      color: #444;
+      border-bottom: 1px dashed #bbb;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+
+    /* ── Notation table ── */
+    table.notation {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 10px 0;
+      font-size: 13.5px;
+    }
+    table.notation th {
+      text-align: left;
+      border-bottom: 1.5px solid #111;
+      padding: 4px 12px 4px 0;
+      font-variant: small-caps;
+      letter-spacing: 0.05em;
+    }
+    table.notation td {
+      padding: 4px 12px 4px 0;
+      border-bottom: 1px solid #ddd;
+      vertical-align: top;
+    }
+    table.notation td:first-child {
+      white-space: nowrap;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+
+    /* ── Equation display ── */
+    .eq-block {
+      margin: 14px 0;
+      padding: 12px 20px;
+      border-left: 3px solid #111;
+      background: #f7f7f7;
+      overflow-x: auto;
+    }
+    .eq-label {
+      font-size: 11.5px;
+      font-variant: small-caps;
+      letter-spacing: 0.07em;
+      color: #555;
+      margin-bottom: 4px;
+    }
+
+    /* ── Geometry diagram ── */
+    .diagram {
+      font-family: 'Courier New', monospace;
+      font-size: 12.5px;
+      line-height: 1.7;
+      padding: 14px 20px;
+      background: #f7f7f7;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin: 12px 0;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    /* ── Worked examples ── */
+    .example {
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      margin: 22px 0;
+      overflow: hidden;
+    }
+    .example-header {
+      background: #111;
+      color: #fff;
+      padding: 7px 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      letter-spacing: 0.03em;
+    }
+    .example-body { padding: 14px 20px; }
+    .step { margin-bottom: 20px; }
+    .step-label {
+      font-weight: bold;
+      font-size: 13px;
+      margin-bottom: 6px;
+      font-variant: small-caps;
+      letter-spacing: 0.05em;
+    }
+    .step-calc {
+      font-family: 'Courier New', monospace;
+      font-size: 12.5px;
+      line-height: 1.9;
+      padding-left: 12px;
+      border-left: 2px solid #ddd;
+      color: #222;
+    }
+    .step-calc .ans { font-weight: bold; color: #000; }
+    .sanity {
+      font-size: 12.5px;
+      color: #444;
+      font-style: italic;
+      border-top: 1px dashed #ccc;
+      margin-top: 12px;
+      padding-top: 8px;
+    }
+    .result {
+      display: inline-block;
+      background: #111;
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    /* ── Note callout ── */
+    .note {
+      font-size: 12.5px;
+      color: #444;
+      border-left: 3px solid #bbb;
+      padding: 6px 14px;
+      margin: 10px 0;
+      background: #fafafa;
+    }
+
+    /* ── Verification table ── */
+    table.verify {
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 8px 0 8px 14px;
+    }
+    table.verify td { padding: 3px 18px 3px 0; vertical-align: top; }
+    table.verify td:first-child { font-family: 'Courier New', monospace; white-space: nowrap; }
+
+    @media print {
+      body { padding: 20px 30px; font-size: 12px; }
+      .example-header { background: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .result { background: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      h2 { page-break-after: avoid; }
+      .example { page-break-inside: avoid; }
+    }
+
+    footer {
+      margin-top: 48px;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+      font-size: 11.5px;
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>UWB Localization &mdash; Math Reference</h1>
+  <div class="subtitle">PantherLunabotics 2025&ndash;2026 &nbsp;&bull;&nbsp; Florida Institute of Technology</div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<h2>What It Does</h2>
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<p>
+  Two UWB anchors are fixed to the arena walls at known positions. Two UWB tags ride on the
+  robot, one on the left and one on the right, separated by a known distance&nbsp;$W$.
+  Each tag ranges to both anchors independently, producing four distance measurements per cycle:
+  $d_{LA},\,d_{LB},\,d_{RA},\,d_{RB}$.
+</p>
+<p>
+  From those four measurements the system computes the full robot pose
+  $(\,x,\;y,\;\theta\,)$ &mdash; position and absolute heading &mdash; with <strong>no IMU required</strong>.
+  The heading is derived entirely from UWB geometry because the tags are labeled (left vs. right).
+  With 4 measurements and only 3 unknowns the system is over-constrained, giving a built-in
+  consistency check.
+</p>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<h2>Coordinate System</h2>
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<p>
+  $+X$ = east (right across arena). $+Y$ = north (away from berm, up the arena).
+  Origin at the bottom-left corner of the arena. Heading $\theta$: $0°$ = north,
+  positive = clockwise: $90°$ = east, $180°$ = south, $270°$ = west.
+</p>
+<p>
+  At heading $\theta$, the robot's right-lateral unit vector is $(\cos\theta,\;{-}\sin\theta)$.
+  Therefore TAG_RIGHT is always displaced from the robot center in that direction, and TAG_LEFT
+  is displaced in the opposite direction $({-}\cos\theta,\;\sin\theta)$.
+</p>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<h2>System Diagram</h2>
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<div class="diagram">
+  Anchor A (ax, ay)                    Anchor B (bx, by)
+        *                                      *
+        |\                                    /|
+        | \ d_LA                       d_LB / |
+        |  \                               /  |
+   d_RA |   \                             /   | d_RB
+        |    \                           /    |
+        |     [TAG_LEFT]-----W-----[TAG_RIGHT] |
+        |                                      |
+        |       robot center = midpoint        |
+
+  Four measurements each cycle:
+    d_LA = TAG_LEFT  to Anchor A     d_LB = TAG_LEFT  to Anchor B
+    d_RA = TAG_RIGHT to Anchor A     d_RB = TAG_RIGHT to Anchor B
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<h2>Notation</h2>
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<table class="notation">
+  <tr><th>Symbol</th><th>Meaning</th></tr>
+  <tr><td>$d_{LA},\,d_{RA}$</td><td>Distances from TAG_LEFT and TAG_RIGHT to Anchor A (metres)</td></tr>
+  <tr><td>$d_{LB},\,d_{RB}$</td><td>Distances from TAG_LEFT and TAG_RIGHT to Anchor B (metres)</td></tr>
+  <tr><td>$W$</td><td>TAG_LEFT-to-TAG_RIGHT separation (metres) &mdash; measure on the robot</td></tr>
+  <tr><td>$(a_x,\,a_y)$</td><td>Anchor A position in arena coordinates (metres)</td></tr>
+  <tr><td>$(b_x,\,b_y)$</td><td>Anchor B position in arena coordinates (metres)</td></tr>
+  <tr><td>$d_{AB}$</td><td>Distance between the two anchors: $\sqrt{(b_x-a_x)^2+(b_y-a_y)^2}$</td></tr>
+  <tr><td>$r_1,\,r_2$</td><td>Circle radii for a given tag: $(d_{xA},\,d_{xB})$ where $x \in \{L,R\}$</td></tr>
+  <tr><td>$a$</td><td>Signed projection along the A&rarr;B axis to the radical axis of the two circles</td></tr>
+  <tr><td>$h$</td><td>Half-chord: perpendicular offset from the radical axis to each intersection point</td></tr>
+  <tr><td>$(P_x,\,P_y)$</td><td>Foot of perpendicular from the intersection points onto the A&rarr;B line</td></tr>
+  <tr><td>$(Q_x,\,Q_y)$</td><td>Unit vector perpendicular to A&rarr;B (direction to intersection points)</td></tr>
+  <tr><td>$(l_x,\,l_y)$</td><td>TAG_LEFT position in arena coordinates (computed)</td></tr>
+  <tr><td>$(r_x,\,r_y)$</td><td>TAG_RIGHT position in arena coordinates (computed)</td></tr>
+  <tr><td>$(x,\,y)$</td><td>Robot center in arena coordinates (metres)</td></tr>
+  <tr><td>$\theta$</td><td>Robot heading (degrees): 0° = north, CW positive, 90° = east</td></tr>
+  <tr><td>$f$</td><td>Forward offset: how far the tag midpoint is ahead of the robot center (metres)</td></tr>
+</table>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<h2>Quick-Reference Test Values</h2>
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<div class="test-box">
+  <div class="setup">
+    All cases: &nbsp;
+    Anchor A at $(0,\,0)$ &nbsp;&bull;&nbsp;
+    Anchor B at $(4,\,0)$ &nbsp;&bull;&nbsp;
+    $W = 0.6\text{ m}$ &nbsp;&bull;&nbsp;
+    $f = 0$
+  </div>
+  <table>
+    <tr>
+      <td>Case 1</td>
+      <td>$d_{LA}=2.625,\; d_{LB}=3.048,\; d_{RA}=3.048,\; d_{RB}=2.625$ (metres)</td>
+      <td class="answer">&rarr;&nbsp; $x=2.000,\; y=2.000,\; \theta=0°$ (north)</td>
+    </tr>
+    <tr>
+      <td>Case 2</td>
+      <td>$d_{LA}=3.499,\; d_{LB}=2.059,\; d_{RA}=3.231,\; d_{RB}=1.562$</td>
+      <td class="answer">&rarr;&nbsp; $x=3.000,\; y=1.500,\; \theta=90°$ (east)</td>
+    </tr>
+    <tr>
+      <td>Case 3</td>
+      <td>$d_{LA}=3.269,\; d_{LB}=4.036,\; d_{RA}=3.081,\; d_{RB}=4.460$</td>
+      <td class="answer">&rarr;&nbsp; $x=1.000,\; y=3.000,\; \theta=180°$ (south)</td>
+    </tr>
+  </table>
+</div>
+
+<p style="font-size:12.5px; color:#444;">
+  Full step-by-step working for all three cases is at the bottom of this sheet.
+</p>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<h2>Step 1 &mdash; Trilaterate Each Tag</h2>
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<p>
+  Each tag's 2D position is determined by intersecting two circles: circle A (centered at Anchor A,
+  radius $r_1$) and circle B (centered at Anchor B, radius $r_2$). Two circles in general
+  position intersect at exactly two points that are mirror images across the A&rarr;B line.
+</p>
+<p>
+  Perform this procedure once for TAG_LEFT $(r_1 = d_{LA},\; r_2 = d_{LB})$
+  and once for TAG_RIGHT $(r_1 = d_{RA},\; r_2 = d_{RB})$.
+</p>
+
+<h3>Anchor separation</h3>
+<div class="eq-block">
+  <div class="eq-label">Precomputed once per session</div>
+  $$d_{AB} \;=\; \sqrt{(b_x - a_x)^2 + (b_y - a_y)^2}$$
+</div>
+
+<h3>Projection distance along A&rarr;B</h3>
+<div class="eq-block">
+  <div class="eq-label">Derivation: subtract the two circle equations to eliminate x&sup2;+y&sup2;</div>
+  $$a \;=\; \frac{r_1^2 \;-\; r_2^2 \;+\; d_{AB}^2}{2\,d_{AB}}$$
+</div>
+<p>
+  $a$ is the coordinate of the intersection points projected onto the A&rarr;B axis, measured
+  from Anchor A. It comes from writing $|P - A|^2 = r_1^2$ and $|P - B|^2 = r_2^2$, then
+  subtracting to cancel the quadratic terms, which leaves a linear equation in the
+  projection of $P$ onto A&rarr;B.
+</p>
+
+<h3>Half-chord (perpendicular offset)</h3>
+<div class="eq-block">
+  <div class="eq-label">Pythagorean theorem in the local circle frame</div>
+  $$h \;=\; \sqrt{\,\max\!\bigl(r_1^2 - a^2,\; 0\bigr)\,}$$
+</div>
+<p>
+  $h$ is the perpendicular distance from the A&rarr;B axis to each intersection point.
+  The $\max(\cdot,\,0)$ clamp absorbs UWB noise that would otherwise produce a negative
+  radicand when the circles barely touch. If $d_{AB} &gt; r_1 + r_2$ (circles too far apart)
+  or $d_{AB} &lt; |r_1 - r_2|$ (one circle inside the other), the circles do not intersect
+  &mdash; discard the measurement.
+</p>
+
+<h3>Intersection points in arena coordinates</h3>
+<div class="eq-block">
+  <div class="eq-label">Foot of perpendicular on the A&rarr;B line</div>
+  $$P_x \;=\; a_x \;+\; a\,\frac{b_x - a_x}{d_{AB}} \qquad
+    P_y \;=\; a_y \;+\; a\,\frac{b_y - a_y}{d_{AB}}$$
+</div>
+<div class="eq-block">
+  <div class="eq-label">Unit vector perpendicular to A&rarr;B (rotated 90&deg; CCW from A&rarr;B)</div>
+  $$Q_x \;=\; -\frac{b_y - a_y}{d_{AB}} \qquad Q_y \;=\; \frac{b_x - a_x}{d_{AB}}$$
+</div>
+<div class="eq-block">
+  <div class="eq-label">Two candidate positions (symmetric about A&rarr;B)</div>
+  $$\text{Candidate 1:}\quad (P_x + h\,Q_x,\;\; P_y + h\,Q_y)$$
+  $$\text{Candidate 2:}\quad (P_x - h\,Q_x,\;\; P_y - h\,Q_y)$$
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<h2>Step 2 &mdash; Select the Valid Pair</h2>
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<p>
+  Step 1 produces two candidates for TAG_LEFT and two for TAG_RIGHT, giving four possible
+  (L,&nbsp;R) combinations. The physically correct pair is the one where the tags are
+  separated by exactly $W$.
+</p>
+
+<div class="eq-block">
+  <div class="eq-label">Test all four (L_cand, R_cand) combinations</div>
+  $$\text{sep} \;=\; \sqrt{(r_x - l_x)^2 + (r_y - l_y)^2}$$
+  $$\text{Accept the pair where } |\,\text{sep} - W\,| \;<\; \varepsilon
+    \quad(\varepsilon \approx 0.05\text{ to }0.10\text{ m for UWB noise})$$
+</div>
+
+<p>
+  Normally exactly one pair passes. If two pairs pass (rare; occurs near the anchor-to-anchor
+  diagonal where both mirror solutions have similar separations), select the candidate closest
+  to the previous position estimate. If no pair passes, the reading is invalid &mdash; skip it.
+</p>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<h2>Step 3 &mdash; Robot Center</h2>
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<div class="eq-block">
+  <div class="eq-label">Midpoint of the two tag positions</div>
+  $$x_M \;=\; \frac{l_x + r_x}{2} \qquad y_M \;=\; \frac{l_y + r_y}{2}$$
+</div>
+
+<p>
+  If $f = 0$ (tag midpoint is at the robot's geometric center), then $(x,\,y) = (x_M,\,y_M)$.
+  If the tag midpoint is mounted $f$ metres ahead of the robot center, apply the correction
+  <em>after</em> computing $\theta$ in Step 4:
+</p>
+
+<div class="eq-block">
+  <div class="eq-label">Forward-offset correction (apply only when f &ne; 0)</div>
+  $$x \;=\; x_M \;-\; f\sin\theta \qquad y \;=\; y_M \;-\; f\cos\theta$$
+</div>
+
+<p style="font-size:12.5px; color:#444;">
+  Derivation: the forward unit vector at heading $\theta$ is $(\sin\theta,\,\cos\theta)$ in the
+  north-0°-CW system. Subtracting $f$ times that vector steps backward from the tag midpoint to
+  the robot center.
+</p>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<h2>Step 4 &mdash; Heading</h2>
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<p>
+  The vector from TAG_LEFT to TAG_RIGHT always points along the robot's right-lateral axis.
+  At heading $\theta$, the right-lateral unit vector is $(\cos\theta,\,-\sin\theta)$, so:
+</p>
+
+<div class="eq-block">
+  <div class="eq-label">Tag-to-tag displacement</div>
+  $$v_x \;=\; r_x - l_x \;=\; W\cos\theta \qquad v_y \;=\; r_y - l_y \;=\; -W\sin\theta$$
+</div>
+
+<div class="eq-block">
+  <div class="eq-label">Heading &mdash; invert the lateral-vector equations</div>
+  $$\theta \;=\; \mathrm{atan2}(-v_y,\; v_x) \cdot \frac{180°}{\pi}
+    \quad\text{(standard two-argument arctangent)}$$
+  $$\text{Normalize: if }\theta < 0°\text{ then }\theta \mathrel{+}= 360°$$
+</div>
+
+<p>
+  The first argument of $\mathrm{atan2}$ is $-v_y$ (not $v_y$) because the heading convention
+  is clockwise-positive, while $\mathrm{atan2}$ uses counter-clockwise-positive. Negating $v_y$
+  converts between the two conventions.
+</p>
+
+<h3>Verification at cardinal headings</h3>
+<table class="verify">
+  <tr>
+    <td>$\theta = 0°$ (north):</td>
+    <td>TAG_R is due east &rarr; $v_x = +W,\; v_y = 0$ &rarr; atan2(0, +W) = 0° &nbsp;&#10003;</td>
+  </tr>
+  <tr>
+    <td>$\theta = 90°$ (east):</td>
+    <td>TAG_R is due south &rarr; $v_x = 0,\; v_y = -W$ &rarr; atan2(+W, 0) = 90° &nbsp;&#10003;</td>
+  </tr>
+  <tr>
+    <td>$\theta = 180°$ (south):</td>
+    <td>TAG_R is due west &rarr; $v_x = -W,\; v_y = 0$ &rarr; atan2(0, &minus;W) = 180° &nbsp;&#10003;</td>
+  </tr>
+  <tr>
+    <td>$\theta = 270°$ (west):</td>
+    <td>TAG_R is due north &rarr; $v_x = 0,\; v_y = +W$ &rarr; atan2(&minus;W, 0) = &minus;90° &rarr; 270° &nbsp;&#10003;</td>
+  </tr>
+</table>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<h2>Residual Ambiguity</h2>
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<p>
+  Both $\text{Candidate}_1$ and $\text{Candidate}_2$ from Step 1 satisfy the distance equations
+  exactly. The W-constraint in Step 2 normally eliminates one candidate from each tag, leaving
+  a unique solution. When the robot lies near the A&ndash;B axis, two (L, R) pairs can both
+  satisfy the W-constraint. Resolution options:
+</p>
+<ul>
+  <li><strong>Previous position</strong> &mdash; the robot cannot teleport; the correct candidate
+      is always closest to the last known position. This is the primary tiebreaker in code.</li>
+  <li><strong>Arena bounds</strong> &mdash; one candidate often falls outside $y \ge 0$ or the
+      arena walls and can be discarded immediately.</li>
+  <li><strong>IMU angular velocity</strong> &mdash; heading must change continuously between
+      cycles. An IMU can confirm which heading is consistent with the recent turn rate.</li>
+</ul>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<h2>Output Summary</h2>
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<table class="notation">
+  <tr><th>Value</th><th>Type</th><th>Description</th></tr>
+  <tr><td>$x$</td><td>float (metres)</td><td>Robot center east coordinate in arena frame</td></tr>
+  <tr><td>$y$</td><td>float (metres)</td><td>Robot center north coordinate in arena frame</td></tr>
+  <tr><td>$\theta$</td><td>float (degrees)</td><td>Robot heading: 0° = north, 90° = east, CW positive</td></tr>
+</table>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<h2>Worked Examples</h2>
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<p style="font-size:12.5px; color:#444;">
+  All cases: Anchor A at $(0,\,0)$, &nbsp;Anchor B at $(4,\,0)$, &nbsp;$W = 0.6\,\text{m}$,
+  &nbsp;$f = 0$. &nbsp;&nbsp;$d_{AB} = 4.000\,\text{m}$ for all cases.
+</p>
+<p style="font-size:12.5px; color:#444;">
+  Because both anchors lie on the $x$-axis ($b_y = a_y = 0$), the perpendicular unit vector
+  $\mathbf{Q}$ is always $(Q_x, Q_y) = (0, 1)$ for these examples. The two candidates for any
+  tag therefore differ only in their $y$-coordinate: $(P_x,\, \pm h)$.
+</p>
+
+<!-- ─────────────────────────────────── Case 1 ─────────────────────── -->
+<div class="example">
+  <div class="example-header">
+    Case 1 &mdash; Robot at (2.000, 2.000), facing north (&theta; = 0&deg;)
+    &nbsp;|&nbsp; d_LA=2.625 &nbsp;d_LB=3.048 &nbsp;d_RA=3.048 &nbsp;d_RB=2.625
+  </div>
+  <div class="example-body">
+
+    <p style="font-size:12.5px; color:#444; margin-bottom:14px;">
+      At &theta;&thinsp;=&thinsp;0° the right-lateral axis points east (+X).
+      TAG_LEFT = (2.000 &minus; 0.300, 2.000) = <strong>(1.700, 2.000)</strong>.
+      TAG_RIGHT = (2.000 + 0.300, 2.000) = <strong>(2.300, 2.000)</strong>.
+    </p>
+
+    <div class="step">
+      <div class="step-label">Step 1a &mdash; Trilaterate TAG_LEFT &nbsp;(r&#8321; = d_LA = 2.625, r&#8322; = d_LB = 3.048)</div>
+      <div class="step-calc">
+        a = (2.625&sup2; &minus; 3.048&sup2; + 4.000&sup2;) / (2 &times; 4.000)<br>
+          = (6.891 &minus; 9.290 + 16.000) / 8.000<br>
+          = 13.601 / 8.000<br>
+          <span class="ans">= 1.700</span><br><br>
+
+        h = sqrt(2.625&sup2; &minus; 1.700&sup2;) = sqrt(6.891 &minus; 2.890) = sqrt(4.001) <span class="ans">&asymp; 2.000</span><br><br>
+
+        P_x = 0 + 1.700 &times; (4.000/4.000) = 1.700 &nbsp;&nbsp;&nbsp; P_y = 0<br>
+        Q_x = 0, Q_y = 1<br><br>
+
+        Candidate 1_L = (1.700 + 2.000&times;0,  0 + 2.000&times;1) = <span class="ans">(1.700,  2.000)</span><br>
+        Candidate 2_L = (1.700 &minus; 0,         0 &minus; 2.000)   = (1.700, &minus;2.000)
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 1b &mdash; Trilaterate TAG_RIGHT &nbsp;(r&#8321; = d_RA = 3.048, r&#8322; = d_RB = 2.625)</div>
+      <div class="step-calc">
+        a = (3.048&sup2; &minus; 2.625&sup2; + 16.000) / 8.000<br>
+          = (9.290 &minus; 6.891 + 16.000) / 8.000<br>
+          = 18.399 / 8.000<br>
+          <span class="ans">= 2.300</span><br><br>
+
+        h = sqrt(9.290 &minus; 5.290) = sqrt(4.000) <span class="ans">= 2.000</span><br><br>
+
+        Candidate 1_R = (2.300,  2.000) &nbsp;&nbsp;&nbsp; Candidate 2_R = (2.300, &minus;2.000)
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 2 &mdash; Select Valid Pair (W = 0.600 m, tolerance 0.05 m)</div>
+      <div class="step-calc">
+        (1_L, 1_R): sep = sqrt((2.300&minus;1.700)&sup2; + (2.000&minus;2.000)&sup2;) = sqrt(0.360+0) = <span class="ans">0.600 ✓</span><br>
+        (1_L, 2_R): sep = sqrt(0.360 + (2.000+2.000)&sup2;) = sqrt(0.360+16.00) = 4.045 ✗<br>
+        (2_L, 1_R): sep = sqrt(0.360 + (2.000+2.000)&sup2;) = 4.045 ✗<br>
+        (2_L, 2_R): sep = sqrt(0.360 + 0) = 0.600 &nbsp;(but y = &minus;2.0 is outside arena) ✗
+      </div>
+      <div class="note" style="margin-top:8px;">
+        Accepted: TAG_LEFT = (1.700, 2.000), TAG_RIGHT = (2.300, 2.000).
+        The mirror solution (2_L, 2_R) is discarded because y = &minus;2.0 is outside the arena (y &ge; 0).
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 3 &mdash; Robot Center</div>
+      <div class="step-calc">
+        x = (1.700 + 2.300) / 2 = <span class="ans">2.000</span><br>
+        y = (2.000 + 2.000) / 2 = <span class="ans">2.000</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 4 &mdash; Heading</div>
+      <div class="step-calc">
+        v_x = 2.300 &minus; 1.700 =  0.600<br>
+        v_y = 2.000 &minus; 2.000 =  0.000<br>
+        &theta; = atan2(&minus;0.000, 0.600) = atan2(0, +) = <span class="ans">0.0° (north) ✓</span>
+      </div>
+      <div class="result">x = 2.000 m &nbsp;&nbsp; y = 2.000 m &nbsp;&nbsp; &theta; = 0.0°</div>
+    </div>
+
+    <div class="sanity">
+      Sanity: Facing north means TAG_RIGHT is directly east of TAG_LEFT &rarr; v_x &gt; 0, v_y = 0.
+      Equal distances d_LA = d_RB and d_LB = d_RA confirm the symmetric straight-north configuration.
+      The a-values (1.700 for TAG_LEFT, 2.300 for TAG_RIGHT) equal the x-coordinates of the tags,
+      which makes sense because both anchors sit on the x-axis. &#10003;
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────── Case 2 ─────────────────────── -->
+<div class="example">
+  <div class="example-header">
+    Case 2 &mdash; Robot at (3.000, 1.500), facing east (&theta; = 90&deg;)
+    &nbsp;|&nbsp; d_LA=3.499 &nbsp;d_LB=2.059 &nbsp;d_RA=3.231 &nbsp;d_RB=1.562
+  </div>
+  <div class="example-body">
+
+    <p style="font-size:12.5px; color:#444; margin-bottom:14px;">
+      At &theta;&thinsp;=&thinsp;90° the right-lateral axis points south (&minus;Y).
+      TAG_LEFT = (3.000, 1.500 + 0.300) = <strong>(3.000, 1.800)</strong>.
+      TAG_RIGHT = (3.000, 1.500 &minus; 0.300) = <strong>(3.000, 1.200)</strong>.
+    </p>
+
+    <div class="step">
+      <div class="step-label">Step 1a &mdash; Trilaterate TAG_LEFT &nbsp;(r&#8321; = d_LA = 3.499, r&#8322; = d_LB = 2.059)</div>
+      <div class="step-calc">
+        a = (3.499&sup2; &minus; 2.059&sup2; + 16.000) / 8.000<br>
+          = (12.243 &minus; 4.240 + 16.000) / 8.000<br>
+          = 24.003 / 8.000<br>
+          <span class="ans">= 3.000</span><br><br>
+
+        h = sqrt(12.243 &minus; 9.000) = sqrt(3.243) <span class="ans">= 1.800</span><br><br>
+
+        Candidate 1_L = (3.000,  1.800) &nbsp;&nbsp;&nbsp; Candidate 2_L = (3.000, &minus;1.800)
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 1b &mdash; Trilaterate TAG_RIGHT &nbsp;(r&#8321; = d_RA = 3.231, r&#8322; = d_RB = 1.562)</div>
+      <div class="step-calc">
+        a = (3.231&sup2; &minus; 1.562&sup2; + 16.000) / 8.000<br>
+          = (10.439 &minus; 2.440 + 16.000) / 8.000<br>
+          = 23.999 / 8.000<br>
+          <span class="ans">= 3.000</span><br><br>
+
+        h = sqrt(10.439 &minus; 9.000) = sqrt(1.439) <span class="ans">= 1.200</span><br><br>
+
+        Candidate 1_R = (3.000,  1.200) &nbsp;&nbsp;&nbsp; Candidate 2_R = (3.000, &minus;1.200)
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 2 &mdash; Select Valid Pair</div>
+      <div class="step-calc">
+        (1_L, 1_R): sep = sqrt(0 + (1.800&minus;1.200)&sup2;) = sqrt(0.360) = <span class="ans">0.600 ✓</span><br>
+        (1_L, 2_R): sep = sqrt(0 + (1.800+1.200)&sup2;) = 3.000 ✗<br>
+        (2_L, 1_R): sep = sqrt(0 + (1.800+1.200)&sup2;) = 3.000 ✗<br>
+        (2_L, 2_R): sep = 0.600 &nbsp;(y negative, outside arena) ✗
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 3 &mdash; Robot Center</div>
+      <div class="step-calc">
+        x = (3.000 + 3.000) / 2 = <span class="ans">3.000</span><br>
+        y = (1.800 + 1.200) / 2 = <span class="ans">1.500</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 4 &mdash; Heading</div>
+      <div class="step-calc">
+        v_x = 3.000 &minus; 3.000 =  0.000<br>
+        v_y = 1.200 &minus; 1.800 = &minus;0.600<br>
+        &theta; = atan2(&minus;(&minus;0.600), 0.000) = atan2(0.600, 0) = <span class="ans">90.0° (east) ✓</span>
+      </div>
+      <div class="result">x = 3.000 m &nbsp;&nbsp; y = 1.500 m &nbsp;&nbsp; &theta; = 90.0°</div>
+    </div>
+
+    <div class="sanity">
+      Sanity: Facing east means TAG_RIGHT is directly south of TAG_LEFT &rarr; v_x = 0, v_y &lt; 0.
+      &minus;v_y = +0.600 &gt; 0, vx = 0, giving atan2(+,&thinsp;0) = 90°.
+      TAG_LEFT (farther from Anchor A: d_LA=3.499) is north; TAG_RIGHT (closer: d_RA=3.231) is south &mdash;
+      consistent with a robot facing east, since TAG_LEFT is to the robot's left (north when facing east). &#10003;
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────── Case 3 ─────────────────────── -->
+<div class="example">
+  <div class="example-header">
+    Case 3 &mdash; Robot at (1.000, 3.000), facing south (&theta; = 180&deg;)
+    &nbsp;|&nbsp; d_LA=3.269 &nbsp;d_LB=4.036 &nbsp;d_RA=3.081 &nbsp;d_RB=4.460
+  </div>
+  <div class="example-body">
+
+    <p style="font-size:12.5px; color:#444; margin-bottom:14px;">
+      At &theta;&thinsp;=&thinsp;180° the right-lateral axis points west (&minus;X).
+      TAG_LEFT = (1.000 + 0.300, 3.000) = <strong>(1.300, 3.000)</strong> &nbsp;(to the robot's left = east).
+      TAG_RIGHT = (1.000 &minus; 0.300, 3.000) = <strong>(0.700, 3.000)</strong> &nbsp;(to the robot's right = west).
+    </p>
+
+    <div class="step">
+      <div class="step-label">Step 1a &mdash; Trilaterate TAG_LEFT &nbsp;(r&#8321; = d_LA = 3.269, r&#8322; = d_LB = 4.036)</div>
+      <div class="step-calc">
+        a = (3.269&sup2; &minus; 4.036&sup2; + 16.000) / 8.000<br>
+          = (10.686 &minus; 16.289 + 16.000) / 8.000<br>
+          = 10.397 / 8.000<br>
+          <span class="ans">= 1.300</span><br><br>
+
+        h = sqrt(10.686 &minus; 1.690) = sqrt(8.996) <span class="ans">= 2.999 &asymp; 3.000</span><br><br>
+
+        Candidate 1_L = (1.300,  3.000) &nbsp;&nbsp;&nbsp; Candidate 2_L = (1.300, &minus;3.000)
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 1b &mdash; Trilaterate TAG_RIGHT &nbsp;(r&#8321; = d_RA = 3.081, r&#8322; = d_RB = 4.460)</div>
+      <div class="step-calc">
+        a = (3.081&sup2; &minus; 4.460&sup2; + 16.000) / 8.000<br>
+          = (9.493 &minus; 19.892 + 16.000) / 8.000<br>
+          = 5.601 / 8.000<br>
+          <span class="ans">= 0.700</span><br><br>
+
+        h = sqrt(9.493 &minus; 0.490) = sqrt(9.003) <span class="ans">= 3.001 &asymp; 3.000</span><br><br>
+
+        Candidate 1_R = (0.700,  3.000) &nbsp;&nbsp;&nbsp; Candidate 2_R = (0.700, &minus;3.000)
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 2 &mdash; Select Valid Pair</div>
+      <div class="step-calc">
+        (1_L, 1_R): sep = sqrt((0.700&minus;1.300)&sup2; + 0) = sqrt(0.360) = <span class="ans">0.600 ✓</span><br>
+        (1_L, 2_R): sep = sqrt(0.360 + (3.000+3.000)&sup2;) = sqrt(0.360+36.00) = 6.029 ✗<br>
+        (2_L, 1_R): sep = 6.029 ✗<br>
+        (2_L, 2_R): sep = 0.600 &nbsp;(y = &minus;3.0, outside arena) ✗
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 3 &mdash; Robot Center</div>
+      <div class="step-calc">
+        x = (1.300 + 0.700) / 2 = <span class="ans">1.000</span><br>
+        y = (3.000 + 3.000) / 2 = <span class="ans">3.000</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-label">Step 4 &mdash; Heading</div>
+      <div class="step-calc">
+        v_x = 0.700 &minus; 1.300 = &minus;0.600<br>
+        v_y = 3.000 &minus; 3.000 =  0.000<br>
+        &theta; = atan2(&minus;0.000, &minus;0.600) = atan2(0, &minus;) = <span class="ans">180.0° (south) ✓</span>
+      </div>
+      <div class="result">x = 1.000 m &nbsp;&nbsp; y = 3.000 m &nbsp;&nbsp; &theta; = 180.0°</div>
+    </div>
+
+    <div class="sanity">
+      Sanity: Facing south means TAG_RIGHT is directly west of TAG_LEFT &rarr; v_x &lt; 0, v_y = 0.
+      atan2(0,&thinsp;&minus;) = 180°.
+      The a-values confirm geometry: TAG_LEFT has a=1.300 (closer to Anchor A at x=0 by projection)
+      and TAG_RIGHT has a=0.700 (even closer), matching that TAG_RIGHT sits at x=0.700 and
+      TAG_LEFT at x=1.300. &#10003;
+    </div>
+  </div>
+</div>
+
+<footer>
+  Code: <code>tests/uwb_localizer.py</code> &mdash; <code>UWBLocalizer</code> class &nbsp;&bull;&nbsp;
+  Hardware &amp; integration notes: <code>UWB.md</code>
+</footer>
+
+</body>
+</html>

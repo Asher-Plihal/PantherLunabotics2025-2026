@@ -8,3 +8,8 @@ lunaenv/
 .venv/
 .env/
 .lunenv/
+
+# ROS2 colcon build artifacts
+**/build/
+install/
+log/

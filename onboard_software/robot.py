@@ -7,20 +7,29 @@ import time
 import teleOp
 import auto
 import robot_params
+from autoTasks.excavation import ExcavationTask
+from autoTasks.dump import DumpTask
 import server
 from subsystems import drivetrain
 from subsystems import auger
 from subsystems import perception
+from subsystems import dashboard
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from library import controller
 from library.protocol import Command, Mode
+from library.pid_drive import PIDDrive
+
+from library.uwb_localizer import UWBLocalizer
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'library', 'motor_controller', 'build'))
 import motor_controller as mc  # type: ignore
 
 class Robot:
+    """Top-level robot orchestrator: initializes hardware, manages modes, and runs the main control loop."""
+
     def __init__(self):
+        """Initialize all subsystems in the required order and block until mission control sends READY."""
         self.current_mode = None
         self.running = True
 
@@ -47,10 +56,38 @@ class Robot:
         self.server = server.Server()
         threading.Thread(target=self.server.start, daemon=True).start()
 
+        # Initialize field dashboard (no-op if RobotConfig.fieldDashboard is False)
+        self.dashboard = dashboard.Dashboard(self.server)
+
+        # Initialize PID drive (localizer start is handled inside PIDDrive.__init__)
+        self.pid_drive: PIDDrive | None = None
+        if robot_params.RobotConfig.usePIDDrive and robot_params.RobotConfig.useDrivetrain:
+            cfg = robot_params.RobotConfig
+            localizer = UWBLocalizer(
+                ax=cfg.uwbAnchorAX, ay=cfg.uwbAnchorAY,
+                bx=cfg.uwbAnchorBX, by=cfg.uwbAnchorBY,
+                tag_sep=cfg.uwbTagSep, forward_offset=cfg.uwbForwardOffset,
+                use_hardware=True,
+                left_port=cfg.uwbLeftPort, right_port=cfg.uwbRightPort,
+            )
+            self.pid_drive = PIDDrive(
+                self.drivetrain, localizer,
+                x_coeffs=cfg.pidXCoeffs,
+                y_coeffs=cfg.pidYCoeffs,
+                h_coeffs=cfg.pidHCoeffs,
+            )
+            self.pid_drive.set_max_rotation_speed(cfg.drivetrainMaxSpeed)
+            self.pid_drive.set_max_translation_speed(cfg.drivetrainMaxSpeed)
+            self.dashboard.set_uwb_source(localizer)
+
         # Initialize controller and run modes
         self.controller = controller.Controller(self)
         self.teleop = teleOp.TeleOp(self)
         self.auto = auto.Auto(self)
+
+        # Initialize auto tasks
+        self.excavation_task = ExcavationTask(self)
+        self.dump_task = DumpTask(self)
 
         startup_timeout = 60 # seconds
         startup_start = time.monotonic()
@@ -64,6 +101,8 @@ class Robot:
         print("[Robot] Startup complete!")
 
     def run(self):
+        """Main control loop: dispatch incoming commands and step the active mode each iteration."""
+        previous_mode = None
 
         while self.running:
 
@@ -78,19 +117,31 @@ class Robot:
                     self.current_mode = cmd[0]
                     self.controller.process_controller_inputs(cmd)
 
+            # On mode transition, clear all subsystem ownership so the
+            # incoming mode starts with a clean slate
+            if self.current_mode != previous_mode:
+                self.drivetrain.force_release()
+                self.auger.force_release()
+                previous_mode = self.current_mode
+
             if self.current_mode == Mode.TELEOP:
                 self.teleop.run_teleOp_step()
             elif self.current_mode == Mode.AUTO:
                 self.auto.run_auto_step()
+
             time.sleep(0.01)
     
     def stop(self):
+        """Gracefully shut down all subsystems and signal the main loop to exit."""
         print("[Robot] Stopping robot")
         self.running = False
+        if self.pid_drive is not None:
+            self.pid_drive.shutdown()
         self.perception.stop()
         self.server.stop()
         self.drivetrain.shutdown()
         self.auger.shutdown()
+        self.dashboard.shutdown()
 
 def setup_network():
     """Connect to the configured network via nmcli (skips if already connected), then print the active SSID."""
@@ -159,4 +210,14 @@ def init_can_bus(interface: str = "can1", bitrate: int = 1_000_000):
     print(f"[CAN] {interface} is up at {bitrate} bps")
         
 if __name__ == "__main__":
-    Robot().run()
+    robot = None
+    try:
+        robot = Robot()
+        robot.run()
+    except KeyboardInterrupt:
+        print("\n[Robot] Interrupted by user")
+    except Exception as e:
+        print(f"[Robot] Fatal error: {e}")
+    finally:
+        if robot is not None:
+            robot.stop()

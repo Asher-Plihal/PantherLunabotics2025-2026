@@ -9,6 +9,8 @@ if TYPE_CHECKING:
 
 @dataclass
 class AxisValues:
+    """Snapshot of all six gamepad axis values for one control cycle."""
+
     left_stick_x: float = 0.0
     left_stick_y: float = 0.0
     right_stick_x: float = 0.0
@@ -17,6 +19,7 @@ class AxisValues:
     rt: float = 0.0
 
     def update(self, cmd):
+        """Unpack axis values from a raw command tuple."""
         self.left_stick_x = cmd[1]
         self.left_stick_y = cmd[2]
         self.right_stick_x = cmd[3]
@@ -25,6 +28,7 @@ class AxisValues:
         self.rt = cmd[6]
 
     def __str__(self):
+        """Human-readable axis state for logging."""
         return (f"Axis State:"
                 f"  Left Stick X: {self.left_stick_x},"
                 f"  Left Stick Y: {self.left_stick_y},"
@@ -34,14 +38,19 @@ class AxisValues:
                 f"  Right Trigger: {self.rt}")
 
 class Controller:
+    """Translates raw command tuples received from the network into robot actions."""
+
     def __init__(self, robot: Robot):
+        """Attach to the robot instance and initialize axis state."""
         self.robot = robot
         self.axis_values = AxisValues()
 
     def process_axes(self, cmd):
+        """Update stored axis values from an axis command tuple."""
         self.axis_values.update(cmd)
 
     def process_buttons(self, cmd):
+        """Dispatch a button event to the handler for the current mode."""
         if len(cmd) != 3:
             print(f"[Controller] Unexpected button command length {len(cmd)}: {cmd}")
             return
@@ -54,6 +63,7 @@ class Controller:
             self.robot.auto.on_button_event(button, is_pressed)
 
     def process_controller_inputs(self, cmd):
+        """Route an incoming command to axis or button processing based on its shape."""
         if len(cmd) > 4 and cmd[0] == Mode.TELEOP: # For now only TELEOP uses axes
             self.process_axes(cmd)
         else:

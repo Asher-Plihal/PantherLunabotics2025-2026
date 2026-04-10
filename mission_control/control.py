@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "onboard_softwa
 import client
 from library.protocol import Command, Mode, Button, ButtonAction
 from library.streaming import StreamMode
+from library.panther_dashboard import DashboardView
 from robot_params import RobotConfig
 
 '''
@@ -33,10 +34,14 @@ Hat 0 - D-Pad (x: L = -1, R = 1 | y: D = -1, U = 1)
 '''
 
 class Control:
+    """Pygame-based operator interface: reads gamepad input and sends commands to the robot over TCP."""
+
     def __init__(self, server_ip):
+        """Initialize pygame, detect the joystick, and create the TCP client."""
         self.running = True
         self.mode = None
         self.viewer_procs: list[multiprocessing.Process] = []
+        self._dashboard_queue: multiprocessing.Queue | None = None
         self.client = client.Client(server_ip) # Connect to the robot's TCP server
 
         # Initialize the controller
@@ -52,10 +57,10 @@ class Control:
         print("[Control] 🎮 Controller connected!")
 
     def run(self):
+        """Connect to the robot, enter the main gamepad event loop, and forward all input as commands."""
         self.client_t = threading.Thread(target=self.client.connect)
         self.client_t.start()
-        if not self.client.connected.wait(timeout=10):
-            print("[Control] Failed to connect to robot within 10 seconds")
+        if not self.client.connected.wait(timeout=5):
             return
         self.client.send_command(Command.READY) # Notify robot that client is ready
 
@@ -164,21 +169,38 @@ class Control:
                             self.client.send_command((self.mode, name, ButtonAction.PRESSED))
                     prev_hat = curr_hat
 
-            commands = (self.mode, left_stick_x, left_stick_y, right_stick_x, right_stick_y, lt, rt)
+            commands = (self.mode, round(left_stick_x, 2), round(left_stick_y, 2), round(right_stick_x, 2), round(right_stick_y, 2), round(lt, 2), round(rt, 2))
             if commands != last_command and self.mode == Mode.TELEOP: # For now only TELEOP uses axes
                 self.client.send_command(commands)
                 last_command = commands
+
+            telemetry = self.client.get_telemetry()
+            if telemetry is not None and self._dashboard_queue is not None:
+                self._dashboard_queue.put(telemetry)
+
             time.sleep(0.05) # 20 Hz loop
 
     def _launch_viewers(self):
-        if RobotConfig.lidarStream == StreamMode.REMOTE:
+        """Start lidar viewer and field dashboard subprocesses based on RobotConfig."""
+        if RobotConfig.useLidar and RobotConfig.lidarStream == StreamMode.REMOTE:
             from subsystems.perception import Lidar
             proc = multiprocessing.Process(target=Lidar.run_viewer, daemon=True)
             proc.start()
             self.viewer_procs.append(proc)
             print("[Control] Launched lidar viewer")
 
+        if RobotConfig.fieldDashboard:
+            self._dashboard_queue = multiprocessing.Queue()
+            proc = multiprocessing.Process(
+                target=DashboardView.run,
+                args=(self._dashboard_queue,),
+                daemon=True)
+            proc.start()
+            self.viewer_procs.append(proc)
+            print("[Control] Launched field dashboard")
+
     def _stop_viewers(self):
+        """Terminate and join all viewer subprocesses."""
         for proc in self.viewer_procs:
             proc.terminate()
         for proc in self.viewer_procs:
@@ -188,6 +210,7 @@ class Control:
         self.viewer_procs.clear()
 
     def stop(self):
+        """Signal shutdown, stop viewers, quit pygame, and close the TCP connection."""
         print("[Control] Starting shut down")
         self.running = False
         self._stop_viewers()

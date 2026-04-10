@@ -1,4 +1,5 @@
 class Util:
+    """Static utility methods and unit-conversion constants."""
 
     # Conversion constants
     MM_PER_INCH = 25.4
@@ -23,6 +24,7 @@ class Util:
     
     @staticmethod
     def apply_deadzone(value, deadzone=0.1):
+        """Return 0 when |value| < deadzone; otherwise rescale the remaining range linearly to [0, 1]."""
         if abs(value) < deadzone:
             return 0.0
         sign = 1.0 if value > 0 else -1.0

@@ -11,14 +11,17 @@ class Server(Connection):
     """Robot-side TCP server that receives commands and sends telemetry."""
 
     def __init__(self, port=robot_params.RobotConfig.Robot_Port):
+        """Initialize the connection base and store the listening port."""
         super().__init__()
         self._port = port
         self._server_socket = None
 
     def _get_role_name(self):
+        """Return 'Server' for use in log messages."""
         return "Server"
 
     def _establish_connection(self):
+        """Bind, listen, and block until mission control connects; return the accepted client socket."""
         self._server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._server_socket.bind(("0.0.0.0", self._port))
@@ -36,9 +39,11 @@ class Server(Connection):
         self._run()
 
     def send_telemetry(self, data):
+        """Serialize data as a TELEMETRY message and enqueue for sending."""
         self._send(MessageType.TELEMETRY, data)
 
     def get_command(self):
+        """Return the next received command payload, or None if none is available."""
         return self._receive()
 
     def stop(self):

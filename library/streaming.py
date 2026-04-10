@@ -5,6 +5,7 @@ from enum import Enum
 
 
 class StreamMode(Enum):
+    """How a stream source delivers its data."""
     NONE = "none"      # No streaming
     REMOTE = "remote"  # Stream over TCP to a viewer on the laptop
     LOCAL = "local"    # Render locally on the robot (monitor plugged in)
@@ -26,6 +27,7 @@ class Stream:
     """
 
     def __init__(self, port: int, name: str):
+        """Configure stream with a TCP port and display name; no network activity until started."""
         self.port = port
         self.name = name
         self._running = False
@@ -36,6 +38,7 @@ class Stream:
 
     @property
     def running(self) -> bool:
+        """True while the stream thread is active."""
         return self._running
 
     # === Source side (used by robot/perception subsystems) ===
@@ -111,6 +114,7 @@ class Stream:
         return bytes(self._recv_exact(length))
 
     def _recv_exact(self, n: int) -> bytearray:
+        """Read exactly n bytes from the viewer socket, blocking until complete."""
         if self._viewer_sock is None:
             raise RuntimeError(f"[{self.name}] Not connected — call connect() first")
         buf = bytearray(n)
@@ -126,6 +130,7 @@ class Stream:
     # === Cleanup ===
 
     def _cleanup_sockets(self):
+        """Close all open sockets, ignoring errors."""
         for s in (self._client_conn, self._server_sock, self._viewer_sock):
             if s:
                 try:
