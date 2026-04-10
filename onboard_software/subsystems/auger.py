@@ -16,7 +16,7 @@ _LOG_COLUMNS = ["Duty Cycle", "Velocity (RPM)", "Position (ticks)", "Current (A)
 # Full-detection tuning parameters
 _FULL_CURRENT_THRESHOLD_A = 80.0  # amps — sustained current above this signals a full auger
 _FULL_DURATION_S = 0.5            # seconds — current must stay above threshold this long
-_CURRENT_SMA_WINDOW = 20           # samples — moving average window to filter transient current drops
+_CURRENT_SMA_WINDOW = 150           # samples — moving average window to filter transient current drops
 
 class Auger(Subsystem):
     """Sample collection motor subsystem (CAN ID 3)."""

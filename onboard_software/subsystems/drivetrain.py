@@ -96,11 +96,12 @@ class Drivetrain(Subsystem):
 
     def turn_left(self, power: float = 0.5, owner=None):
         """Turn left at the given power (default 50%)."""
-        self.set_power(owner, -power, -power, -power, -power)
+        self.set_power(owner, power, power, power, power)
 
     def turn_right(self, power: float = 0.5, owner=None):
         """Turn right at the given power (default 50%)."""
-        self.set_power(owner, power, power, power, power)
+        self.set_power(owner, -power, -power, -power, -power)
+        
 
     def fold_out(self, power: float = 0.5, owner=None):
         """Fold out at the given power (default 50%)."""
