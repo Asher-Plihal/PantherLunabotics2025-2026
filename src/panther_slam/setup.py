@@ -10,7 +10,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name + '/launch', ['launch/slam.launch.py']),
+        ('share/' + package_name + '/launch', ['launch/slam.launch.py', 'launch/bev_mapper.launch.py']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -26,6 +26,7 @@ setup(
     entry_points={
         'console_scripts': [
             'slam_planner = panther_slam.slam_planner:main',
+            'bev_mapper = panther_slam.bev_mapper.bev_mapper:main',
         ],
     },
 )
