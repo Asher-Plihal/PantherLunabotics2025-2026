@@ -33,12 +33,14 @@ class LinearActuatorTester:
         target = max(0, min(1023, target))
         high = (target >> 8) & 0xFF
         low  =  target       & 0xFF
-        self._bus.write_i2c_block_data(self._address, 0, [high, low])
+        self._bus.write_i2c_block_data(self._address, high, [low])
 
     def read_position(self) -> int:
         """Read the current actuator position (0–1023) from the Nano."""
         data = self._bus.read_i2c_block_data(self._address, 0, 2)
         return (data[0] << 8) | data[1]
+        # Note: smbus2 read sends a register byte (0x00) before reading.
+        # Arduino's requestEvent ignores it and sends 2 bytes back.
 
     def move_to(self, target: int, timeout: float = 5.0) -> None:
         """Send target and poll until position is within ±5 raw counts or timeout."""
