@@ -15,7 +15,7 @@ import smbus2
 
 
 I2C_BUS     = 1       # /dev/i2c-1  (Jetson 40-pin header pins 3/5)
-I2C_ADDRESS = 0x08
+I2C_ADDRESS = 0x40
 READ_DELAY  = 0.05    # seconds between write and read
 
 
