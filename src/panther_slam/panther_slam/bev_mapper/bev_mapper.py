@@ -5,7 +5,7 @@ from nav_msgs.msg import OccupancyGrid
 import numpy as np
 import cv2
 from cv_bridge import CvBridge
-import sensor_msgs.point_cloud2 as pc2
+import sensor_msgs_py.point_cloud2 as pc2
 
 
 class BEVMapper(Node):
@@ -148,6 +148,10 @@ class BEVMapper(Node):
 
         # Flip vertically for proper orientation
         img = cv2.flip(img, 0)
+
+        # Status overlay
+        cv2.putText(img, 'BEV MAP', (5, 15),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 128, 0), 1)
 
         return img
 

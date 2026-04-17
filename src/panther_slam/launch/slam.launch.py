@@ -43,7 +43,7 @@ def generate_launch_description():
             '/rtabmap.launch.py'
         ]),
         launch_arguments={
-            'rtabmap_args':       '--delete_db_on_start --Optimizer/GravitySigma 0.3',
+            'rtabmap_args':       '--delete_db_on_start --Optimizer/GravitySigma 0.3 --Grid/3D true',
             'odom_args':          '--Vis/MinInliers 10 --Vis/MaxDepth 4.0 --OdomF2M/MaxSize 1000 --Kp/MaxFeatures 500',
             'rgb_topic':          '/camera/camera/color/image_raw',
             'depth_topic':        '/camera/camera/aligned_depth_to_color/image_raw',
