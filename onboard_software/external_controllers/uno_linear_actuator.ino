@@ -1,6 +1,13 @@
 #include <SoftwareSerial.h>
 SoftwareSerial jetsonSerial(2, 3);  // RX=pin2, TX=pin3
 
+"""
+UNO Linear Actuator Control Code
+This code is run on an arduino UNO to control a linear actuator based on commands 
+received from a Jetson Nano. The actuator's position is read via an ADC and feedback 
+is sent back to the Jetson for closed-loop control.
+"""
+
 #define FEEDBACK_PIN A0
 
 #define IN1 8

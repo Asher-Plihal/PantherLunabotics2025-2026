@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import serial
 import robot_params
 from collections import deque
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
@@ -12,6 +13,14 @@ import motor_controller  # type: ignore
 
 # Note: if this is changed, update log_data as well
 _LOG_COLUMNS = ["Duty Cycle", "Velocity (RPM)", "Position (ticks)", "Current (A)", "Temp (°C)", "Bus Voltage (V)"]
+
+_ACTUATOR_PORT = "/dev/ttyTHS1"
+_ACTUATOR_BAUD = 9600
+
+# Preset positions in inches
+_TRANSPORT_INCHES = 1.0
+_INTAKE_INCHES    = 2.0
+_DUMP_INCHES      = 3.0
 
 # Full-detection tuning parameters
 _FULL_CURRENT_THRESHOLD_A = 80.0  # amps — sustained current above this signals a full auger
@@ -44,6 +53,15 @@ class Auger(Subsystem):
         self._full_current_start: float | None = None
         self._current_window: deque[float] = deque(maxlen=_CURRENT_SMA_WINDOW)
 
+        self._actuator_pos: float = 0.0
+        self._actuator_moving: bool = False
+        try:
+            self._actuator = serial.Serial(_ACTUATOR_PORT, _ACTUATOR_BAUD, timeout=0)
+            time.sleep(2)  # allow Arduino to boot
+        except serial.SerialException as e:
+            print(f"[Auger] Linear actuator serial unavailable: {e}")
+            self._actuator = None
+
         if robot_params.RobotConfig.logAugerTelemetry:
             self.start_logging()
 
@@ -66,17 +84,42 @@ class Auger(Subsystem):
         """Stop the auger motor."""
         self.set_power(owner, 0.0)
 
-    def set_auger_angle(self, angle_degrees):
-        pass
+    def set_auger_angle(self, pos_inches: float) -> None:
+        """Send a MOVE command to the linear actuator; returns immediately (non-blocking)."""
+        if self._actuator is None:
+            return
+        self._actuator.write(f"MOVE {pos_inches:.2f}\n".encode())
+        self._actuator_moving = True
 
-    def set_auger_transport_angle(self):
-        pass
+    def get_auger_angle(self) -> float:
+        """Return the last position reported by the linear actuator in inches."""
+        return self._actuator_pos
 
-    def set_auger_intake_angle(self):
-        pass
+    def update_actuator(self) -> None:
+        """Drain the serial buffer and update cached position; must be called each cycle."""
+        if self._actuator is None or not self._actuator_moving:
+            return
+        while self._actuator.in_waiting:
+            line = self._actuator.readline().decode(errors="ignore").strip()
+            if line.startswith("POS"):
+                try:
+                    self._actuator_pos = float(line.split()[1])
+                except (IndexError, ValueError):
+                    pass
+            elif line == "DONE":
+                self._actuator_moving = False
 
-    def set_auger_dump_angle(self):
-        pass
+    def set_auger_transport_angle(self) -> None:
+        """Move the auger to its stowed/transport position."""
+        self.set_auger_angle(_TRANSPORT_INCHES)
+
+    def set_auger_intake_angle(self) -> None:
+        """Move the auger to its digging/intake position."""
+        self.set_auger_angle(_INTAKE_INCHES)
+
+    def set_auger_dump_angle(self) -> None:
+        """Move the auger to its dump position."""
+        self.set_auger_angle(_DUMP_INCHES)
 
     @property
     def is_full(self) -> bool:
@@ -113,10 +156,12 @@ class Auger(Subsystem):
         self._logger.stop_logging()
 
     def shutdown(self):
-        """Release ownership, stop the motor, and close the log file."""
+        """Release ownership, stop the motor, close the log file, and close the serial port."""
         self.force_release()
         self.stop()
         self.stop_logging()
+        if self._actuator is not None:
+            self._actuator.close()
 
     def print_telemetry(self, duty_cycle=True, velocity=True, position=True, current=True, temperature=False, voltage=True, interval=0.1):
         """Print formatted motor feedback, rate-limited by interval seconds."""
@@ -129,7 +174,7 @@ class Auger(Subsystem):
         print(f"{robot_params.robot_timer.timestamp()} [Auger] " + ", ".join(parts))
 
     def log_data(self):
-        """Print telemetry if enabled and append a CSV row if logging is active."""
+        """Print telemetry if enabled, poll the actuator serial port, and append a CSV row if logging is active."""
         if robot_params.RobotConfig.useTelemetry:
             self.print_telemetry()
         if self._logger is None or not self._logger.is_logging:

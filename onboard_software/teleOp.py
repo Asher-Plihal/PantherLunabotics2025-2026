@@ -63,6 +63,7 @@ class TeleOp:
 
         # Update motor controller (must come before telemetry reads)
         self.robot.motor_controller.update()
+        self.robot.auger.update_actuator()
 
         #Test if current will work for auger trigger
         #print(self.robot.auger.is_full)

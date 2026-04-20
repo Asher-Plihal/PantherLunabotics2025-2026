@@ -45,6 +45,7 @@ class Auto:
 
         # Update motor controller (must come before telemetry reads)
         self.robot.motor_controller.update()
+        self.robot.auger.update_actuator()
 
         # Print telemetry and log data
         self.robot.auger.log_data()
