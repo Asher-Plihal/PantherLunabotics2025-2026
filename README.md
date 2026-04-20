@@ -46,10 +46,10 @@ python control.py
 
 # TODO:
 
-1. Setup linear actuator
-2. Test joystick drive both ways 
+1. Set up linear actuator
+2. Test joystick drive both ways
 2. Test auto tasks without pathing
 
-1. Setup UWB
-2. Setup live pid tuning setup
+1. Set up UWB
+2. Set up live PID tuning
 2. Figure out camera
