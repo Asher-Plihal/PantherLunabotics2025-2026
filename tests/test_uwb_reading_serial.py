@@ -1,5 +1,5 @@
 """
-UWB serial reading + parsing test — HaoruTech ULM3 (STM32 + DWM3000).
+UWB serial reading + parsing test — HaoruTech ULA1 (ESP32 + DWM1000).
 
 Tests the serial reading and parsing logic from uwb_localizer.py in isolation,
 without running any localization math. Prints parsed distances in metres so you
@@ -9,14 +9,11 @@ Before running: plug in both tag modules and check port assignments:
     dmesg | grep ttyUSB
 Then update LEFT_PORT and RIGHT_PORT below to match.
 /dev/ttyUSB0 is reserved for LiDAR.
-
-Expected output:
-    [LEFT]  raw: mc 0f 00000663 000005a3 ...
+Expected output format (ULA1 packet — 4 RANGE fields, no timestamp, no $K line):
+    [LEFT]  raw: mc 0f 00000663 000005a3 00000512 000004cb 095f c1 0 a0:0
     [LEFT]  parsed: A0 = 1.635 m, A1 = 1.443 m
-    [RIGHT] raw: mc 0f 00000512 000004cb ...
+    [RIGHT] raw: mc 0f 00000512 000004cb 00000663 000005a3 095f c1 0 a0:1
     [RIGHT] parsed: A0 = 1.298 m, A1 = 1.227 m
-
-LED status: green blink = tag ranging OK, red blink = no anchor response.
 
 Run:  python test_uwb_reading_serial.py
 Stop: Ctrl+C

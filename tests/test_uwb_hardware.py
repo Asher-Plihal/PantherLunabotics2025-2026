@@ -1,5 +1,5 @@
 """
-Minimal UWB hardware test — HaoruTech ULM3 (STM32 + DWM3000).
+Minimal UWB hardware test — HaoruTech ULA1 (ESP32 + DWM1000).
 
 Before running: plug in both UWB modules and check what ports the Jetson assigned:
     dmesg | grep ttyUSB
@@ -7,14 +7,13 @@ Then update BASE_PORT and TAG_PORT below to match.
 /dev/ttyUSB0 is reserved for LiDAR — UWB modules will likely be ttyUSB1 and ttyUSB2,
 but plug order determines the number so always verify with dmesg first.
 
-If output looks like garbage, BAUD is probably wrong (default is 115200 for ULM3).
+If output looks like garbage, BAUD is probably wrong (default is 115200 for ULA1).
 
 Expected output format (tag):
-    mc 0f 00000663 000005a3 ... 095f c1 00146fb7 a0:0
-    $KT0, 1.69, 2.93, ...
+    mc 0f 00000663 000005a3 00000512 000004cb 095f c1 0 a0:0
 
-LED status: green blink = tag ranging OK, red blink = no anchor response,
-light blue blink = anchor connected to tag.
+Note: unlike the ULM3, the ULA1 does NOT output a $K tag-position line.
+The packet has 4 RANGE fields, no MCU timestamp, and a single-digit debug field.
 
 Set BASE_PORT to the anchor (fixed, known position).
 Set TAG_PORT to the tag (the one you move around at different distances).

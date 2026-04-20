@@ -118,7 +118,7 @@ class UWBLocalizer:
         Args:
             left_port:  Serial port for TAG_LEFT  (e.g. "/dev/ttyUSB1").
             right_port: Serial port for TAG_RIGHT (e.g. "/dev/ttyUSB2").
-            baud:       Baud rate — 115200 matches the STM32/DWM3000 (ULM3) default.
+            baud:       Baud rate — 115200 matches the ESP32/DWM1000 (ULA1) default.
         """
         self._left_serial  = serial.Serial(left_port,  baud, timeout=1.0)
         self._right_serial = serial.Serial(right_port, baud, timeout=1.0)
@@ -392,8 +392,8 @@ class UWBLocalizer:
         """
         Read lines from a serial port until a valid 'mc' packet is found and parsed.
 
-        The ULM3 may emit a '$K...' line (tag-computed position) between 'mc' packets.
-        This method skips non-'mc' lines and parses the first valid ranging packet.
+        The ULA1 outputs only 'mc' packets continuously — no $K tag-position line.
+        This method skips any non-'mc' lines and parses the first valid ranging packet.
         Returns None if no valid packet is found or the port errors.
         """
         try:
@@ -411,13 +411,13 @@ class UWBLocalizer:
     @staticmethod
     def _parse(line: str) -> Optional[tuple[float, float]]:
         """
-        Parse one ULM3 serial packet to (dist_anchor_A, dist_anchor_B) in metres.
+        Parse one ULA1 serial packet to (dist_anchor_A, dist_anchor_B) in metres.
 
-        ULM3 format (confirmed from manual Section 7.1):
-            mc 0f 00000663 000005a3 00000512 000004cb ffffffff ffffffff ffffffff ffffffff 095f c1 00146fb7 a0:0 22be
-               MASK RANGE0    RANGE1    RANGE2    RANGE3    RANGE4    RANGE5    RANGE6    RANGE7
+        ULA1 format (ESP32 + DWM1000, from manual):
+            mc 0f 00000663 000005a3 00000512 000004cb 095f c1 0 a0:0
+               MASK RANGE0    RANGE1    RANGE2    RANGE3
 
-        4-anchor firmware (default) omits RANGE4–7, giving fewer fields.
+        4 RANGE fields only (no RANGE4–7, no MCU timestamp, no DIAGNOSIS field).
         MASK is a bitmask of valid ranges: bit 0 = RANGE0, bit 1 = RANGE1, etc.
         RANGE values are hex millimetres. 0xffffffff = invalid/no anchor.
 
