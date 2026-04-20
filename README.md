@@ -47,6 +47,7 @@ python control.py
 # TODO:
 
 1. Setup linear actuator
+2. Test joystick drive both ways 
 2. Test auto tasks without pathing
 
 1. Setup UWB
