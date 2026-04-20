@@ -74,9 +74,9 @@ class Drivetrain(Subsystem):
         self.mc.set_motor_duty_cycle(self.motor_ids[2], Util.clip(back_left_power, -self.max_speed, self.max_speed))
         self.mc.set_motor_duty_cycle(self.motor_ids[3], Util.clip(back_right_power, -self.max_speed, self.max_speed))
 
-    def stop(self):
+    def stop(self, owner=None):
         """Set all motors to zero power."""
-        self.set_power(None, 0, 0, 0, 0)
+        self.set_power(owner, 0, 0, 0, 0)
 
     def drive_forward(self, power: float = 0.5, owner=None):
         """Drive straight forward at the given power (default 50%)."""

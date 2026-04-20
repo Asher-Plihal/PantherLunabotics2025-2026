@@ -48,7 +48,7 @@ class ExcavationTask(AutoTask):
     # AutoTask interface
     # ------------------------------------------------------------------
 
-    def start_auto_task(self, drive: bool = True) -> None:
+    def start_auto_task(self, drive: bool = False) -> None:
         """Claim subsystem ownership and enter DRIVING_TO_ZONE."""
         self._is_finished = False
         self._is_running = True
@@ -60,7 +60,7 @@ class ExcavationTask(AutoTask):
 
     def stop_auto_task(self) -> None:
         """Stop all actuators, release ownership, and return to IDLE."""
-        self.robot.drivetrain.set_power(self, 0, 0, 0, 0)
+        self.robot.drivetrain.stop(self)
         self.robot.auger.set_power(self, 0.0)
         if self.robot.pid_drive is not None:
             self.robot.pid_drive.reset()

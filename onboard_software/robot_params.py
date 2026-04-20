@@ -55,9 +55,9 @@ class RobotConfig:
     uwbRightPort:     str   = "/dev/ttyUSB2"
 
     # PID Drive coefficients — tune on hardware
-    pidXCoeffs = PIDController.PIDCoefficients(kp=0.5, ki=0.0, kd=0.0)  # lateral (east/west)
-    pidYCoeffs = PIDController.PIDCoefficients(kp=0.5, ki=0.0, kd=0.0)  # longitudinal (north/south)
-    pidHCoeffs = PIDController.PIDCoefficients(kp=0.3, ki=0.0, kd=0.0)  # heading
+    pidXCoeffs = PIDController.PIDCoefficients(kp=0, ki=0.0, kd=0.0)  # lateral (east/west)
+    pidYCoeffs = PIDController.PIDCoefficients(kp=0, ki=0.0, kd=0.0)  # longitudinal (north/south)
+    pidHCoeffs = PIDController.PIDCoefficients(kp=0, ki=0.0, kd=0.0)  # heading
 
     # Telemetry configuration
     useTelemetry = False

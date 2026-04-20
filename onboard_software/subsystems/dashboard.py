@@ -167,6 +167,12 @@ class Dashboard:
         self.set_circles(circles)
         self.set_points(points)
 
+        pos = localizer._position
+        if pos:
+            self.put("UWB Pos", f"{pos.x:.3f} m  {pos.y:.3f} m  {pos.heading:.1f} deg")
+        else:
+            self.put("UWB Pos", "NO SOLUTION")
+
     def shutdown(self) -> None:
         """Stop the sender thread."""
         self._running = False

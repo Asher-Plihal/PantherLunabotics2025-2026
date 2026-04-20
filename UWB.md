@@ -397,6 +397,6 @@ If UWB ranging noise causes jittery position estimates, consider implementing:
 ## Integration Plan
 1. Run `tests/dashboard.py` to validate that the `UWBLocalizer` math in `library/uwb_localizer.py` produces correct (x, y, theta) with manual test values.
 2. Connect a tag and run `tests/test_uwb_hardware.py` to confirm live packets match the format in the Serial Output section above. Check whether 4 or 8 RANGE fields are present.
-3. Update `UWBLocalizer._parse()` in `library/uwb_localizer.py` to handle both 4-anchor and 8-anchor packet formats, and validate the MASK field.
+3. Update `UWBLocalizer._parse()` in `library/uwb_localizer.py` to handle both 4-anchor and 8-anchor packet formats, and validate the MASK field. Use `tests/test_uwb_reading_serial.py` for testing before moving to `UWBLocalizer`.
 4. Measure anchor positions and tag separation (W). Add them as constants in `robot_params.py`. Run full hardware integration test with all 4 modules active.
 5. Move `UWBLocalizer` to `onboard_software/subsystems/uwb_localizer.py`. Add a `useUWB` feature toggle to `robot_params.py`. Call `update_from_hardware()` each cycle in the auto loop.
