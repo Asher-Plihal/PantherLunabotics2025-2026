@@ -46,16 +46,9 @@ python control.py
 
 # TODO:
 
-Make sure joystick drive works with update motor power directions
-test robot auger is full
+1. Setup linear actuator
+2. Test auto tasks without pathing
 
-1. Finish up the dashbaord
- - Target for dashbaord should having a heading
- - Read and cleanup
-2. Setup UWB
- - Check math
- - Cleanup `/uwb_localizer.py` to work well
- - test it using dashbaord
- - setup to test the uwbs with dashbaord as well
-3. Write pathing software
-4. Auto Tasks when pathing is done
+1. Setup UWB
+2. Setup live pid tuning setup
+2. Figure out camera

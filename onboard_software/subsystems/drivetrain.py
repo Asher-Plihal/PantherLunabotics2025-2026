@@ -102,7 +102,6 @@ class Drivetrain(Subsystem):
         """Turn right at the given power (default 50%)."""
         self.set_power(owner, -power, -power, -power, -power)
         
-
     def fold_out(self, power: float = 0.5, owner=None):
         """Fold out at the given power (default 50%)."""
         self.set_power(owner, power, power, -power, -power)
@@ -139,10 +138,10 @@ class Drivetrain(Subsystem):
     def calculate_arcade_powers(self, y, x, turning):
         """Convert (y, x, turning) inputs to mecanum wheel powers, normalised so no wheel exceeds 1.0."""
         denominator = max(abs(y) + abs(x) + abs(turning), 1)
-        front_left_power = (y - x - turning) / denominator
-        front_right_power = (y + x + turning) / denominator
-        back_left_power = (y + x - turning) / denominator
-        back_right_power = (y - x + turning) / denominator
+        front_left_power = (-y - x - turning) / denominator
+        front_right_power = (y + x - turning) / denominator
+        back_left_power = (-y + x - turning) / denominator
+        back_right_power = (y - x - turning) / denominator
 
         return front_left_power, front_right_power, back_left_power, back_right_power
 
@@ -158,9 +157,9 @@ class Drivetrain(Subsystem):
         strafe = (math.atan(5 * ((left_strafe + right_strafe) / 2)) / math.atan(5)) * 1.1  # Strafing compensation
 
         denominator = max(abs(left) + abs(strafe), abs(right) + abs(strafe), 1)
-        front_left_power = (left - strafe) / denominator
+        front_left_power = (-left - strafe) / denominator
         front_right_power = (right + strafe) / denominator
-        back_left_power = (left + strafe) / denominator
+        back_left_power = (-left + strafe) / denominator
         back_right_power = (right - strafe) / denominator
 
         self.set_power(owner, front_left_power, front_right_power, back_left_power, back_right_power)
