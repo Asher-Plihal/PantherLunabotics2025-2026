@@ -6,13 +6,13 @@
 - Product: https://www.robotshop.com/products/haorutech-uwb-ultra-wideband-positioning-module-w-esp32-dwm1000-arduino
 - User manual: https://www.haorutech.com/download/ULA1_UserManual-EN.pdf
 
-**Architecture:** Jetson <--USB/Serial (CP2102)--> ESP32 <--SPI--> DWM1000
+**Architecture:** Jetson <--USB/Serial (CH340)--> ESP32 <--SPI--> DWM1000
 
 The ESP32 owns the SPI bus to the DWM1000 and handles all UWB ranging internally. The Jetson only communicates with the ESP32 over serial (USB) — it never touches the DWM1000 directly.
 
 **Serial:** 115200 baud, 8-N-1
 
-**Connector:** USB (CP2102 USB-to-UART bridge — requires CP210x driver on Windows)
+**Connector:** USB (CH340 USB-to-UART bridge — requires CH340 driver on Windows)
 
 **Key specs:**
 | Parameter | Value |
@@ -71,7 +71,29 @@ The ULA1 does **not** expose downlink serial commands — configuration is done 
 
 ### LED Status Indicators
 
-LED behavior is not documented in the ULA1 manual. Verify by observation after powering on.
+LED behavior is not documented in the ULA1 manual. Observed behavior:
+- **Blue LED** — module is configured as a **Tag**
+- **Yellow LED** — module is configured as an **Anchor**
+- **Red LEDs blinking in unison** — Tag is actively ranging (anchors detected)
+- **Red LEDs blinking in sequence (up/down chase)** — Anchor is active and broadcasting
+- **Red LEDs solid** — ESP32 stuck in download/bootloader mode (see Known Issues)
+
+## Jetson Driver Setup (CH340)
+
+The Jetson's Tegra kernel does not include the CH340 driver by default. Build and load it from source once:
+
+```bash
+sudo apt install build-essential
+git clone https://github.com/juliagoda/CH341SER.git
+cd CH341SER
+make
+sudo make load      # loads for current session
+sudo make install   # persists across reboots
+```
+
+The `linux-headers` package is already present at `/usr/src/linux-headers-5.15.148-tegra-ubuntu22.04_aarch64/`. After loading, unplug and replug the tag USB cable — it should appear as `/dev/ttyUSB*`.
+
+> **Note:** `sudo make load` only lasts until reboot. `sudo make install` was run to make it permanent.
 
 ## UWB Setup
 
@@ -335,7 +357,40 @@ The ULA1 outputs raw unfiltered distances, so both EMA and EKF operate directly 
 2. **Packet field count:** Confirm whether RANGE2–RANGE3 fields are always present in the packet even with only 2 anchors, or if the packet is shorter. This affects `_parse()` field indexing.
 3. **Baud rate confirmation:** 115200 is the assumed default based on the CP2102 driver and ULM3 precedent. Confirm with a serial monitor if there is any doubt.
 4. **Power bank auto-shutoff:** The ULA1 has no keep-alive switch. If anchors shut off during a match, investigate power banks with always-on modes or add a USB dummy load.
-5. **LED behavior:** Not documented — observe after first power-on to determine ranging status indicators.
+5. ~~**LED behavior:**~~ Resolved — blue = Tag, yellow = Anchor, red LEDs in unison = Tag ranging, red LEDs in sequence = Anchor broadcasting.
+
+## Known Issues
+
+### CH340 Auto-Reset on Serial Port Open
+
+**Problem:** Opening a serial port on Linux asserts DTR and RTS via the CH340, which triggers the ESP32 auto-reset circuit (DTR → GPIO0, RTS → EN). If GPIO0 is held LOW during reset, the ESP32 enters download/bootloader mode (`boot:0x3 DOWNLOAD_BOOT`) and hangs waiting for firmware — it never runs the ranging firmware.
+
+**Cause:** Hardware — the CH340 auto-reset circuit uses capacitors to pulse GPIO0 and EN when the port is opened. This cannot be fixed in firmware.
+
+**Fix:** After opening the serial port in Python, manually drive the correct reset sequence: set `dtr=False` (GPIO0 HIGH = normal boot), assert `rts=True` (EN LOW = hold in reset), release `rts=False` (EN HIGH = boot starts), then wait ~1 second for the ESP32 to fully boot before reading.
+
+```python
+ser = serial.Serial(port, 115200, timeout=1.0)
+ser.dtr = False   # GPIO0 HIGH → normal boot mode
+ser.rts = True    # EN LOW → hold in reset
+time.sleep(0.1)
+ser.rts = False   # EN HIGH → release, ESP32 boots
+time.sleep(1.0)   # wait for boot + ranging init
+```
+
+This is implemented in `tests/test_uwb_hardware.py` and `tests/test_uwb_reading_serial.py` and must also be applied in `library/uwb_localizer.py`.
+
+### Intermittent Download Mode with Two Tags
+
+**Problem:** When both tag serial ports are opened simultaneously (two threads), one module occasionally still enters download mode. The two reset sequences race and the timing is not always reliable.
+
+**Fix:** Stagger thread starts by 1.5 seconds so the first module completes its boot before the second port is opened. Both test scripts do this.
+
+### brltty Conflict (Ubuntu 22.04)
+
+**Problem:** The `brltty` accessibility service (Braille TTY) automatically claims CH340 devices on Ubuntu 22.04, immediately disconnecting them.
+
+**Fix:** `sudo apt remove brltty`
 
 ## Integration Plan
 

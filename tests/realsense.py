@@ -40,14 +40,14 @@ from scipy.ndimage import center_of_mass, find_objects, gaussian_filter, label
 #  CONFIG
 # ─────────────────────────────────────────────────────────────────────────────
 class Cfg:
-    CAM_HEIGHT       = 0.30    # metres above ground
-    CAM_PITCH_DEG    = 25.0    # degrees downward from horizontal (0 = horizontal)
+    CAM_HEIGHT       = 0.85    # metres above ground
+    CAM_PITCH_DEG    = 45.0    # degrees downward from horizontal (0 = horizontal)
 
-    MIN_DEPTH        = 0.25    # m
+    MIN_DEPTH        = 0.15    # m
     MAX_DEPTH        = 5.0     # m
 
-    BOULDER_H_MIN    = 0.08    # m above plane → obstacle
-    BOULDER_H_MAX    = 0.60    # m above plane → ceiling / person (ignored)
+    BOULDER_H_MIN    = 0.25    # m above plane → obstacle (tightened for 30-50cm obstacles)
+    BOULDER_H_MAX    = 0.55    # m above plane → ceiling / person (ignored)
     CRATER_D_MIN     = 0.06    # m below plane → obstacle
     CRATER_D_MAX     = 0.55    # m below plane → noise / invalid (ignored)
 
@@ -55,13 +55,14 @@ class Cfg:
     RES              = 0.03    # m / cell  (250 × 0.03 = 7.5 m)
     DECAY            = 0.75    # temporal decay per frame
     BIN_THRESH       = 0.28
-    MIN_CLUSTER      = 15      # min cells for a valid obstacle
+    MIN_CLUSTER      = 25      # min cells for a valid obstacle (increased for fewer false positives)
+    MAX_OBSTACLE_DIST= 3.0     # m - only detect obstacles within this distance
 
     RANSAC_N         = 80
-    RANSAC_THRESH    = 0.05    # m inlier distance
-    RANSAC_MIN_INL   = 200
-    PLANE_EMA        = 0.70    # smoothing: higher = slower adaptation
-    PLANE_MAX_C_DELTA= 0.12    # max allowed intercept shift per frame
+    RANSAC_THRESH    = 0.03    # m inlier distance (tightened for flatter ground)
+    RANSAC_MIN_INL   = 300     # min inliers (increased for better ground fit)
+    PLANE_EMA        = 0.80    # smoothing: higher = slower adaptation (more stable)
+    PLANE_MAX_C_DELTA= 0.08    # max allowed intercept shift per frame (tightened)
 
     BEV_SCALE        = 2       # BEV pixel scale
     VERIFY_MODE      = False
@@ -189,10 +190,13 @@ def update_occupancy(
     plane:   np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray]:
     h_vals = height_above_ground(verts, plane)
+    dist_vals = np.sqrt(verts[:, 0]**2 + verts[:, 2]**2)  # Distance from camera
+    
     mask = (
         ((h_vals >  Cfg.BOULDER_H_MIN) & (h_vals <  Cfg.BOULDER_H_MAX)) |
         ((h_vals < -Cfg.CRATER_D_MIN)  & (h_vals > -Cfg.CRATER_D_MAX))
-    )
+    ) & (dist_vals < Cfg.MAX_OBSTACLE_DIST)  # Only obstacles within range
+    
     obs     = verts[mask]
     layer   = np.zeros_like(occ_map)
 
@@ -538,10 +542,27 @@ def main() -> None:
     out_3d     = np.zeros((h_cam, w_cam, 3), dtype=np.uint8)
     out_ref    = [out_3d]
 
-    print(f"\n[Prior]  a={prior[0]:.4f}  b={prior[1]:.4f}  c={prior[2]:.4f}")
-    print(f"         height={Cfg.CAM_HEIGHT} m   pitch={Cfg.CAM_PITCH_DEG}°")
-    print("  Controls: [p] pause  [r] reset view  [d] decimation  "
-          "[h] toggle height colours  [q] quit\n")
+    print(f"\n╔════════════════════════════════════════════════════════════╗")
+    print(f"║  RealSense Obstacle Detector + World-Frame Viewer          ║")
+    print(f"╚════════════════════════════════════════════════════════════╝")
+    print(f"\n[Camera Configuration]")
+    print(f"  • Height above ground:  {Cfg.CAM_HEIGHT:.2f} m")
+    print(f"  • Pitch down angle:     {Cfg.CAM_PITCH_DEG:.1f}°")
+    print(f"\n[Obstacle Detection Parameters]")
+    print(f"  • Boulder height range: {Cfg.BOULDER_H_MIN:.2f} - {Cfg.BOULDER_H_MAX:.2f} m")
+    print(f"  • Max obstacle distance: {Cfg.MAX_OBSTACLE_DIST:.1f} m")
+    print(f"  • Min cluster size:     {Cfg.MIN_CLUSTER} cells")
+    print(f"\n[Ground Plane Prior]  y_cam = {prior[0]:.4f}·x_cam + {prior[1]:.4f}·z_cam + {prior[2]:.4f}")
+    print(f"\n[Controls]")
+    print(f"  • [p]     Pause/Resume camera")
+    print(f"  • [r]     Reset view")
+    print(f"  • [d]     Cycle decimation (1×, 2×, 4×)")
+    print(f"  • [h]     Toggle height classification colours")
+    print(f"  • [q/ESC] Quit")
+    print(f"\n[View]")
+    print(f"  • Ground plane fixed at y=0 (world frame, bottom of view)")
+    print(f"  • Cyan marker = camera position at height {Cfg.CAM_HEIGHT:.2f} m")
+    print(f"  • Green = ground  |  Red = boulders (above ground)  |  Blue = craters (below ground)\n")
 
     # ── Windows ──────────────────────────────────────────────────────────────
     WIN_3D  = "Point Cloud (h = toggle height colours)"
@@ -591,6 +612,12 @@ def main() -> None:
                 # ── Ground plane ────────────────────────────────────────────
                 raw_plane = estimate_ground_plane(verts_f, cur_plane)
                 cur_plane = smooth_plane(cur_plane, raw_plane)
+
+                # ── Filter points by height (remove > 50cm above ground) ─────
+                h_vals = height_above_ground(verts_f, cur_plane)
+                height_filter = h_vals <= 0.50
+                verts_f = verts_f[height_filter]
+                texcoords_f = texcoords_f[height_filter]
 
                 # ── Occupancy + obstacles ────────────────────────────────────
                 occ_map, binary = update_occupancy(occ_map, verts_f, cur_plane)
