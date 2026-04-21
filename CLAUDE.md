@@ -316,3 +316,5 @@ All in `onboard_software/robot_params.py`:
 ### When devloping 
 
 While the architecture is divided into two sides, `/onboard_software` and `/mission_control`, both computers have access to the full software base. Although each primarily runs its respective side of the code, it is better to keep software implementations simple and implement everything within a single class, rather than creating two classes—one for each side—running the same software implementation. Doing so would only add unnecessary complexity where it is not needed.
+
+**UWB:** The `uwbs/` folder contains UWB-related code and documentation. When working on anything UWB-related, read `uwbs/UWB.md` first.
