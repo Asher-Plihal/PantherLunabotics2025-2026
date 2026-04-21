@@ -342,6 +342,60 @@ For our 2-anchor setup: RANGE0 = Anchor A (A0), RANGE1 = Anchor B (A1). RANGE2�
 - `tests/test_uwb_hardware.py` — minimal raw serial test. Prints everything both tags send over USB. Use this first to verify the serial output format and baud rate before relying on the parser.
 - `tests/test_uwb_reading_serial.py` — serial reading + parsing test. Prints parsed distances in metres.
 
+## DWM1000 Hardware Tuning (On-Device, Before Serial Output)
+
+The DW1000 chip has three parameters that directly affect ranging accuracy and update rate. These are set in the ESP32 Arduino firmware — they run **inside the module** and filter/tune the signal before any distance value is ever sent over serial.
+
+**Requires reflashing firmware.** You need Arduino IDE + ESP32 board package + the DW1000 library from `ULA1_Arduino_library/DW1000-Arduino.zip`. Both tags and both anchors must be flashed with matching settings (PRF, data rate, and preamble must be identical across all modules or ranging will fail).
+
+### Parameters
+
+**1. Pulse Repetition Frequency (PRF)**
+Controls how densely the UWB pulses are packed. 64 MHz gives better multipath rejection and accuracy. 16 MHz is the default.
+
+```cpp
+DW1000.setPulseFrequency(DW1000.FREQ_64MHZ);  // 16MHz (default) or 64MHz
+```
+
+**2. Data Rate**
+Lower data rate = longer time on air per packet = better SNR and range accuracy but slower update rate.
+
+```cpp
+DW1000.setDataRate(DW1000.RATE_850KBPS);  // 6800KBPS (default), 850KBPS, or 110KBPS
+```
+
+**3. Preamble Length**
+Longer preamble = more symbols for the receiver to lock on = better sensitivity in noisy environments. Must pair with an appropriate data rate — 110kbps requires long preambles.
+
+```cpp
+DW1000.setPreambleLength(DW1000.LEN_256);  // many options: 64, 128, 256, 512, 1024, 2048
+```
+
+### Update Rate Tradeoff Table
+
+Each tag does one TWR exchange per anchor per cycle, then outputs one `mc` packet. With 2 anchors, each cycle = 2 exchanges. With 2 tags using TDMA, each tag gets every other slot — halve the per-tag rate.
+
+| Config | Per TWR exchange | 2-anchor cycle | Per-tag rate (2 tags) | Notes |
+|--------|-----------------|----------------|----------------------|-------|
+| 6.8 Mbps + PRF16 + preamble 64 | ~1 ms | ~3–5 ms | ~100–150 Hz | Factory default — fast, noisiest |
+| 6.8 Mbps + PRF64 + preamble 128 | ~2 ms | ~5–8 ms | ~60–100 Hz | Better accuracy, minimal speed cost |
+| 850 Kbps + PRF64 + preamble 256 | ~5 ms | ~12 ms | ~40 Hz | Good balance — recommended starting point |
+| 110 Kbps + PRF64 + preamble 1024 | ~20 ms | ~45 ms | ~10 Hz | Best accuracy, too slow for realtime nav |
+
+**Recommended config for Panther:** `110 Kbps + PRF 64 MHz + preamble 1024` — maximum accuracy. At 10–20% NEO speed the robot moves ~0.1–0.3 m/s, so even at 10 Hz per tag it only travels 1–3 cm between updates — well within the ±10 cm UWB accuracy. Update rate is not a bottleneck for a slow lunar rover.
+
+### Flashing Procedure
+
+1. Unzip `ULA1_Arduino_library/DW1000-Arduino.zip` and open the main sketch in Arduino IDE.
+2. Install ESP32 board support: **File → Preferences → Board Manager URL** → add `https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`, then install "esp32 by Espressif".
+3. Select board: **Tools → Board → ESP32 Dev Module**.
+4. Modify the DW1000 init block in the sketch with the parameters above.
+5. Connect the module via USB. The CH340 auto-reset circuit handles entering flash mode automatically — no BOOT button needed in most cases.
+6. **Upload.** If the upload fails, hold the BOOT button on the ESP32 while clicking Upload, release after "Connecting..." appears.
+7. Repeat for all 4 modules with identical settings.
+
+**All modules must match.** Mismatched PRF or data rate between tag and anchor = no ranging.
+
 ## Noise Mitigation
 
 The ULA1 has ±10 cm accuracy (vs ±5 cm on the ULM3) and **no built-in Kalman filter**. Software-side filtering is more important with this module.
