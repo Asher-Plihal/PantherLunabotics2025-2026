@@ -120,8 +120,20 @@ class UWBLocalizer:
             right_port: Serial port for TAG_RIGHT (e.g. "/dev/ttyUSB2").
             baud:       Baud rate — 115200 matches the ESP32/DWM1000 (ULA1) default.
         """
-        self._left_serial  = serial.Serial(left_port,  baud, timeout=1.0)
-        self._right_serial = serial.Serial(right_port, baud, timeout=1.0)
+        self._left_serial  = self._open_port(left_port,  baud)
+        self._right_serial = self._open_port(right_port, baud)
+
+    @staticmethod # Might need to be udpated when uwb fully debuged
+    def _open_port(port: str, baud: int) -> serial.Serial:
+        """Open a serial port with DTR/RTS disabled to prevent ESP32 reset on connect."""
+        ser = serial.Serial()
+        ser.port = port
+        ser.baudrate = baud
+        ser.timeout = 1.0
+        ser.dtr = False  # prevent ESP32 reset on port open
+        ser.rts = False
+        ser.open()
+        return ser
 
     # -----------------------------------------------------------------------
     # Math — To find the robot position from the four distance measurements
