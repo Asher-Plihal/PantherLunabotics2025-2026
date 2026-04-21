@@ -23,16 +23,22 @@ Stop: Ctrl+C
 """
 
 import threading
+import time
 import serial
 
 BASE_PORT = "/dev/ttyUSB1"   # anchor — fixed reference
-TAG_PORT  = "/dev/ttyUSB2"   # tag — move this one to test distances
+TAG_PORT  = "/dev/ttyUSB0"   # tag — move this one to test distances
 BAUD      = 115200
 
 
 def read_loop(port: str, label: str) -> None:
     try:
         ser = serial.Serial(port, BAUD, timeout=1.0)
+        ser.dtr = False  # GPIO0 HIGH → normal boot (not download mode)
+        ser.rts = True   # EN LOW → hold in reset
+        time.sleep(0.1)
+        ser.rts = False  # EN HIGH → release reset, ESP32 boots
+        time.sleep(1)  # wait for ESP32 to fully boot and start ranging
         print(f"[{label}] connected on {port}")
     except serial.SerialException as e:
         print(f"[{label}] failed to open {port}: {e}")
@@ -49,6 +55,7 @@ def read_loop(port: str, label: str) -> None:
 
 
 threading.Thread(target=read_loop, args=(BASE_PORT, "BASE"), daemon=True).start()
+time.sleep(1.5)
 threading.Thread(target=read_loop, args=(TAG_PORT,  "TAG"),  daemon=True).start()
 
 print("Reading from both UWB sensors — Ctrl+C to stop\n")

@@ -1,3 +1,6 @@
 [submodule "/home/rmcnasa/PantherLunabotics2025-2026/onboard_software/library/lidar"]
 	path = /home/rmcnasa/PantherLunabotics2025-2026/onboard_software/library/lidar
 	url = https://github.com/Hyun-je/pyrplidar.git
+[submodule "third_party/sam2"]
+	path = third_party/sam2
+	url = https://github.com/facebookresearch/sam2.git

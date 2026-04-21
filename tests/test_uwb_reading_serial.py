@@ -20,12 +20,13 @@ Stop: Ctrl+C
 """
 
 import threading
+import time
 from typing import Optional
 
 import serial
 
-LEFT_PORT  = "/dev/ttyUSB1"   # Tag LEFT  (T0)
-RIGHT_PORT = "/dev/ttyUSB2"   # Tag RIGHT (T1)
+LEFT_PORT  = "/dev/ttyUSB0"   # Tag LEFT  (T0)
+RIGHT_PORT = "/dev/ttyUSB1"   # Tag RIGHT (T1)
 BAUD       = 115200
 
 
@@ -58,6 +59,11 @@ def read_and_parse_loop(port: str, label: str) -> None:
     """Read serial lines, parse mc packets, and print raw + parsed output."""
     try:
         ser = serial.Serial(port, BAUD, timeout=1.0)
+        ser.dtr = False
+        ser.rts = True
+        time.sleep(0.1)
+        ser.rts = False
+        time.sleep(1.0)
         print(f"[{label}] connected on {port}")
     except serial.SerialException as e:
         print(f"[{label}] failed to open {port}: {e}")
@@ -87,6 +93,7 @@ def read_and_parse_loop(port: str, label: str) -> None:
 
 
 threading.Thread(target=read_and_parse_loop, args=(LEFT_PORT,  "LEFT"),  daemon=True).start()
+time.sleep(1.5)
 threading.Thread(target=read_and_parse_loop, args=(RIGHT_PORT, "RIGHT"), daemon=True).start()
 
 print("Reading and parsing UWB serial — Ctrl+C to stop\n")

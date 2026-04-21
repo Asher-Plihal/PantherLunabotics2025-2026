@@ -1,3 +1,6 @@
+# CH340 driver build (built from source on Jetson, not checked in)
+CH341SER/
+
 # Python cache and bytecode
 __pycache__/
 *.py[cod]
