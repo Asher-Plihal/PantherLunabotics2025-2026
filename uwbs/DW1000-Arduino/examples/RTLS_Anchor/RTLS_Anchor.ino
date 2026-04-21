@@ -65,6 +65,9 @@ void setup()
     //初始化参数
     DW1000.newConfiguration();
     DW1000.setDefaults();
+    DW1000.setDataRate(DW1000.TRX_RATE_110KBPS);
+    DW1000.setPulseFrequency(DW1000.TX_PULSE_FREQ_64MHZ);
+    DW1000.setPreambleLength(DW1000.TX_PREAMBLE_LEN_1024);
     DW1000.setDeviceAddress(Dev_Addr);
     DW1000.setNetworkId(0x1234);
     DW1000.commitConfiguration();

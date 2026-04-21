@@ -35,6 +35,7 @@ const uint16_t replyDelayTimeUS = 2500;//回发数据延时
 static byte seq_number = 0;//测距消息流水号
 volatile byte expectedMsgId = FC_RESP;//发送数据后需要接收的数据功能码
 uint16_t target_anchor_addr=A0_ADDR;//目标基站短地址
+uint16_t Dev_Addr = ERR_ADDR;
 
 //标识上位机通信协议中距离值的有效情况，如mask=0000 0001则代表A0基站测距数据有效
 //如mask=0000 0011则代表A0/A1基站测距数据有效
@@ -48,7 +49,7 @@ int range_A0=-1,range_A1=-1,range_A2=-1,range_A3=-1;
 void setup() 
 {
     Serial.begin(115200);
-    uint16_t Dev_Addr=DW1000.ReadSwitch(ROLE_TAG);
+    Dev_Addr=DW1000.ReadSwitch(ROLE_TAG);
     if(Dev_Addr==ERR_ADDR)
     {
         Serial.println(F("Switch setting error,please check"));
@@ -63,6 +64,9 @@ void setup()
     //初始化参数
     DW1000.newConfiguration();
     DW1000.setDefaults();
+    DW1000.setDataRate(DW1000.TRX_RATE_110KBPS);
+    DW1000.setPulseFrequency(DW1000.TX_PULSE_FREQ_64MHZ);
+    DW1000.setPreambleLength(DW1000.TX_PREAMBLE_LEN_1024);
     DW1000.setDeviceAddress(Dev_Addr);
     DW1000.setNetworkId(0x1234);
     DW1000.commitConfiguration();
@@ -124,7 +128,7 @@ void next_range()
         uint16_t range_time = millis();
         char out_data[100];
         sprintf(out_data,"mc %02x %08x %08x %08x %08x %04x %02x %08x t%d:0",range_mask,range_A0,range_A1,range_A2,range_A3,\
-        out_data_count++,seq_number,range_time,(uint8_t)T0_ADDR);
+        out_data_count++,seq_number,range_time,(uint8_t)Dev_Addr);
         
         Serial.println(out_data);
         transmitRangeData(0XFFFF);//广播发送汇总测距结果

@@ -2751,7 +2751,13 @@ void DW1000Class::LedCtl(uint16_t dev_addr)
   {
     digitalWrite(PIN_LED1,HIGH);
     digitalWrite(PIN_LED2,LOW);
-    digitalWrite(PIN_LED3,LOW);    
+    digitalWrite(PIN_LED3,LOW);
+  }
+  else if(dev_addr==T1_ADDR)//T1-white
+  {
+    digitalWrite(PIN_LED1,LOW);
+    digitalWrite(PIN_LED2,LOW);
+    digitalWrite(PIN_LED3,LOW);
   }
   else//error -red
   {
@@ -2786,6 +2792,11 @@ uint16_t DW1000Class::ReadSwitch(uint8_t role)
     {
       LedCtl(T0_ADDR);
       return T0_ADDR;
+    }
+    else if((sw_addr1==1)&&(sw_addr2==1)&&(sw_addr3==0))
+    {
+      LedCtl(T1_ADDR);
+      return T1_ADDR;
     }
     else
     {

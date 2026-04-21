@@ -71,12 +71,34 @@ The ULA1 does **not** expose downlink serial commands — configuration is done 
 
 ### LED Status Indicators
 
-LED behavior is not documented in the ULA1 manual. Observed behavior:
-- **Blue LED** — module is configured as a **Tag**
-- **Yellow LED** — module is configured as an **Anchor**
-- **Red LEDs blinking in unison** — Tag is actively ranging (anchors detected)
-- **Red LEDs blinking in sequence (up/down chase)** — Anchor is active and broadcasting
-- **Red LEDs solid** — ESP32 stuck in download/bootloader mode (see Known Issues)
+LED behavior is not documented in the ULA1 manual. Derived from firmware source (`DW1000.cpp`, `LedCtl()`).
+
+#### Main RGB LED (large, set at boot)
+
+Solid color — set once when the ESP32 reads the DIP switches at startup. Tells you what role and address the module has configured itself as.
+
+| Color | Role / Address | Meaning |
+|-------|---------------|---------|
+| Yellow | A0 | Anchor 0 |
+| Blue | A1 | Anchor 1 |
+| Green | A2 | Anchor 2 |
+| Purple | A3 | Anchor 3 |
+| Cyan | T0 | Tag 0 (LEFT) |
+| White | T1 | Tag 1 (RIGHT) |
+| Red | — | Switch config error — bad DIP switch combination, module halts |
+
+If the LED shows red at boot, the DIP switches are in a combination the firmware does not recognize. Check switch positions and power cycle.
+
+#### Two Small Red LEDs (radio activity)
+
+These are the DW1000 chip's built-in TX_LED (upper) and RX_LED (lower), enabled in firmware by `setLedBlink()` inside `setDefaults()`. They pulse briefly on every transmit or receive radio event — they do not stay on.
+
+| Pattern | Which module | Why |
+|---------|-------------|-----|
+| Both blink together | **Tag** actively ranging | Tags fire TX (POLL), RX (RESP), TX (FINAL) in rapid succession (~5 ms total) — upper and lower appear to flash simultaneously |
+| Lower → upper → pause | **Anchor** actively ranging | Anchor RX (POLL from tag) blinks lower, then TX (RESP) blinks upper after 2.5 ms delay, then long pause (~200 ms) until the next poll arrives — the gap makes the two blinks visually distinct |
+| No blinking | Module sees no peers | DW1000 is in receive mode waiting but detecting no radio traffic — anchors not in range or not powered |
+| Both LEDs solid (not blinking) | ESP32 stuck in bootloader | See Known Issues — auto-reset circuit put the ESP32 into download mode |
 
 ## Jetson Driver Setup (CH340)
 
@@ -410,7 +432,7 @@ The ULA1 outputs raw unfiltered distances, so both EMA and EKF operate directly 
 2. **Packet field count:** Confirm whether RANGE2–RANGE3 fields are always present in the packet even with only 2 anchors, or if the packet is shorter. This affects `_parse()` field indexing.
 3. **Baud rate confirmation:** 115200 is the assumed default based on the CP2102 driver and ULM3 precedent. Confirm with a serial monitor if there is any doubt.
 4. **Power bank auto-shutoff:** The ULA1 has no keep-alive switch. If anchors shut off during a match, investigate power banks with always-on modes or add a USB dummy load.
-5. ~~**LED behavior:**~~ Resolved — blue = Tag, yellow = Anchor, red LEDs in unison = Tag ranging, red LEDs in sequence = Anchor broadcasting.
+5. ~~**LED behavior:**~~ Resolved — see LED Status Indicators section for full color table and blink pattern meanings.
 
 ## Known Issues
 

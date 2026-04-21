@@ -51,6 +51,7 @@
 
 //定义标签短地址
 #define T0_ADDR     0X0000
+#define T1_ADDR     0X0001
 
 //定义错误短地址
 #define ERR_ADDR    0XFFFF
