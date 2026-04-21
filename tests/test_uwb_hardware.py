@@ -55,7 +55,7 @@ def read_loop(port: str, label: str) -> None:
 
 
 threading.Thread(target=read_loop, args=(BASE_PORT, "BASE"), daemon=True).start()
-time.sleep(1.5)
+time.sleep(3.0)
 threading.Thread(target=read_loop, args=(TAG_PORT,  "TAG"),  daemon=True).start()
 
 print("Reading from both UWB sensors — Ctrl+C to stop\n")

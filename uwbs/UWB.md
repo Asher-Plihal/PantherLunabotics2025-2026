@@ -165,7 +165,6 @@ After powering on all 4 modules:
 The two anchors are on separate perpendicular walls of the starting zone, giving two independent triangulation baselines.
 
 **Note:** USB port numbers depend on plug order at boot. Always verify with `dmesg | grep ttyUSB` after connecting. Use udev rules to pin stable names (e.g. `/dev/ttyUWB_LEFT`, `/dev/ttyUWB_RIGHT`) by USB vendor/product ID.
-- `/dev/ttyUSB0` is reserved for LiDAR.
 
 ## How Localization Works
 

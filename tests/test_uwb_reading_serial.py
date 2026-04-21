@@ -59,11 +59,12 @@ def read_and_parse_loop(port: str, label: str) -> None:
     """Read serial lines, parse mc packets, and print raw + parsed output."""
     try:
         ser = serial.Serial(port, BAUD, timeout=1.0)
-        ser.dtr = False
-        ser.rts = True
+        time.sleep(1.5)  # let ESP32 finish whatever boot state it entered
+        ser.dtr = False  # GPIO0 HIGH → normal boot mode
+        ser.rts = True   # EN LOW → hold in reset
         time.sleep(0.1)
-        ser.rts = False
-        time.sleep(1.0)
+        ser.rts = False  # EN HIGH → release, ESP32 reboots into ranging firmware
+        time.sleep(1.5)  # wait for clean boot and ranging init
         print(f"[{label}] connected on {port}")
     except serial.SerialException as e:
         print(f"[{label}] failed to open {port}: {e}")
