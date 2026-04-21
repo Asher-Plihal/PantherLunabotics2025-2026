@@ -251,7 +251,7 @@ class AppState:
         self.paused      = False
         self.decimate    = 1
         self.scale       = True
-        self.show_height = True   # colour by height classification vs RGB
+        self.show_height = False   # colour by height classification vs RGB
 
     def reset(self):
         self.pitch, self.yaw, self.distance = 0, 0, 2.0
@@ -521,8 +521,8 @@ def main() -> None:
         print("ERROR: depth camera with colour sensor required")
         return
 
-    config.enable_stream(rs.stream.depth, rs.format.z16,  30)
-    config.enable_stream(rs.stream.color, rs.format.bgr8, 30)
+    config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16,  30)
+    config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
     pipeline.start(config)
 
     profile          = pipeline.get_active_profile()
@@ -532,7 +532,7 @@ def main() -> None:
 
     pc        = rs.pointcloud()
     decimate  = rs.decimation_filter()
-    decimate.set_option(rs.option.filter_magnitude, 2)
+    decimate.set_option(rs.option.filter_magnitude, 1)
 
     # ── State ────────────────────────────────────────────────────────────────
     app_state  = AppState()
