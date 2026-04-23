@@ -26,31 +26,30 @@ from typing import Optional
 import serial
 
 LEFT_PORT  = "/dev/ttyUSB0"   # Tag LEFT  (T0)
-RIGHT_PORT = "/dev/ttyUSB1"   # Tag RIGHT (T1)
+RIGHT_PORT = "/dev/ttyUSB1"   # Tag RIGHT (T1) — set to anchor port if testing with one tag
 BAUD       = 115200
 
 
-def parse(line: str) -> Optional[tuple[float, float]]:
+def parse(line: str) -> Optional[tuple[Optional[float], Optional[float]]]:
     """
-    Parse one ULM3 'mc' packet to (dist_anchor_A, dist_anchor_B) in metres.
+    Parse one ULA1 'mc' packet to (dist_anchor_A, dist_anchor_B) in metres.
 
     Validates the MASK field and rejects ffffffff (invalid) ranges.
-    Returns None if the line is not a valid mc packet or either range is invalid.
+    Returns None if the line is not a valid mc packet or all ranges are invalid.
     """
     parts = line.split()
     if len(parts) < 4 or parts[0] != "mc":
         return None
     try:
         mask = int(parts[1], 16)
-        if (mask & 0x03) != 0x03:
-            return None
         range0_hex = parts[2]
         range1_hex = parts[3]
-        if range0_hex == "ffffffff" or range1_hex == "ffffffff":
+        dist_a_mm = int(range0_hex, 16) if (mask & 0x01) and range0_hex != "ffffffff" else None
+        dist_b_mm = int(range1_hex, 16) if (mask & 0x02) and range1_hex != "ffffffff" else None
+        if dist_a_mm is None and dist_b_mm is None:
             return None
-        dist_a_mm = int(range0_hex, 16)
-        dist_b_mm = int(range1_hex, 16)
-        return dist_a_mm / 1000.0, dist_b_mm / 1000.0
+        return (dist_a_mm / 1000.0 if dist_a_mm is not None else None,
+                dist_b_mm / 1000.0 if dist_b_mm is not None else None)
     except (ValueError, IndexError):
         return None
 
@@ -79,12 +78,20 @@ def read_and_parse_loop(port: str, label: str) -> None:
             # Print all raw lines so we can see the full output
             print(f"[{label}] raw: {line}")
 
-            # Only parse mc packets
+            # Only parse tag-originated mc packets (last field starts with 't')
             if line.startswith("mc"):
+                parts_line = line.split()
+                if parts_line and not parts_line[-1].startswith("t"):
+                    continue  # skip anchor-originated packets (a0:0 etc.) — not valid distances
                 result = parse(line)
                 if result:
                     dist_a, dist_b = result
-                    print(f"[{label}] parsed: A0 = {dist_a:.3f} m, A1 = {dist_b:.3f} m")
+                    parts_out = []
+                    if dist_a is not None:
+                        parts_out.append(f"A0 = {dist_a:.3f} m")
+                    if dist_b is not None:
+                        parts_out.append(f"A1 = {dist_b:.3f} m")
+                    print(f"[{label}] parsed: {', '.join(parts_out)}")
                 else:
                     print(f"[{label}] parsed: INVALID (mask or range check failed)")
 
