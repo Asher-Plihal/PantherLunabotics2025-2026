@@ -547,9 +547,11 @@ if __name__ == "__main__":
 
     # ── Localizer + dashboard ─────────────────────────────────────────────────
     loc  = UWBLocalizer(AX, AY, BX, BY, TAG_SEP, FORWARD_OFFSET)
-    dash = PantherDashboard("Panther Dashboard — UWB Debug")
+    dash = PantherDashboard("Panther Dashboard — UWB Debug", fullscreen=True)
 
-    idx = 0
+    ADVANCE_MS   = 3000   # ms to display each test case before auto-advancing
+    idx          = 0
+    last_advance = pygame.time.get_ticks()
 
     def run_case(i):
         """Run the localizer on TEST_CASES[i] and return all computed and expected values."""
@@ -612,16 +614,15 @@ if __name__ == "__main__":
             dash.put("x",          f"{pos.x:.3f} m  (exp {ex:.3f})")
             dash.put("y",          f"{pos.y:.3f} m  (exp {ey:.3f})")
             dash.put("heading",    f"{pos.heading:.1f} deg  (exp {eh:.1f})")
-            err_xy = math.sqrt((pos.x - ex) ** 2 + (pos.y - ey) ** 2)
-            dash.put("xy error",   f"{err_xy * 100:.1f} cm")
         else:
             dash.put("result", "NO SOLUTION")
-        dash.put("SPACE", "next case   Q/close: quit")
 
         if not dash.update():
             break
 
-        if dash.key_pressed(pygame.K_SPACE):
+        now = pygame.time.get_ticks()
+        if dash.key_pressed(pygame.K_SPACE) or now - last_advance >= ADVANCE_MS:
             idx = (idx + 1) % len(TEST_CASES)
             pos, d_LA, d_RA, d_LB, d_RB, ex, ey, eh, label = run_case(idx)
             dash.clear_telemetry()
+            last_advance = now

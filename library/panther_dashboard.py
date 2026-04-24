@@ -72,10 +72,16 @@ _FIELD_IMAGE = "../field.png"
 class PantherDashboard:
     """Field + telemetry viewer. See module docstring for API."""
 
-    def __init__(self, title: str = "Panther Dashboard"):
+    def __init__(self, title: str = "Panther Dashboard", fullscreen: bool = False):
         """Initialize the window, fonts, and layout."""
         pygame.init()
-        self._screen     = pygame.display.set_mode((_DEFAULT_W, _DEFAULT_H))
+        if fullscreen:
+            info = pygame.display.Info()
+            w, h = info.current_w, info.current_h
+            self._screen = pygame.display.set_mode((w, h), pygame.FULLSCREEN)
+        else:
+            w, h = _DEFAULT_W, _DEFAULT_H
+            self._screen = pygame.display.set_mode((w, h))
         pygame.display.set_caption(title)
         self._clock      = pygame.time.Clock()
         self._font_sm    = pygame.font.SysFont("monospace", 15)
@@ -98,7 +104,7 @@ class PantherDashboard:
             if os.path.exists(img_path) else None
         )
 
-        self._calc_layout(_DEFAULT_W, _DEFAULT_H)
+        self._calc_layout(w, h)
         self._static = self._build_static()
 
     # ── layout ────────────────────────────────────────────────────────────────
@@ -234,7 +240,7 @@ class PantherDashboard:
                 self._running = False
             if event.type == pygame.KEYDOWN:
                 self.keys_pressed.add(event.key)
-                if event.key == pygame.K_q:
+                if event.key in (pygame.K_q, pygame.K_ESCAPE):
                     self._running = False
         if not self._running:
             pygame.quit()
@@ -362,31 +368,26 @@ class PantherDashboard:
             self._screen.blit(txt, (cx + radius + 3, cy - txt.get_height() // 2))
 
     def _draw_panel(self) -> None:
-        """Render telemetry key-value entries in the right panel."""
+        """Render telemetry key-value entries in the right panel, one entry per line."""
         if not self._telemetry:
             return
-        x         = self._panel_x + 10
+        x           = self._panel_x + 10
         panel_right = self._panel_x + self._panel_w - 8
-        row_h     = 20
-        cur_x     = x
-        cur_y     = _PAD + 42
+        row_h       = 20
+        cur_y       = _PAD + 42
 
         for key, val in self._telemetry.items():
             label = self._font_sm.render(f"{key}: ", True, _C["key"])
             value = self._font_sm.render(val,        True, _C["val"])
-
-            fits_inline = cur_x + label.get_width() + value.get_width() <= panel_right
-
-            self._screen.blit(label, (cur_x, cur_y))
-
-            if fits_inline:
-                self._screen.blit(value, (cur_x + label.get_width(), cur_y))
-                cur_x += label.get_width() + value.get_width() + 16
+            self._screen.blit(label, (x, cur_y))
+            val_x = x + label.get_width()
+            if val_x + value.get_width() <= panel_right:
+                self._screen.blit(value, (val_x, cur_y))
+                cur_y += row_h
             else:
                 cur_y += row_h
-                self._screen.blit(value, (x, cur_y))
-                cur_y += row_h + 4
-                cur_x  = x
+                self._screen.blit(value, (x + 10, cur_y))
+                cur_y += row_h
 
 
 # ── DashboardView — runs as a separate process on the laptop ─────────────────
