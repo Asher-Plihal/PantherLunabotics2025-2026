@@ -6,7 +6,7 @@ time.sleep(2)
 print("ready")
 
 # move actuator
-ser.write(b"MOVE 0.0\n")
+ser.write(b"MOVE 0\n")
 
 while True:
     line = ser.readline().decode(errors='ignore').strip()

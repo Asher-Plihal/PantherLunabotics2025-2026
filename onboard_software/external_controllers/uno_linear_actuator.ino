@@ -1,12 +1,12 @@
 #include <SoftwareSerial.h>
 SoftwareSerial jetsonSerial(2, 3);  // RX=pin2, TX=pin3
 
-"""
+/*
 UNO Linear Actuator Control Code
 This code is run on an arduino UNO to control a linear actuator based on commands 
 received from a Jetson Nano. The actuator's position is read via an ADC and feedback 
 is sent back to the Jetson for closed-loop control.
-"""
+*/
 
 #define FEEDBACK_PIN A0
 
@@ -55,6 +55,7 @@ void loop() {
 
     if (cmd.startsWith("MOVE")) {
       targetInches = cmd.substring(5).toFloat();
+      targetInches = constrain(targetInches, 0, 4);  // limit to 4 inches
       newCommand = true;
     }
   }
@@ -69,13 +70,13 @@ void loop() {
     int error = targetADC - current;
 
     // feedback to Jetson
-    Serial.print("POS ");
-    Serial.println(adcToInches(current), 2);
+    jetsonSerial.print("POS ");
+    jetsonSerial.println(adcToInches(current), 2);
 
     if (abs(error) <= tolerance) {
       digitalWrite(IN1, LOW);
       digitalWrite(IN2, LOW);
-      Serial.println("DONE");
+      jetsonSerial.println("DONE");
       newCommand = false;   // stop motion
     }
     else if (error > 0) {
