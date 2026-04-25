@@ -20,7 +20,7 @@ class Auto:
         self._last_update_time = time.monotonic()
 
     def on_button_event(self, button, is_pressed: bool) -> None:
-        """Toggle auto tasks on button press: LB = excavation, RB = dump."""
+        """Toggle auto tasks on button press: LB = excavation, RB = dump, DPAD_UP = auger 1 in, DPAD_DOWN = auger 0 in."""
         if not is_pressed:
             return
 
@@ -39,6 +39,12 @@ class Auto:
                 task.stop_auto_task()
             else:
                 task.start_auto_task()
+
+        elif button == Button.DPAD_UP:
+            self.robot.auger.set_auger_angle(1.0)
+
+        elif button == Button.DPAD_DOWN:
+            self.robot.auger.set_auger_angle(0.0)
 
     def periodic_loop(self):
         """Called at 50Hz — put all periodic tasks here."""
