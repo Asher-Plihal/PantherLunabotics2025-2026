@@ -42,7 +42,7 @@ class Auger(Subsystem):
         config.motor_type = motor_controller.MotorType.BRUSHLESS
         config.sensor_type = motor_controller.SensorType.HALL_SENSOR
         config.ramp_rate = 0.0
-        config.inverted = False
+        config.inverted = True
         config.motor_kv = 480
         config.smart_current_free_limit = 20.0
         config.smart_current_stall_limit = 80.0
