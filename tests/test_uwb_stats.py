@@ -56,13 +56,16 @@ def parse(line: str) -> Optional[tuple[Optional[float], Optional[float]]]:
 def read_loop(port: str, label: str) -> None:
     """Read serial, parse tag-originated mc packets, accumulate samples, print live readings."""
     try:
-        ser = serial.Serial(port, BAUD, timeout=1.0)
-        time.sleep(1.5)
-        ser.dtr = False
-        ser.rts = True
+        ser = serial.Serial()
+        ser.port = port
+        ser.baudrate = BAUD
+        ser.timeout = 1.0
+        ser.dtr = False  # GPIO0 HIGH before port opens — prevents download mode on reset
+        ser.open()
+        ser.rts = True   # EN LOW → hold in reset
         time.sleep(0.1)
-        ser.rts = False
-        time.sleep(1.5)
+        ser.rts = False  # EN HIGH → release reset, ESP32 boots normally
+        time.sleep(1.0)  # wait for ESP32 to fully boot and start ranging
         print(f"[{label}] connected on {port}")
     except serial.SerialException as e:
         print(f"[{label}] failed to open {port}: {e}")

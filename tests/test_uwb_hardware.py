@@ -33,11 +33,15 @@ BAUD      = 115200
 
 def read_loop(port: str, label: str) -> None:
     try:
-        ser = serial.Serial(port, BAUD, timeout=1.0)
-        ser.dtr = False  # GPIO0 HIGH → normal boot (not download mode)
+        ser = serial.Serial()
+        ser.port = port
+        ser.baudrate = BAUD
+        ser.timeout = 1.0
+        ser.dtr = False  # GPIO0 HIGH before port opens — prevents download mode on reset
+        ser.open()
         ser.rts = True   # EN LOW → hold in reset
         time.sleep(0.1)
-        ser.rts = False  # EN HIGH → release reset, ESP32 boots
+        ser.rts = False  # EN HIGH → release reset, ESP32 boots normally
         time.sleep(1)  # wait for ESP32 to fully boot and start ranging
         print(f"[{label}] connected on {port}")
     except serial.SerialException as e:

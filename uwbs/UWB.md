@@ -442,16 +442,22 @@ The ULA1 outputs raw unfiltered distances, so both EMA and EKF operate directly 
 
 **Cause:** Hardware — the CH340 auto-reset circuit uses capacitors to pulse GPIO0 and EN when the port is opened. This cannot be fixed in firmware.
 
-**Fix:** After opening the serial port in Python, manually drive the correct reset sequence: set `dtr=False` (GPIO0 HIGH = normal boot), assert `rts=True` (EN LOW = hold in reset), release `rts=False` (EN HIGH = boot starts), then wait ~1 second for the ESP32 to fully boot before reading.
+**Fix:** Create the `Serial` object without opening it, set `dtr=False` before calling `open()` so GPIO0 is HIGH before any reset fires, then manually trigger a clean reset via RTS. Wait 1 second for the ESP32 to fully boot before reading.
 
 ```python
-ser = serial.Serial(port, 115200, timeout=1.0)
-ser.dtr = False   # GPIO0 HIGH → normal boot mode
+ser = serial.Serial()
+ser.port = port
+ser.baudrate = 115200
+ser.timeout = 1.0
+ser.dtr = False   # GPIO0 HIGH before port opens — prevents download mode on reset
+ser.open()
 ser.rts = True    # EN LOW → hold in reset
 time.sleep(0.1)
-ser.rts = False   # EN HIGH → release, ESP32 boots
+ser.rts = False   # EN HIGH → release, ESP32 boots normally
 time.sleep(1.0)   # wait for boot + ranging init
 ```
+
+**Why not `serial.Serial(port, baud)`?** Passing the port directly causes pyserial to call `open()` immediately, asserting DTR=True before we can intervene. That brief DTR assertion holds GPIO0 LOW and puts the ESP32 into download mode even if we set `dtr=False` right after.
 
 This is implemented in `tests/test_uwb_hardware.py` and `tests/test_uwb_reading_serial.py` and must also be applied in `library/uwb_localizer.py`.
 
@@ -459,7 +465,7 @@ This is implemented in `tests/test_uwb_hardware.py` and `tests/test_uwb_reading_
 
 **Problem:** When both tag serial ports are opened simultaneously (two threads), one module occasionally still enters download mode. The two reset sequences race and the timing is not always reliable.
 
-**Fix:** Stagger thread starts by 1.5 seconds so the first module completes its boot before the second port is opened. Both test scripts do this.
+**Fix:** Stagger thread starts by 3.0 seconds so the first module fully completes its boot before the second port is opened. 1.5 seconds is not sufficient — the second module still occasionally enters download mode at that interval. Both test scripts use this delay.
 
 ### brltty Conflict (Ubuntu 22.04)
 
