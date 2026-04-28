@@ -55,6 +55,7 @@ class Auger(Subsystem):
 
         self._actuator_pos: float = 0.0
         self._actuator_moving: bool = False
+        self._last_actuator_target: float | None = None
         try:
             self._actuator = serial.Serial(_ACTUATOR_PORT, _ACTUATOR_BAUD, timeout=0)
             time.sleep(2)  # allow Arduino to boot
@@ -85,10 +86,17 @@ class Auger(Subsystem):
         self.set_power(owner, 0.0)
 
     def set_auger_angle(self, pos_inches: float) -> None:
-        """Send a MOVE command to the linear actuator; returns immediately (non-blocking)."""
+        """Send a MOVE command to the linear actuator; returns immediately (non-blocking).
+
+        Suppresses duplicate commands so rapid repeated calls with the same target
+        do not flood the Arduino's serial buffer.
+        """
         if self._actuator is None:
             return
+        if self._last_actuator_target == pos_inches:
+            return
         self._actuator.write(f"MOVE {pos_inches:.2f}\n".encode())
+        self._last_actuator_target = pos_inches
         self._actuator_moving = True
 
     def get_auger_angle(self) -> float:
@@ -108,6 +116,7 @@ class Auger(Subsystem):
                     pass
             elif line == "DONE":
                 self._actuator_moving = False
+                self._last_actuator_target = None
 
     def set_auger_transport_angle(self) -> None:
         """Move the auger to its stowed/transport position."""
