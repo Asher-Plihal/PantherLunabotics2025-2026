@@ -18,29 +18,38 @@ class TeleOp:
 
     def on_button_event(self, button, is_pressed):
         """Dispatch a single gamepad button press or release to the appropriate subsystem."""
-        if button in (Button.DPAD_UP, Button.DPAD_DOWN, Button.DPAD_LEFT, Button.DPAD_RIGHT,
-                      Button.LB, Button.RB, Button.X):
+        if button in (Button.X,):
+            # To restore button drive: add Button.DPAD_UP/DOWN/LEFT/RIGHT, Button.LB, Button.RB to the tuple above
             if robot_params.RobotConfig.useDrivetrain:
                 if is_pressed:
                     self._active_drive_buttons.add(button)
-                    if button == Button.DPAD_UP:
-                        self.robot.drivetrain.drive_forward()
-                    elif button == Button.DPAD_DOWN:
-                        self.robot.drivetrain.drive_backward()
-                    elif button == Button.DPAD_LEFT:
-                        self.robot.drivetrain.strafe_left()
-                    elif button == Button.DPAD_RIGHT:
-                        self.robot.drivetrain.strafe_right()
-                    elif button == Button.LB:
-                        self.robot.drivetrain.turn_left()
-                    elif button == Button.RB:
-                        self.robot.drivetrain.turn_right()
-                    elif button == Button.X:
+                    # if button == Button.DPAD_UP:
+                    #     self.robot.drivetrain.drive_forward()
+                    # elif button == Button.DPAD_DOWN:
+                    #     self.robot.drivetrain.drive_backward()
+                    # elif button == Button.DPAD_LEFT:
+                    #     self.robot.drivetrain.strafe_left()
+                    # elif button == Button.DPAD_RIGHT:
+                    #     self.robot.drivetrain.strafe_right()
+                    # elif button == Button.LB:
+                    #     self.robot.drivetrain.turn_left()
+                    # elif button == Button.RB:
+                    #     self.robot.drivetrain.turn_right()
+                    if button == Button.X:
                         self.robot.drivetrain.fold_out()
                 else:
                     self._active_drive_buttons.discard(button)
                     if not self._active_drive_buttons:
                         self.robot.drivetrain.stop()
+        elif button == Button.DPAD_LEFT:
+            if is_pressed:
+                self.robot.auger.set_auger_dump_angle()
+        elif button == Button.DPAD_UP:
+            if is_pressed:
+                self.robot.auger.set_auger_transport_angle()
+        elif button == Button.DPAD_DOWN:
+            if is_pressed:
+                self.robot.auger.set_auger_intake_angle()
         elif button == Button.Y:
             if is_pressed:
                 self.robot.auger.intake()

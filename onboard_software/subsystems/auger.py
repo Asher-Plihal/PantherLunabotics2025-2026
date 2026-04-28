@@ -18,9 +18,9 @@ _ACTUATOR_PORT = "/dev/ttyTHS1"
 _ACTUATOR_BAUD = 9600
 
 # Preset positions in inches
-_TRANSPORT_INCHES = 1.0
+_TRANSPORT_INCHES = 0.0
 _INTAKE_INCHES    = 2.0
-_DUMP_INCHES      = 3.0
+_DUMP_INCHES      = 1.0
 
 # Full-detection tuning parameters
 _FULL_CURRENT_THRESHOLD_A = 80.0  # amps — sustained current above this signals a full auger
@@ -76,11 +76,11 @@ class Auger(Subsystem):
 
     def intake(self, owner=None):
         """Run the auger in the intake direction at 50% power."""
-        self.set_power(owner, 0.5)
+        self.set_power(owner, 0.75)
 
     def outtake(self, owner=None):
         """Run the auger in the outtake direction at 50% power."""
-        self.set_power(owner, -0.5)
+        self.set_power(owner, -0.75)
 
     def stop(self, owner=None):
         """Stop the auger motor."""

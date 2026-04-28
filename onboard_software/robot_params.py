@@ -27,7 +27,7 @@ class RobotConfig:
     # Network configuration
     Robot_IP = "100.87.109.7"
     Robot_Port = 8080
-    Robot_CAN_Interface = "can1"
+    Robot_CAN_Interface = "can0"
 
     # Streaming configuration
     lidarStream = StreamMode.REMOTE
@@ -77,7 +77,7 @@ class NetworkConfig:
 
     # Select which network to connect to on startup.
     # The key must match one of the entries in NETWORKS below.
-    SELECTED_NETWORK = "FLTech-Guest"
+    SELECTED_NETWORK = "Ashers-HS"
 
     # Maps a friendly name to the nmcli connection profile name saved on the Jetson.
     # Add or rename entries to match what you see in `nmcli connection show`.

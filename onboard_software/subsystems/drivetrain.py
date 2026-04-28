@@ -104,7 +104,7 @@ class Drivetrain(Subsystem):
         
     def fold_out(self, power: float = 0.5, owner=None):
         """Fold out at the given power (default 50%)."""
-        self.set_power(owner, power, power, -power, -power)
+        self.set_power(owner, power, -power, -power, power)
 
     def drive_task(self, owner, left_forward, left_strafe, right_forward, right_strafe):  # right_strafe = turning in arcade, strafe in tank; right_forward unused in arcade
         """Route a joystick command to arcade or tank drive based on RobotConfig.drivetrainMode."""
