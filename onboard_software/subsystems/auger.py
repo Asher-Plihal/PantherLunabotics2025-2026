@@ -56,6 +56,7 @@ class Auger(Subsystem):
         self._actuator_pos: float = 0.0
         self._actuator_moving: bool = False
         self._last_actuator_target: float | None = None
+        self._pending_actuator_target: float | None = None
         try:
             self._actuator = serial.Serial(_ACTUATOR_PORT, _ACTUATOR_BAUD, timeout=0)
             time.sleep(2)  # allow Arduino to boot
@@ -86,27 +87,35 @@ class Auger(Subsystem):
         self.set_power(owner, 0.0)
 
     def set_auger_angle(self, pos_inches: float) -> None:
-        """Send a MOVE command to the linear actuator; returns immediately (non-blocking).
+        """Stage a target position for the linear actuator.
 
-        Suppresses duplicate commands so rapid repeated calls with the same target
-        do not flood the Arduino's serial buffer.
+        Does not write to serial immediately — the command is flushed once per cycle
+        by update_actuator(), so rapid button spam cannot overflow the serial buffer.
         """
         if self._actuator is None:
             return
-        if self._last_actuator_target == pos_inches:
-            return
-        self._actuator.write(f"MOVE {pos_inches:.2f}\n".encode())
-        self._last_actuator_target = pos_inches
-        self._actuator_moving = True
+        self._pending_actuator_target = pos_inches
 
     def get_auger_angle(self) -> float:
         """Return the last position reported by the linear actuator in inches."""
         return self._actuator_pos
 
     def update_actuator(self) -> None:
-        """Drain the serial buffer and update cached position; must be called each cycle."""
-        if self._actuator is None or not self._actuator_moving:
+        """Flush any pending MOVE command and drain incoming serial; must be called each cycle.
+
+        Sending is rate-limited to once per cycle, so no matter how fast the user
+        triggers preset buttons the Arduino's serial buffer can never be overrun.
+        """
+        if self._actuator is None:
             return
+
+        # Send at most one MOVE per cycle, only if the target actually changed.
+        if self._pending_actuator_target is not None and self._pending_actuator_target != self._last_actuator_target:
+            self._actuator.write(f"MOVE {self._pending_actuator_target:.2f}\n".encode())
+            self._last_actuator_target = self._pending_actuator_target
+            self._actuator_moving = True
+        self._pending_actuator_target = None
+
         while self._actuator.in_waiting:
             line = self._actuator.readline().decode(errors="ignore").strip()
             if line.startswith("POS"):
