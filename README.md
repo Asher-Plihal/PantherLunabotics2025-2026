@@ -39,17 +39,67 @@ python robot.py
 python control.py
 ```
 
-# Blockers:
+TODOs at comp:
 
-1. Waiting for UWB parts to arrive
-2. Full scale robot to be built
+Stage 1: Test full manual
+Motor speeds
+Auger speeds
+
+Stage 2: Partial assist
+AutoTasks
+Auger full auto detect
+
 
 # TODO:
 
-1. Set up linear actuator
-2. Test joystick drive both ways
 2. Test auto tasks without pathing
 
 1. Set up UWB
 2. Set up live PID tuning
 2. Figure out camera
+
+Make sure the can port is can0
+---
+
+# CAN Interface Binding (One-Time Jetson Setup)
+
+Pins the USB-to-CAN adapter (`gs_usb`) permanently to `can0` and the onboard Tegra CAN (`mttcan`) to `can1`, so the assignment never changes between reboots.
+
+## Steps (run on Jetson)
+
+**1. Create the link file for the USB adapter:**
+```bash
+sudo nano /etc/systemd/network/10-can-usb.link
+```
+Paste:
+```ini
+[Match]
+Driver=gs_usb
+
+[Link]
+Name=can0
+```
+
+**2. Create the link file for the onboard CAN:**
+```bash
+sudo nano /etc/systemd/network/11-can-onboard.link
+```
+Paste:
+```ini
+[Match]
+Driver=mttcan
+
+[Link]
+Name=can1
+```
+
+**3. Reboot:**
+```bash
+sudo reboot
+```
+
+**4. Verify:**
+```bash
+ip link show can0   # should be the USB adapter
+ip link show can1   # should be the onboard Tegra CAN
+```
