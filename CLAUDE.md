@@ -6,6 +6,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 PantherLunabotics 2025-2026 is a robotics competition project (NASA Lunabotics) for Florida Institute of Technology. It is a distributed control system: Python runs on both the operator's laptop (mission control) and the robot's onboard Jetson computer, while a C++ layer (compiled via CMake/pybind11) handles low-level motor controller communication over CAN bus.
 
+## Known Issues
+
+### CAN Bus Interface
+The Jetson has two CAN interfaces: `can0` (onboard Tegra CAN controller, `mttcan`) and `can1` (USB-to-CAN adapter — OpenMoko/Geschwister Schneider, `gs_usb`). The USB adapter is `can1`. `robot_params.RobotConfig.Robot_CAN_Interface` is set to `"can1"`. If the CAN bus stops working after a reboot, bring it up manually:
+
+```bash
+sudo ip link set can1 down
+sudo ip link set can1 type can bitrate 1000000
+sudo ip link set can1 txqueuelen 1000
+sudo ip link set can1 up
+```
+
+Verify with `ip link show can1` — look for `state UP` and `LOWER_UP`. Use `candump can1` to verify frames are arriving from the SPARK MAXes.
+
 ## Feature Workflow
 
 1. Understand the prompt
