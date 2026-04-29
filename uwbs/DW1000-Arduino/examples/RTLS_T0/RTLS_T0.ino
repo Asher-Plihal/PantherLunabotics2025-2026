@@ -44,8 +44,12 @@ int range_A0=-1,range_A1=-1,range_A2=-1,range_A3=-1;
 
 // T1 passive TDMA: set after T1 broadcasts its own RANGEDATA, cleared when T0's
 // broadcast is received. Forces T1 to start each cycle immediately after T0
-// finishes, avoiding simultaneous air-time. Watchdog fires as standalone fallback.
+// finishes, avoiding simultaneous air-time.
+// Timeout is 400ms — must exceed T0's full cycle period (~280ms: 4×20ms + 200ms idle)
+// so T1 stays in listen mode long enough to always catch T0's broadcast.
 bool waitingForT0 = false;
+uint32_t waitForT0Started = 0;
+const uint32_t WAIT_FOR_T0_TIMEOUT = 400;
 
 /*
 * 函数名称：setup() 
@@ -97,6 +101,7 @@ void setup()
     // Watchdog (200ms) fires as fallback if T0 is absent (standalone T1 test).
     if(Dev_Addr == T1_ADDR) {
         waitingForT0 = true;
+        waitForT0Started = millis();
         receiver();
         Serial.println("T1: waiting for T0 broadcast...");
     } else {
@@ -156,7 +161,7 @@ void next_range()
 */
 void resetInactive()
 {
-    if (waitingForT0) Serial.println("T1: T0 timeout, free-running");
+    if (waitingForT0) Serial.println("T1: watchdog reset while waiting");
     waitingForT0 = false;
     range_mask=0x0;
     range_A0=-1, range_A1=-1, range_A2=-1, range_A3=-1;
@@ -303,8 +308,13 @@ void loop()
     {
         receivetimeoutAck = false;
         if (waitingForT0) {
-            // Keep listening for T0's broadcast; watchdog is the fallback.
-            receiver();
+            if (millis() - waitForT0Started > WAIT_FOR_T0_TIMEOUT) {
+                Serial.println("T1: T0 wait timeout, free-running");
+                resetInactive();
+            } else {
+                noteActivity(); // keep 200ms watchdog from firing during the wait window
+                receiver();
+            }
             return;
         }
         next_range();//进行下一个基站测距
@@ -340,6 +350,7 @@ void loop()
             if (Dev_Addr == T1_ADDR) {
                 // Passive TDMA: listen for T0's broadcast to start next cycle in-phase.
                 waitingForT0 = true;
+                waitForT0Started = millis();
                 receiver();
                 Serial.println("T1: cycle done, waiting for T0...");
             } else {
