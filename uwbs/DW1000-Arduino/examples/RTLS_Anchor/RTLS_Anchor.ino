@@ -278,7 +278,15 @@ void loop()
         byte msgId = data[9];//获取数据功能码
         if (msgId != expectedMsgId) //功能码非预期则重新开启测距周期
         {
-            resetInactive(); 
+            // Stray POLL from the other tag while mid-exchange. Re-arm receiver
+            // and keep waiting for the expected reply. Do NOT noteActivity here:
+            // if the expected reply is lost (e.g. collision), the 200ms watchdog
+            // must still be allowed to fire so we recover.
+            if (msgId == FC_POLL && expectedMsgId != FC_POLL) {
+                receiver();
+                return;
+            }
+            resetInactive();
             return;
         }
         if (msgId == FC_POLL) //收到POLL消息

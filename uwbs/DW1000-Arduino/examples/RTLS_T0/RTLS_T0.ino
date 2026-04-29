@@ -87,6 +87,11 @@ void setup()
     DW1000.attachReceivedHandler(handleReceived);
     DW1000.attachReceiveTimeoutHandler(handleReceiveTimeout);
     
+    // Stagger T1 by half a ranging cycle (~125ms) so T0 and T1 don't poll
+    // anchors simultaneously and collide. T0 starts immediately; T1 waits.
+    if(Dev_Addr == T1_ADDR) {
+        delay(125);
+    }
     target_anchor_addr=A0_ADDR;
     transmitPoll(target_anchor_addr);//发送POLL消息
     noteActivity();//记录当前时间（喂狗）
@@ -339,7 +344,11 @@ void loop()
         byte msgId = data[9];//获取数据功能码
         if (msgId != expectedMsgId) //功能码非预期则重新开启测距周期
         {
-            resetInactive();
+            // Stray frame (typically the other tag's broadcast FC_RANGEDATA).
+            // Re-arm receiver and keep waiting for our expected reply; the 6ms
+            // RX timeout will move us to the next anchor if it never arrives.
+            // Do not resetInactive() — that would abandon the whole cycle.
+            receiver();
             return;
         }
         if (msgId == FC_RESP) //收到RESP消息
