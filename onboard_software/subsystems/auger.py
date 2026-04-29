@@ -21,6 +21,8 @@ _ACTUATOR_BAUD = 9600
 _TRANSPORT_INCHES = 0.0
 _INTAKE_INCHES    = 2.0
 _DUMP_INCHES      = 1.0
+_MIN_ACTUATOR_INCHES = 0.0
+_MAX_ACTUATOR_INCHES = 4.0
 
 # Full-detection tuning parameters
 _FULL_CURRENT_THRESHOLD_A = 80.0  # amps — sustained current above this signals a full auger
@@ -66,6 +68,11 @@ class Auger(Subsystem):
 
         if robot_params.RobotConfig.logAugerTelemetry:
             self.start_logging()
+
+    @property
+    def power(self) -> float:
+        """Return the current motor duty cycle from the cached feedback."""
+        return self.mc.get_motor_feedback(self.motor_id).duty_cycle
 
     def set_power(self, owner, power):
         """Write duty cycle to the auger motor; blocked if owner check fails."""
@@ -126,6 +133,14 @@ class Auger(Subsystem):
             elif line == "DONE":
                 self._actuator_moving = False
                 self._last_actuator_target = None
+
+    def set_auger_min_angle(self) -> None:
+        """Move the actuator to its minimum (fully retracted) position."""
+        self.set_auger_angle(_MIN_ACTUATOR_INCHES)
+
+    def set_auger_max_angle(self) -> None:
+        """Move the actuator to its maximum (fully extended) position."""
+        self.set_auger_angle(_MAX_ACTUATOR_INCHES)
 
     def set_auger_transport_angle(self) -> None:
         """Move the auger to its stowed/transport position."""
