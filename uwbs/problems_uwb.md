@@ -54,15 +54,25 @@ Two root causes remained after Iteration 2:
 
 ---
 
-## 3. ESP32 boots into download mode when opened via serial
+## 3. ESP32 does not start ranging firmware when serial port is opened
 
-**Problem:** When modules are plugged into the Jetson via USB, the CH340 USB-to-serial chip asserts DTR low on power-up, which holds GPIO0 low and causes the ESP32 to boot into `DOWNLOAD_BOOT` instead of running the ranging firmware. This happens before any Python code runs. When two modules are plugged in simultaneously the problem is worse — both go into download mode and the RTS reset sequence in the test script is not reliable enough to recover both.
+**Problem:** Opening the serial port with a plain `serial.Serial(port, baud)` call leaves the ESP32 idle — LEDs stay gray and no `mc` packets are emitted. The modules are not in download mode; they simply need an explicit reset to boot into the ranging firmware.
 
-**Fix (in `test_uwb_hardware.py`):**
-- Run `stty -F <port> -hupcl` before opening each port to prevent the kernel serial driver from toggling control lines on open
-- Set `dtr=False` and re-assert it before releasing RTS reset to ensure GPIO0 stays HIGH throughout the reset sequence
-- Stagger the two tag threads by 4 seconds so T0 is fully booted before T1's reset fires
+**Fix:** Set `dtr=False` before opening (keeps GPIO0 HIGH so the reset lands in normal boot mode, not download mode), then pulse RTS to trigger the reset, then wait 1 second for the firmware to start.
+
+```python
+ser = serial.Serial()
+ser.port = port
+ser.baudrate = 115200
+ser.timeout = 1.0
+ser.dtr = False  # keep GPIO0 HIGH — prevents ESP32 booting into download mode
+ser.open()
+ser.rts = True   # EN LOW → hold in reset
+time.sleep(0.1)
+ser.rts = False  # EN HIGH → release, ESP32 boots into ranging firmware
+time.sleep(1.0)  # wait for boot
+```
 
 **Notes:**
-- The fix is reliable but not 100% consistent across runs — occasionally a second run is needed. This is a hardware quirk of the CH340 auto-reset circuit on these specific modules.
-- When only one module is plugged in it always boots correctly on the first try.
+- No `stty -hupcl`, no DTR re-assertion, and no thread stagger are needed — each tag handles its own boot independently within its thread.
+- Confirmed working with both tags starting simultaneously.

@@ -61,12 +61,12 @@ def read_and_parse_loop(port: str, label: str) -> None:
         ser.port = port
         ser.baudrate = BAUD
         ser.timeout = 1.0
-        ser.dtr = False  # GPIO0 HIGH before port opens — prevents download mode on reset
+        ser.dtr = False  # keep GPIO0 HIGH — prevents ESP32 booting into download mode
         ser.open()
         ser.rts = True   # EN LOW → hold in reset
         time.sleep(0.1)
-        ser.rts = False  # EN HIGH → release reset, ESP32 boots normally
-        time.sleep(1.0)  # wait for ESP32 to fully boot and start ranging
+        ser.rts = False  # EN HIGH → release, ESP32 boots into ranging firmware
+        time.sleep(1.0)  # wait for boot
         print(f"[{label}] connected on {port}")
     except serial.SerialException as e:
         print(f"[{label}] failed to open {port}: {e}")
@@ -104,7 +104,6 @@ def read_and_parse_loop(port: str, label: str) -> None:
 
 
 threading.Thread(target=read_and_parse_loop, args=(LEFT_PORT,  "LEFT"),  daemon=True).start()
-time.sleep(1.5)
 threading.Thread(target=read_and_parse_loop, args=(RIGHT_PORT, "RIGHT"), daemon=True).start()
 
 print("Reading and parsing UWB serial — Ctrl+C to stop\n")

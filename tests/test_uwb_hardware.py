@@ -21,7 +21,6 @@ Run:  python test_uwb_hardware.py
 Stop: Ctrl+C
 """
 
-import subprocess
 import threading
 import time
 import serial
@@ -33,22 +32,16 @@ BAUD    = 115200
 
 def read_loop(port: str, label: str) -> None:
     try:
-        # Prevent the kernel serial driver from toggling DTR/RTS on open,
-        # which pulls GPIO0 LOW on the CH340 and boots the ESP32 into download mode.
-        subprocess.run(["stty", "-F", port, "-hupcl"], check=False)
-
         ser = serial.Serial()
         ser.port = port
         ser.baudrate = BAUD
         ser.timeout = 1.0
-        ser.dtr = False  # GPIO0 HIGH — prevent download mode
+        ser.dtr = False  # keep GPIO0 HIGH — prevents ESP32 booting into download mode
         ser.open()
-        time.sleep(0.05)
         ser.rts = True   # EN LOW → hold in reset
         time.sleep(0.1)
-        ser.dtr = False  # re-assert GPIO0 HIGH before releasing reset
-        ser.rts = False  # EN HIGH → release, ESP32 boots normally
-        time.sleep(2.0)  # wait for full boot
+        ser.rts = False  # EN HIGH → release, ESP32 boots into ranging firmware
+        time.sleep(1.0)  # wait for boot
         print(f"[{label}] connected on {port}")
     except serial.SerialException as e:
         print(f"[{label}] failed to open {port}: {e}")
@@ -65,7 +58,6 @@ def read_loop(port: str, label: str) -> None:
 
 
 threading.Thread(target=read_loop, args=(T0_PORT, "T0"), daemon=True).start()
-time.sleep(4.0)  # wait for T0 to fully boot before resetting T1
 threading.Thread(target=read_loop, args=(T1_PORT, "T1"), daemon=True).start()
 
 print("Reading from both tags — Ctrl+C to stop\n")

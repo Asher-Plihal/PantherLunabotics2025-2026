@@ -32,6 +32,7 @@ import math
 import sys
 import os
 import threading
+import time
 from typing import Optional
 
 import serial
@@ -123,16 +124,19 @@ class UWBLocalizer:
         self._left_serial  = self._open_port(left_port,  baud)
         self._right_serial = self._open_port(right_port, baud)
 
-    @staticmethod # Might need to be udpated when uwb fully debuged
+    @staticmethod
     def _open_port(port: str, baud: int) -> serial.Serial:
-        """Open a serial port with DTR/RTS disabled to prevent ESP32 reset on connect."""
+        """Open a serial port and reset the ESP32 into ranging firmware via the CH340 RTS line."""
         ser = serial.Serial()
         ser.port = port
         ser.baudrate = baud
         ser.timeout = 1.0
-        ser.dtr = False  # prevent ESP32 reset on port open
-        ser.rts = False
+        ser.dtr = False  # keep GPIO0 HIGH — prevents ESP32 booting into download mode
         ser.open()
+        ser.rts = True   # EN LOW → hold in reset
+        time.sleep(0.1)
+        ser.rts = False  # EN HIGH → release, ESP32 boots into ranging firmware
+        time.sleep(1.0)  # wait for boot
         return ser
 
     # -----------------------------------------------------------------------
