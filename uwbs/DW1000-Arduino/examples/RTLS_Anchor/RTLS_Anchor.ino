@@ -21,11 +21,11 @@ byte data[MAX_LEN_DATA];
 
 
 //定义测距周期
-// Watchdog period for stuck-mid-exchange recovery only. The anchor now keeps
-// listening continuously between cycles (see FC_RANGEDATA handler), so this
-// only fires when an expected reply is genuinely lost. 50ms gives plenty of
-// margin over a normal ~25ms exchange while recovering fast under collisions.
-#define TIME_RANGING_PERIOD    (50)
+// Watchdog for stuck-mid-exchange recovery. Must be longer than a full tag
+// cycle (POLL→RESP→FINAL→REPORT for all anchors + broadcast RANGEDATA) so
+// the anchor doesn't time out before the broadcast arrives. At 110kbps +
+// preamble 1024 a 4-anchor cycle is ~50–60ms, so 200ms keeps safe margin.
+#define TIME_RANGING_PERIOD    (200)
 
 //定义中断标志位
 volatile boolean sentAck = false;

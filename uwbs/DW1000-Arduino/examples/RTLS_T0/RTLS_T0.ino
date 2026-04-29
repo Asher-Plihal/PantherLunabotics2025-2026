@@ -30,11 +30,7 @@ DW1000Time timeRespReceived;
 DW1000Time timeFinalSent;
 
 uint32_t lastActivity;//记录活动时间
-// Watchdog only — kicks in when an expected reply is lost mid-cycle. The tag
-// also uses this gap as inter-cycle pacing, so 50ms gives ~50ms idle between
-// cycles instead of ~200ms (faster ranging, more chances for both tags to
-// successfully complete a cycle within the same wall-clock second).
-const uint32_t RangingPeriod = 50;
+const uint32_t RangingPeriod = 200;//测距周期200ms 4个基站测距20ms 总周期约220ms一次，4HZ
 const uint16_t replyDelayTimeUS = 2500;//回发数据延时
 static byte seq_number = 0;//测距消息流水号
 volatile byte expectedMsgId = FC_RESP;//发送数据后需要接收的数据功能码
