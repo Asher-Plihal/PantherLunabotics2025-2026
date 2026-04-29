@@ -235,15 +235,17 @@ void loop()
     if(receivetimeoutAck)//接收数据超时
     {
         receivetimeoutAck = false;
-        if(expectedMsgId == FC_POLL)//接收POLL数据超时
+        if(expectedMsgId != FC_POLL)
         {
-            Serial.println("recv POLL time out");
-        }
-        else
-        {
+            // Mid-exchange timeout (waiting for FINAL or RANGEDATA) — log it.
+            // FC_POLL timeouts are normal idle churn; logging them fills the console.
             Serial.print("recv time out 0x");
             Serial.println(expectedMsgId,HEX);
         }
+        // Re-arm receiver immediately. Without this the DW1000 goes deaf for up to
+        // 140ms (gap between 60ms HW timeout and 200ms watchdog), causing both tags
+        // to miss their poll window and get mc 00.
+        receiver();
     }
     //超过测距周期（RangingPeriod）未发送和接收成功，则重新启动测距周期，打开接收器，准备接收POLL消息
     //作用类似看门狗
