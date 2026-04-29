@@ -9,16 +9,16 @@ PantherLunabotics 2025-2026 is a robotics competition project (NASA Lunabotics) 
 ## Known Issues
 
 ### CAN Bus Interface
-The Jetson has two CAN interfaces: `can0` (onboard Tegra CAN controller, `mttcan`) and `can1` (USB-to-CAN adapter — OpenMoko/Geschwister Schneider, `gs_usb`). The USB adapter is `can1`. `robot_params.RobotConfig.Robot_CAN_Interface` is set to `"can1"`. If the CAN bus stops working after a reboot, bring it up manually:
+The Jetson has two CAN interfaces: `can0` (USB-to-CAN adapter — OpenMoko/Geschwister Schneider, `gs_usb`) and `can1` (onboard Tegra CAN controller, `mttcan`). The USB adapter is `can0`. `robot_params.RobotConfig.Robot_CAN_Interface` is set to `"can0"`. The interface names are pinned permanently via systemd `.link` files in `/etc/systemd/network/` (`10-can-usb.link` and `11-can-onboard.link`). If the CAN bus stops working after a reboot, bring it up manually:
 
 ```bash
-sudo ip link set can1 down
-sudo ip link set can1 type can bitrate 1000000
-sudo ip link set can1 txqueuelen 1000
-sudo ip link set can1 up
+sudo ip link set can0 down
+sudo ip link set can0 type can bitrate 1000000
+sudo ip link set can0 txqueuelen 1000
+sudo ip link set can0 up
 ```
 
-Verify with `ip link show can1` — look for `state UP` and `LOWER_UP`. Use `candump can1` to verify frames are arriving from the SPARK MAXes.
+Verify with `ip link show can0` — look for `state UP` and `LOWER_UP`. Use `candump can0` to verify frames are arriving from the SPARK MAXes.
 
 ## Feature Workflow
 

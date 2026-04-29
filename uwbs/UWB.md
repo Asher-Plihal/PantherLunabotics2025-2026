@@ -480,3 +480,78 @@ This is implemented in `tests/test_uwb_hardware.py` and `tests/test_uwb_reading_
 3. Update `UWBLocalizer._parse()` in `library/uwb_localizer.py` for the ULA1 packet format (4 RANGE fields, no timestamp, no `$K` line). Use `tests/test_uwb_reading_serial.py` for testing before moving to `UWBLocalizer`.
 4. Measure anchor positions and tag separation (W). Add them as constants in `robot_params.py`. Run full hardware integration test with all 4 modules active.
 5. Move `UWBLocalizer` to `onboard_software/subsystems/uwb_localizer.py`. Add a `useUWB` feature toggle to `robot_params.py`. Call `update_from_hardware()` each cycle in the auto loop.
+
+## Ranging Performance (Measured)
+
+Measured with two tags (T0 + T1) and two anchors active simultaneously using `tests/test_uwb_stats.py`. Tags placed static at ~1.1 m from A0 and ~3.85 m from A1.
+
+### Update Rate
+
+Each tag completes one full ranging cycle (poll all anchors → broadcast RANGEDATA → wait/idle) in ~250 ms — approximately **4 Hz per tag, 8 readings/second combined** across both tags. With 4 anchors active instead of 2, timeouts on the unused A2/A3 slots add ~12 ms per cycle; effective rate stays near 4 Hz.
+
+### Noise (1-sigma stdev)
+
+| Module | Condition | A0 stdev | A1 stdev |
+|--------|-----------|----------|----------|
+| T1 (well-oriented) | Confirmed across two anchor-swap runs | 10–15 mm | 16–28 mm |
+| T0 (poorly-oriented) | Confirmed across two anchor-swap runs | 68–91 mm | 51–67 mm |
+
+The anchor-swap test (same tags, same positions, A0/A1 physically exchanged) showed noise follows the **tag**, not the anchor. T0's higher noise is an antenna orientation problem: the DW1000's radiation pattern drops sharply edge-on to the PCB. Rotating T0 to match T1's orientation will reduce its noise to a similar level.
+
+### Filtering
+
+**Is it worth filtering raw distances?**
+
+At 4 Hz and 0.3 m/s robot speed, each sample is ~75 mm of robot motion. An exponential moving average (EMA) with α = 0.5 has a ~250 ms time constant — at 0.3 m/s that is ~75 mm of positional lag introduced, roughly equal to the noise it removes from T0. The tradeoff is marginal for distance-level filtering.
+
+**Recommended approach:**
+
+1. **Spike rejection (worth it):** a 3-sample median filter on raw distances rejects the occasional near-zero artifact produced when a tag and anchor are very close together. One line of code, no lag.
+
+```python
+from collections import deque
+import statistics
+
+class MedianFilter:
+    def __init__(self, window: int = 3):
+        self._buf = deque(maxlen=window)
+
+    def update(self, value: float) -> float:
+        self._buf.append(value)
+        return statistics.median(self._buf)
+
+# One instance per anchor per tag:
+f_a0 = MedianFilter()
+f_a1 = MedianFilter()
+
+# Each time a new mc packet arrives:
+dist_a0 = f_a0.update(raw_a0)
+dist_a1 = f_a1.update(raw_a1)
+```
+
+2. **EMA on position output (moderate benefit):** apply EMA with α ≈ 0.5 to the (x, y) output of trilateration, not to the raw distances. Smoothing after trilateration avoids amplifying distance noise through the geometric calculation.
+
+```python
+class EMA:
+    def __init__(self, alpha: float = 0.5):
+        self._alpha = alpha
+        self._value = None
+
+    def update(self, value: float) -> float:
+        if self._value is None:
+            self._value = value
+        else:
+            self._value = self._alpha * value + (1 - self._alpha) * self._value
+        return self._value
+
+# One instance per output axis:
+ema_x = EMA(alpha=0.5)
+ema_y = EMA(alpha=0.5)
+
+x_smooth = ema_x.update(x_raw)
+y_smooth = ema_y.update(y_raw)
+```
+
+3. **Kalman filter on pose (best, more complex):** an EKF fusing UWB position with the robot's odometry (encoder ticks or motor commands) eliminates lag and handles missed cycles. The right upgrade once basic localization is working.
+
+For T1's 10–15 mm noise, no filter is needed — it is already below the robot's per-sample motion at competition speeds.

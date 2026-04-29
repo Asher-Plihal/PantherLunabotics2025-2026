@@ -65,6 +65,9 @@ make for live tuning for auger
 Make sure the can port is can0
 ---
 
+ip link show can0   # should show gs_usb driver
+ip link show can1   # should show mttcan driver
+
 # CAN Interface Binding (One-Time Jetson Setup)
 
 Pins the USB-to-CAN adapter (`gs_usb`) permanently to `can0` and the onboard Tegra CAN (`mttcan`) to `can1`, so the assignment never changes between reboots.
