@@ -52,6 +52,10 @@ Auger full auto detect
 
 # TODO:
 
+fix control
+fix can
+make for live tuning for auger
+
 2. Test auto tasks without pathing
 
 1. Set up UWB
