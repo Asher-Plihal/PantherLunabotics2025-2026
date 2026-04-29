@@ -126,6 +126,7 @@ def print_stats() -> None:
 
 
 threading.Thread(target=read_loop, args=(LEFT_PORT,  "LEFT"),  daemon=True).start()
+time.sleep(3.0)  # stagger resets — simultaneous RTS pulses cause one module to boot into download mode
 threading.Thread(target=read_loop, args=(RIGHT_PORT, "RIGHT"), daemon=True).start()
 
 print("Collecting UWB ranging stats — Ctrl+C to stop and print summary\n")

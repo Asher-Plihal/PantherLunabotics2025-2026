@@ -21,7 +21,7 @@ Usage:
 
     # Hardware (ports passed directly to constructor, then call update() with no args)
     loc = UWBLocalizer(ax=0.0, ay=5.0, bx=2.5, by=5.0, tag_sep=0.6,
-                       use_hardware=True, left_port="/dev/ttyUSB1", right_port="/dev/ttyUSB2")
+                       use_hardware=True, left_port="/dev/ttyUWB_LEFT", right_port="/dev/ttyUWB_RIGHT")
     pos = loc.update()
 
 Run directly to test with manual values and visualise in PantherDashboard:
@@ -122,6 +122,7 @@ class UWBLocalizer:
             baud:       Baud rate — 115200 matches the ESP32/DWM1000 (ULA1) default.
         """
         self._left_serial  = self._open_port(left_port,  baud)
+        time.sleep(3)  # small delay between resets to avoid USB issues
         self._right_serial = self._open_port(right_port, baud)
 
     @staticmethod

@@ -104,6 +104,7 @@ def read_and_parse_loop(port: str, label: str) -> None:
 
 
 threading.Thread(target=read_and_parse_loop, args=(LEFT_PORT,  "LEFT"),  daemon=True).start()
+time.sleep(2.0)  # stagger resets — simultaneous RTS pulses cause one module to boot into download mode
 threading.Thread(target=read_and_parse_loop, args=(RIGHT_PORT, "RIGHT"), daemon=True).start()
 
 print("Reading and parsing UWB serial — Ctrl+C to stop\n")

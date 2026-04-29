@@ -74,5 +74,6 @@ time.sleep(1.0)  # wait for boot
 ```
 
 **Notes:**
-- No `stty -hupcl`, no DTR re-assertion, and no thread stagger are needed — each tag handles its own boot independently within its thread.
-- Confirmed working with both tags starting simultaneously.
+- No `stty -hupcl` and no DTR re-assertion are needed.
+- A stagger of ≥2 seconds between thread starts is required when opening two ports. Simultaneous RTS resets cause one module to boot into download mode (red LED). The first thread's 1.0s boot wait must complete before the second RTS fires.
+- `_open_port` in `uwb_localizer.py` is safe without a stagger because it opens ports sequentially — right does not open until left's boot wait returns.
