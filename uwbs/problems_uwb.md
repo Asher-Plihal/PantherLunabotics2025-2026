@@ -18,15 +18,27 @@
 
 **Root cause:** The RTLS_T0/RTLS_Anchor firmware was designed for one tag at a time. No multi-tag support exists in the original PeterSun01 firmware.
 
-**Fix (possible fix, written but not yet flashed/tested):**
+**Fix (written, partially tested — see Iteration 2):**
 
-Tag side (`RTLS_T0.ino`):
-1. T1 delays 125ms at the end of `setup()` before sending its first POLL. One full 4-anchor cycle is ~250ms, so 125ms puts T1 approximately half a cycle behind T0 at boot.
-2. When the tag receives an unexpected msgId mid-cycle (typically the *other* tag's broadcast `FC_RANGEDATA` to `0xFFFF`), it now just re-arms the receiver instead of calling `resetInactive()`. The 6ms RX timeout still fires and moves us to the next anchor if the expected reply is genuinely lost. Without this, T0's broadcast RANGEDATA was knocking T1 back to A0 every cycle.
+### Iteration 1 (insufficient — T1 still got `mc 00`)
 
-Anchor side (`RTLS_Anchor.ino`): When `msgId != expectedMsgId` and the unexpected message is `FC_POLL` while the anchor is mid-exchange (waiting for `FC_FINAL` or `FC_RANGEDATA`), the anchor ignores the competing POLL and re-opens the receiver instead of calling `resetInactive()`. **`noteActivity()` is intentionally NOT called on this path** — if T1 keeps spamming POLLs while T0's FINAL is lost to collision, refreshing the watchdog would let us hang forever. Letting the watchdog tick is the recovery mechanism.
+Tag boot offset (T1 delays 125ms) + anchor ignored stray `FC_POLL` mid-exchange. After flashing, T0 went from `mc 00` → `mc 01` (still missing A1) and T1 stayed at `mc 00`. Wasn't enough.
 
-**Status:** Firmware changes written, not yet reflashed. Needs testing with both tags active.
+### Iteration 2 (current — root cause)
+
+Reading T1's serial output showed `seq_number` jumping by exactly 5 each cycle (4 POLLs + 1 broadcast RANGEDATA, **zero FINALs**). T1 was transmitting POLLs but receiving zero RESPs from any anchor. That eliminated "collision corrupts T1's POLL" — T1's POLLs were arriving at anchors but anchors weren't responding.
+
+The actual root cause is in `RTLS_Anchor.ino`'s FC_RANGEDATA handler: after a successful cycle the anchor calls `DW1000.idle()` and sits deaf until the 200ms watchdog fires. The original firmware was designed for a single tag — its watchdog was tuned so the anchor's deaf window ended exactly when the tag's next POLL was due. With two tags the second tag's POLLs almost always landed in the deaf window and got no response.
+
+Three changes ([RTLS_Anchor.ino](DW1000-Arduino/examples/RTLS_Anchor/RTLS_Anchor.ino), [RTLS_T0.ino](DW1000-Arduino/examples/RTLS_T0/RTLS_T0.ino)):
+
+1. **Anchor never goes deaf.** After processing FC_RANGEDATA, replace `DW1000.idle()` with `resetInactive()` so the anchor goes straight back to listening for the next POLL.
+2. **Generalized stray-frame handling on anchor.** Any wrong msgId (the other tag's POLL *or* its broadcast RANGEDATA) just re-arms the receiver. No `noteActivity` on that path — the watchdog must be allowed to fire if the expected reply is genuinely lost.
+3. **Watchdog shortened to 50ms (anchor + tag).** Only used for stuck-mid-exchange recovery now, not inter-cycle pacing. 50ms gives plenty of margin over a real ~25ms exchange while recovering quickly under collisions.
+
+Tag-side stray-frame ignore (broadcast RANGEDATA from the other tag) and T1 boot offset are kept from iteration 1.
+
+**Status:** Iteration 2 written, not yet reflashed. Needs testing with both tags active.
 
 **Notes:**
 - The cycles will naturally drift over time since the ESP32 clocks are not synchronized. If they drift back into phase, a few cycles of degraded readings will occur before they drift apart again. For a 30-minute competition run this should be acceptable.

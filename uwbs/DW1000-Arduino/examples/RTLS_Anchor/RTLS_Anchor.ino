@@ -21,7 +21,11 @@ byte data[MAX_LEN_DATA];
 
 
 //定义测距周期
-#define TIME_RANGING_PERIOD    (200) //测距周期
+// Watchdog period for stuck-mid-exchange recovery only. The anchor now keeps
+// listening continuously between cycles (see FC_RANGEDATA handler), so this
+// only fires when an expected reply is genuinely lost. 50ms gives plenty of
+// margin over a normal ~25ms exchange while recovering fast under collisions.
+#define TIME_RANGING_PERIOD    (50)
 
 //定义中断标志位
 volatile boolean sentAck = false;
@@ -276,17 +280,14 @@ void loop()
         uint8_t data_len=DW1000.getDataLength();//取得数据长度
         DW1000.getData(data, data_len);//取得数据
         byte msgId = data[9];//获取数据功能码
-        if (msgId != expectedMsgId) //功能码非预期则重新开启测距周期
+        if (msgId != expectedMsgId)
         {
-            // Stray POLL from the other tag while mid-exchange. Re-arm receiver
-            // and keep waiting for the expected reply. Do NOT noteActivity here:
-            // if the expected reply is lost (e.g. collision), the 200ms watchdog
-            // must still be allowed to fire so we recover.
-            if (msgId == FC_POLL && expectedMsgId != FC_POLL) {
-                receiver();
-                return;
-            }
-            resetInactive();
+            // Stray frame from the other tag (its POLL or its broadcast
+            // FC_RANGEDATA to 0xFFFF). Re-arm receiver and keep waiting for the
+            // expected message. Do NOT noteActivity or resetInactive here — the
+            // watchdog must be allowed to fire if the expected reply is truly
+            // lost so the anchor recovers without a permanent stuck state.
+            receiver();
             return;
         }
         if (msgId == FC_POLL) //收到POLL消息
@@ -342,8 +343,13 @@ void loop()
                                 data[18], rang[0], rang[1], rang[2], rang[3], out_data_count++,seq_number, range_time, data[7], device_addr[0]);
             Serial.println(out_data);
 
-            DW1000.idle();//一个测距周期完毕，接入空闲模式
-            noteActivity();//记录当前时间（喂狗）
+            // Cycle done. Go straight back to listening for the next POLL
+            // instead of going idle for the watchdog period. The original
+            // DW1000.idle() here put the anchor deaf for 200ms after every
+            // cycle — fine with one tag (its next POLL arrived right when the
+            // watchdog fired) but with two tags the second tag's POLLs almost
+            // always landed in the deaf window and got no RESP.
+            resetInactive();
         }
 
 
