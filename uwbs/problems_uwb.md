@@ -38,33 +38,19 @@ Three changes ([RTLS_Anchor.ino](DW1000-Arduino/examples/RTLS_Anchor/RTLS_Anchor
 
 Tag-side stray-frame ignore (broadcast RANGEDATA from the other tag) and T1 boot offset are kept from iteration 1.
 
-**Status (Iteration 2):** Confirmed working for single-tag operation (T1 alone achieves consistent `mc 03`). Multi-tag collision persists: each tag monopolizes one anchor exclusively; `recv time out 0x82` on A1 indicates A1 completes a TWR exchange with T1 but T1's broadcast never arrives because T0's interference disrupts T1's cycle timing.
+### Iteration 3 — Passive TDMA + anchor deaf-window fix (**SOLVED**)
 
-### Iteration 3 (current — passive TDMA for T1)
+Two root causes remained after Iteration 2:
 
-Root cause of remaining collision: T0 and T1 free-run independently and inevitably overlap on-air. The fix is to remove the free-running behavior from T1 entirely.
+**Root cause A — free-running collision:** T0 and T1 both free-ran at the same ~240ms cycle period. Their phases inevitably aligned, causing simultaneous POLLs and anchor confusion.
 
-T1 now waits for T0's broadcast `FC_RANGEDATA` frame (sent to 0xFFFF at the end of every cycle) before starting its own POLL cycle. Since T0's broadcast is received by every node simultaneously, T1 knows exactly when T0 has finished — and starts immediately after, with no simultaneous air-time. The 200ms watchdog fires as a fallback if T0 is absent (standalone T1 test).
+**Root cause B — anchor deaf window (60ms hardware RX timeout):** The anchor had `setReceiveFrameWaitTimeoutPeriod(60000)` = 60ms. After each `resetInactive()`, the receiver ran for 60ms, then the hardware timeout fired. The `receivetimeoutAck` handler only printed a message — it never called `receiver()`. The anchor's DW1000 sat deaf for 140ms (gap between the 60ms HW timeout and the 200ms watchdog). T0's next poll always arrived during this deaf window and got no response → `mc 00`.
 
-Changes (RTLS_T0.ino only — anchor unchanged):
+**Fix A — passive TDMA (RTLS_T0.ino):** T1 waits for T0's `FC_RANGEDATA` broadcast (to 0xFFFF, detected by source address `T0_ADDR = 0x0000`) before starting its own cycle. Timeout is 400ms (> T0's ~280ms full cycle period). `noteActivity()` is called on each 6ms RX tick during the wait so the 200ms watchdog doesn't fire early. Standalone fallback: if T0's broadcast never arrives within 400ms, T1 free-runs.
 
-1. **T1 boot**: instead of `delay(125)` + immediate POLL, T1 opens receiver and sets `waitingForT0 = true`. T0 boots and starts free-running immediately.
-2. **After T1's RANGEDATA sent**: instead of `DW1000.idle()`, T1 opens receiver and sets `waitingForT0 = true`.
-3. **Receive handler (T1 only)**: if `waitingForT0`, check if received frame is `FC_RANGEDATA` from T0 (`data[7:8]` == `T0_ADDR`). If yes: clear flag, call `resetInactive()` → start T1's cycle. If no: re-arm receiver.
-4. **RX timeout handler**: if `waitingForT0`, re-arm receiver instead of calling `next_range()`.
-5. **`resetInactive()`**: clears `waitingForT0` (watchdog fallback path).
+**Fix B — anchor always-receive (RTLS_Anchor.ino):** Added `receiver()` at the end of the `receivetimeoutAck` handler so the anchor immediately re-arms after every 60ms timeout. Eliminated the deaf window entirely. Also suppressed noisy FC_POLL timeout logs (normal idle churn).
 
-Expected timing: T0 cycle ~80-100ms → T0 broadcasts → T1 starts → T1 cycle ~80-100ms → T1 broadcasts → T1 waits → T0 starts next cycle at ~200ms after its broadcast. Gap between T1 finishing and T0 starting: ~100-120ms. No overlap.
-
-**Status:** Written, not yet flashed. Needs testing with both tags and both anchors active.
-
-**Notes:**
-- The cycles will naturally drift over time since the ESP32 clocks are not synchronized. If they drift back into phase, a few cycles of degraded readings will occur before they drift apart again. For a 30-minute competition run this should be acceptable.
-- If sustained collision becomes a problem, a proper TDMA implementation with synchronized time slots would be the next step.
-
-**For a future AI attempting a better fix:**
-Read `uwbs/DW1000-Arduino/examples/RTLS_Anchor/RTLS_Anchor.ino` and `uwbs/DW1000-Arduino/examples/RTLS_T0/RTLS_T0.ino`. The problem is two tags colliding at the anchor because they transmit at the same time and the anchor can only handle one exchange at a time. A current partial fix exists in both files but has not been tested. Write a robust fix — the goal is both T0 and T1 getting reliable `mc 03` readings simultaneously with 2 anchors active. Read `uwbs/UWB.md` first for full hardware and protocol context. keep it simple and concise dont change more than you need
-- **Comparison to MaUWB (reddit.com/r/diyelectronics/comments/1fp0kg5):** MaUWB is a commercial module (STM32 + DW3000, newer chip) that solves the multi-tag collision problem by design — it supports up to 8 anchors and 64 tags with scheduling built into the firmware. The Reddit post specifically opens by calling out UWB signal interference between multiple anchors and tags as the core problem UWB faces. Our situation is the same problem on cheaper hardware (DW1000-based ULA1 modules) with a minimal firmware that was never designed for it. MaUWB is not a drop-in replacement — it uses AT commands over serial and a completely different communication model — but it confirms this is a well-known problem and the fix is proper time-division scheduling.
+**Result:** Both T0 and T1 achieve solid `mc 03` every cycle simultaneously with no drops. Confirmed across two consecutive test runs.
 
 ---
 

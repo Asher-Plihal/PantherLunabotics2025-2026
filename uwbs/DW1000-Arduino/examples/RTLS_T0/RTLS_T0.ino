@@ -103,7 +103,7 @@ void setup()
         waitingForT0 = true;
         waitForT0Started = millis();
         receiver();
-        Serial.println("T1: waiting for T0 broadcast...");
+        //Serial.println("T1: waiting for T0 broadcast...");
     } else {
         target_anchor_addr=A0_ADDR;
         transmitPoll(target_anchor_addr);//发送POLL消息
@@ -161,7 +161,7 @@ void next_range()
 */
 void resetInactive()
 {
-    if (waitingForT0) Serial.println("T1: watchdog reset while waiting");
+    //if (waitingForT0) Serial.println("T1: watchdog reset while waiting");
     waitingForT0 = false;
     range_mask=0x0;
     range_A0=-1, range_A1=-1, range_A2=-1, range_A3=-1;
@@ -309,7 +309,7 @@ void loop()
         receivetimeoutAck = false;
         if (waitingForT0) {
             if (millis() - waitForT0Started > WAIT_FOR_T0_TIMEOUT) {
-                Serial.println("T1: T0 wait timeout, free-running");
+                //Serial.println("T1: T0 wait timeout, free-running");
                 resetInactive();
             } else {
                 noteActivity(); // keep 200ms watchdog from firing during the wait window
@@ -352,7 +352,7 @@ void loop()
                 waitingForT0 = true;
                 waitForT0Started = millis();
                 receiver();
-                Serial.println("T1: cycle done, waiting for T0...");
+                //Serial.println("T1: cycle done, waiting for T0...");
             } else {
                 DW1000.idle();//测距周期结束，进入空闲模式
             }
@@ -372,11 +372,11 @@ void loop()
                 uint16_t src = ((uint16_t)data[8] << 8) | data[7];
                 if (src == T0_ADDR) {
                     waitingForT0 = false;
-                    Serial.println("T1: T0 seen, starting cycle");
+                    //Serial.println("T1: T0 seen, starting cycle");
                     resetInactive(); // start T1's cycle immediately after T0's
                     return;
                 }
-                Serial.print("T1: RANGEDATA from unknown src=0x"); Serial.println(src, HEX);
+                //Serial.print("T1: RANGEDATA from unknown src=0x"); Serial.println(src, HEX);
             }
             receiver(); // not T0's broadcast, keep waiting
             return;
