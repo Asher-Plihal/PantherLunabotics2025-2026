@@ -42,6 +42,11 @@ uint16_t Dev_Addr = ERR_ADDR;
 uint8_t range_mask=0x00;
 int range_A0=-1,range_A1=-1,range_A2=-1,range_A3=-1;
 
+// T1 passive TDMA: set after T1 broadcasts its own RANGEDATA, cleared when T0's
+// broadcast is received. Forces T1 to start each cycle immediately after T0
+// finishes, avoiding simultaneous air-time. Watchdog fires as standalone fallback.
+bool waitingForT0 = false;
+
 /*
 * 函数名称：setup() 
 * 功能：Arduino入口函数，初始化设置
@@ -87,13 +92,17 @@ void setup()
     DW1000.attachReceivedHandler(handleReceived);
     DW1000.attachReceiveTimeoutHandler(handleReceiveTimeout);
     
-    // Stagger T1 by half a ranging cycle (~125ms) so T0 and T1 don't poll
-    // anchors simultaneously and collide. T0 starts immediately; T1 waits.
+    // T0 starts immediately. T1 waits for T0's first RANGEDATA broadcast before
+    // beginning its own cycle so they never transmit simultaneously from the start.
+    // Watchdog (200ms) fires as fallback if T0 is absent (standalone T1 test).
     if(Dev_Addr == T1_ADDR) {
-        delay(125);
+        waitingForT0 = true;
+        receiver();
+        Serial.println("T1: waiting for T0 broadcast...");
+    } else {
+        target_anchor_addr=A0_ADDR;
+        transmitPoll(target_anchor_addr);//发送POLL消息
     }
-    target_anchor_addr=A0_ADDR;
-    transmitPoll(target_anchor_addr);//发送POLL消息
     noteActivity();//记录当前时间（喂狗）
 }
 
@@ -145,8 +154,10 @@ void next_range()
 * 函数名称：resetInactive() 
 * 功能：重新开始一次测距周期，发送POLL消息
 */
-void resetInactive() 
+void resetInactive()
 {
+    if (waitingForT0) Serial.println("T1: T0 timeout, free-running");
+    waitingForT0 = false;
     range_mask=0x0;
     range_A0=-1, range_A1=-1, range_A2=-1, range_A3=-1;
     expectedMsgId = FC_RESP;
@@ -291,16 +302,11 @@ void loop()
     if(receivetimeoutAck)//接收数据超时
     {
         receivetimeoutAck = false;
-        // if(expectedMsgId == FC_RESP)
-        // {
-        //     Serial.print("recv ANCHOR RESP time out,Addr=0x");
-        //     Serial.println(target_anchor_addr,HEX);
-        // }
-        // else if(expectedMsgId == FC_REPORT)
-        // {
-        //     Serial.print("recv ANCHOR REPORT time out,Addr=0x");
-        //     Serial.println(target_anchor_addr,HEX);
-        // }
+        if (waitingForT0) {
+            // Keep listening for T0's broadcast; watchdog is the fallback.
+            receiver();
+            return;
+        }
         next_range();//进行下一个基站测距
     }
     //超过测距周期（RangingPeriod）未发送和接收成功，则重新启动测距周期，重新发起发送POLL消息
@@ -331,7 +337,14 @@ void loop()
         }
         else if (msgId == FC_RANGEDATA)  //发送的数据是RANGEDATA数据
         {
-            DW1000.idle();//测距周期结束，进入空闲模式
+            if (Dev_Addr == T1_ADDR) {
+                // Passive TDMA: listen for T0's broadcast to start next cycle in-phase.
+                waitingForT0 = true;
+                receiver();
+                Serial.println("T1: cycle done, waiting for T0...");
+            } else {
+                DW1000.idle();//测距周期结束，进入空闲模式
+            }
             noteActivity();//记录当前时间（喂狗）
         }
     }
@@ -342,6 +355,21 @@ void loop()
         uint8_t data_len=DW1000.getDataLength();//取得数据长度
         DW1000.getData(data, data_len);//取得接收数据
         byte msgId = data[9];//获取数据功能码
+        if (waitingForT0) {
+            // T1 passive TDMA: watching for T0's broadcast to trigger our cycle.
+            if (msgId == FC_RANGEDATA) {
+                uint16_t src = ((uint16_t)data[8] << 8) | data[7];
+                if (src == T0_ADDR) {
+                    waitingForT0 = false;
+                    Serial.println("T1: T0 seen, starting cycle");
+                    resetInactive(); // start T1's cycle immediately after T0's
+                    return;
+                }
+                Serial.print("T1: RANGEDATA from unknown src=0x"); Serial.println(src, HEX);
+            }
+            receiver(); // not T0's broadcast, keep waiting
+            return;
+        }
         if (msgId != expectedMsgId) //功能码非预期则重新开启测距周期
         {
             // Stray frame (typically the other tag's broadcast FC_RANGEDATA).

@@ -38,7 +38,25 @@ Three changes ([RTLS_Anchor.ino](DW1000-Arduino/examples/RTLS_Anchor/RTLS_Anchor
 
 Tag-side stray-frame ignore (broadcast RANGEDATA from the other tag) and T1 boot offset are kept from iteration 1.
 
-**Status:** Iteration 2 written, not yet reflashed. Needs testing with both tags active.
+**Status (Iteration 2):** Confirmed working for single-tag operation (T1 alone achieves consistent `mc 03`). Multi-tag collision persists: each tag monopolizes one anchor exclusively; `recv time out 0x82` on A1 indicates A1 completes a TWR exchange with T1 but T1's broadcast never arrives because T0's interference disrupts T1's cycle timing.
+
+### Iteration 3 (current — passive TDMA for T1)
+
+Root cause of remaining collision: T0 and T1 free-run independently and inevitably overlap on-air. The fix is to remove the free-running behavior from T1 entirely.
+
+T1 now waits for T0's broadcast `FC_RANGEDATA` frame (sent to 0xFFFF at the end of every cycle) before starting its own POLL cycle. Since T0's broadcast is received by every node simultaneously, T1 knows exactly when T0 has finished — and starts immediately after, with no simultaneous air-time. The 200ms watchdog fires as a fallback if T0 is absent (standalone T1 test).
+
+Changes (RTLS_T0.ino only — anchor unchanged):
+
+1. **T1 boot**: instead of `delay(125)` + immediate POLL, T1 opens receiver and sets `waitingForT0 = true`. T0 boots and starts free-running immediately.
+2. **After T1's RANGEDATA sent**: instead of `DW1000.idle()`, T1 opens receiver and sets `waitingForT0 = true`.
+3. **Receive handler (T1 only)**: if `waitingForT0`, check if received frame is `FC_RANGEDATA` from T0 (`data[7:8]` == `T0_ADDR`). If yes: clear flag, call `resetInactive()` → start T1's cycle. If no: re-arm receiver.
+4. **RX timeout handler**: if `waitingForT0`, re-arm receiver instead of calling `next_range()`.
+5. **`resetInactive()`**: clears `waitingForT0` (watchdog fallback path).
+
+Expected timing: T0 cycle ~80-100ms → T0 broadcasts → T1 starts → T1 cycle ~80-100ms → T1 broadcasts → T1 waits → T0 starts next cycle at ~200ms after its broadcast. Gap between T1 finishing and T0 starting: ~100-120ms. No overlap.
+
+**Status:** Written, not yet flashed. Needs testing with both tags and both anchors active.
 
 **Notes:**
 - The cycles will naturally drift over time since the ESP32 clocks are not synchronized. If they drift back into phase, a few cycles of degraded readings will occur before they drift apart again. For a 30-minute competition run this should be acceptable.
