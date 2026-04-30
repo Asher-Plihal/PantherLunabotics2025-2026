@@ -52,6 +52,7 @@ Auger full auto detect
 
 # TODO:
 
+uwb hight offset
 fix control
 fix can
 make for live tuning for auger

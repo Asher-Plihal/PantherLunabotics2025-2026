@@ -79,83 +79,104 @@ The C++ module uses pybind11 to expose `MotorController` to Python.
 
 ## Competition Rules (Software-Relevant)
 
-Full guidebook: `lunabotics-guidebook-2025-2026.txt` — **do not read the full guidebook unless specifically asked.** The software-relevant rules are summarized below. The guidebook is mostly administrative (applications, papers, eligibility, awards) and will waste context window.
+Full guidebook: `ucf-lunabotics-guidebook-2026.txt` — **do not read the full guidebook unless specifically asked.** The software-relevant rules are summarized below. The guidebook is mostly administrative (applications, papers, eligibility, awards) and will waste context window.
 
 ### Arena Layout
 
-**Coordinate system:** Origin (0,0) at arena bottom-left. +X = east (right), +Y = north (up). Heading: 0° = north, positive = clockwise (90° = east). All robot poses, targets, and arena coordinates use this convention.
+**Coordinate system:** Origin (0,0) at INGRESS corner (top-right, where the arena divider meets the right wall). +X = west (left across arena), +Y = south (down). Berm center is at X=6.80 m, Y=3.57 m from INGRESS. The fiducials bar is on the right wall at the INGRESS end.
 
 ```
-Top-down view.  Origin (0,0) at bottom-left.  X → right (east), Y → up (north).
-Outer dimensions: 6.88 m × 5.0 m.  Interior ≈ 6.8 m × 5.0 m.
+Top-down view. Origin at INGRESS (top-right corner). X → left, Y → down.
+Bin width: 8.10 m. Bin height: 4.57 m. Judge platform: 1.00 m (left, not drivable).
 
-           ◄── 2.5 m ──►◄──────────── 4.38 m ────────────►
-           ◄──────────────── 6.88 m ──────────────────────►
-    ┌──────────────┬──────────────────────────────────────┐  ▲
-    │              │                                      │  │
-    │  EXCAVATION  │          OBSTACLE ZONE               │  │
-    │    ZONE      │                                      │  │
-    │              │     ☼ boulders (30-40cm dia, min 3)   │  │
-    │  (dig here,  │     ○ craters (40-50cm w/d, min 3)   │ 5.0 m
-    │   rocks may  │     ▌ central column (permanent)     │  │
-    │   be moved)  │                                      │  │
-    │              │     Randomly placed before each round.│  │
-    │  ┌─────────┐ │         ┌──────────────────┐         │  │
-    │  │ STARTING│ │         │  CONSTRUCTION    │         │  │
-    │  │  ZONE   │ │         │  ┌──BERM───┐     │         │  │
-    │  │ [Robot] │ │         │  │1.7×0.8m │     │         │  │
-    │  └─────────┘ │         │  └─────────┘     │         │  │
-    │  (no rocks)  │         │  Red box 2.2×0.9m│         │  │
-    └──────────────┴─────────┴──────────────────┴─────────┘  ▼
-    (0,0)                     Berm center ≈ (5.38, 0.6)
+  INGRESS (0,0)
+  ┌──────────────────────────────────────────┬──────────────┐◄── Fiducials bar
+  │         OBSTACLE ZONE  (4.1 m wide)      │ STARTING     │ (right wall, 40 cm
+  │  ○ brown boulders (30-40 cm, min 3)      │ ZONE  2 m    │  above regolith,
+  │  ○ blue craters  (40-50 cm, min 3)       │ [Robot here] │  0.5–2.0 m from top)
+  │  Randomly placed before each run.        │              │
+  │                    ┌─────────────────────┘              │
+  │  CONSTRUCTION      │                                    │
+  │  ZONE              │    OBSTACLE ZONE (continued)       │
+  │  ┌──────────────┐  │                                    │
+  │  │  BERM ZONE   │  │                                    │
+  │  │  1.5 × 0.9 m │  │                                    │
+  │  │  (red box)   │  │                                    │
+  │  └──────────────┘  │         EXCAVATION ZONE  (4 m)     │
+  │    2.6 m from left │                                    │
+  └────────────────────┴────────────────────────────────────┘
+  ◄── 1.00 m ──►◄──────────────── 8.10 m ─────────────────►
+  (judge platform)
 ```
 
-- Regolith: ~45 cm deep BP-1 crushed basalt simulant (may contain ~2 cm gravel)
-- Regolith must be carried through obstacle zone to construction zone (no bulldozing)
-- Only berm volume inside the red box counts toward scoring
+- Regolith: LHS-2E (Lunar Highlands Simulant), ~90 cm deep
+- **Excavation Zone overlaps with Starting Zone** — robot may excavate anywhere in either zone
+- Regolith for the berm must come from the Excavation Zone or Starting Zone only (not Obstacle or Construction zones)
+- Bulldozing (pushing material with a blade from excavation zone through to berm) is explicitly permitted
+- Only berm volume inside the red box (1.5 m × 0.9 m) counts toward scoring
+- Robot must not push or move obstacles in the Obstacle Zone (only permitted in Construction Zone)
+- Robot must avoid craters in Obstacle Zone (no filling them in)
 
 ### Obstacles
-- **Boulders:** Min 3, randomly placed each round, ~30-40cm diameter with varying heights
-- **Craters:** Min 3, varying depths/widths up to ~40-50cm
-- **Central support column:** Permanent fixture, must be avoided
-- **Penalty:** 30 pts per rock contact or crater crossing during autonomous operation (max 90 pts)
+- **Boulders:** Min 3, randomly placed each run, ~30–40 cm diameter, varying heights. May also appear in Excavation Zone (no larger than Obstacle Zone boulders).
+- **Craters:** Min 3, varying depth/width, up to 40–50 cm wide/deep, in Obstacle Zone only
+- **No permanent central column** (that was the old NASA arena)
+- **Penalty:** 30 pts per rock contact or crater crossing in Obstacle Zone during autonomous operation (max 90 pts)
 
 ### Robot Constraints
-- Max mass: 80 kg, stowed volume: 150cm x 75cm x 75cm
-- E-stop button required (40mm min, highest practical location, must stop motion AND disable power)
+- Max mass: 80 kg (includes all onboard comms/video equipment and navigational aid system)
+- Stowed volume: 150 cm × 75 cm × 75 cm (orientation team's choice; may expand after run starts)
+- E-stop button required: min 40 mm diameter COTS red button, highest practical location, one push stops motion AND disconnects batteries from all controllers
+- Resetting E-stop alone does NOT resume operation — a second deliberate action is required
+- Power logger must be wired between battery and kill switch (30-pt BCP Energy penalty if not)
+- Min 4 lifting points, clearly marked
 
 ### Timing
-- 10 min setup, 30 min competition run, 5 min removal
-- Robot must move within 5 min of timer start or attempt is terminated
-- Loss of locomotion for 5 min = attempt terminated
-- Two attempts allowed per team
+- 10 min setup, **15 min competition run**, 5 min removal
+- Robot must move within 5 min of timer start or run is terminated
+- Loss of locomotion for 5 min = run terminated
+- Two attempts allowed per team; scores from both runs are **added together** (cumulative)
 
 ### Communications
 - IEEE 802.11 WiFi only, assigned SSID "Team_##", encryption required
-- Max average bandwidth: 4 Mbps (+ 500 Kbps per NASA situational awareness camera used)
-- At arena: all comms through NASA-provided WAP to MCC only — **no backchannel wireless connections** (disqualification)
-- Bluetooth: Class 2 & 3 only (max 2.5 mW). Class 1, Zigbee, power amplifiers all prohibited
-- External WiFi antenna required
+- Bandwidth measurements are **not performed at UCF** (only at KSC)
+- Each team provides their own WAP router placed on a shelf next to the EXOLITH network drop
+- All comms to robot via team WAP + EXOLITH ethernet cable to MCC only — **no backchannel wireless connections** (disqualification)
+- Bluetooth: Class 2 & 3 only (max 2.5 mW EIRP). Class 1, Zigbee/802.15.4 at 2.4 GHz, and power amplifiers all prohibited
+- External WiFi antenna required on robot
+- Competition runs on WiFi Channels 1 and 11; RoboPits use 5 GHz only (2.4 GHz off by default)
 
 ### Autonomy Rules
-**Allowed sensors:** IMUs, cameras, fiducial targets/beacons on arena frame
+**Allowed sensors:** IMUs (compass feature must be disabled), cameras, fiducial targets/beacons (starting zone only), infrared sensors, Hall Effect sensors, proximity detectors
 
-**Prohibited for autonomy:** GPS, compasses (analog/digital), touch sensors, ultrasonic proximity sensors, infrared sensors, **using walls for navigation/mapping** (disqualification)
+**Prohibited:** GPS, IMU-enabled GPS, compasses (analog/digital), touch sensors, ultrasonic proximity sensors
 
-**Autonomy scoring tiers:**
+**Walls:** May be used for localization when sensed naturally, provided **no a priori information** about wall dimensions or location is used. Simple wall-tracking offsets (e.g. "follow wall at 0.5 m") are not allowed. Teams must be able to prove to judges that their autonomy does not inappropriately use wall information.
+
+**Beacons/fiducials:** May only be placed in the Starting Zone — attached to the designated 80/20 fiducial bar (matte black, 1.00" × 1.00" T-slot, mounted ~40 cm above regolith on the right wall, starting 0.5 m from INGRESS and extending 1.5 m) or anywhere in the regolith within the starting zone. Tape, clamps, and rods are allowed; screws or fasteners requiring holes are not.
+
+**During autonomous operation:** telemetry allowed for health monitoring only, all team members hands-free (no touching laptops, controllers, etc.), must announce start and completion of every autonomy attempt to MCJ before initiating, cannot update autonomy program between runs to account for obstacle locations.
+
+**Autonomy scoring tiers (allowable combinations):**
 - Excavation only: 75 pts
-- Excavation + dump (traversal via remote control): 125 pts
-- Excavation + dump + travel: 375 pts
-- Full autonomy (one cycle): 450 pts
-- Full autonomy (entire run): 600 pts
+- Dump only: 50 pts
+- Travel only: 250 pts
+- Excavation + Dump: 125 pts
+- Dump + Travel: 300 pts
+- Excavation + Dump + Travel: 375 pts
+- Full autonomy (one complete cycle): 450 pts
+- Full autonomy (entire run, min 2 cycles): 600 pts
 
-**During autonomous operation:** telemetry allowed for health monitoring only, no control input, all team members hands-free, cannot update autonomy program between runs to account for obstacle locations
+Excavation/Dump/Travel points cannot be combined with Full Autonomy scores.
+Travel attempt must be made at the **start of the run** (first time leaving Starting Zone) for maximum points; a 50-pt penalty applies if attempted after traversing the Obstacle Zone in remote control.
 
 ### Berm Scoring
-- Scored by volume within target area (volumetric scan before/after)
-- Productivity by mass: cm³ berm / min / kg × 4.4 coefficient
-- Productivity by energy: cm³ berm / min / Wh × 1.5 coefficient
-- Regolith must come from excavation zone, must be carried through obstacle zone (no bulldozing)
+- Scored by volume within the 1.5 m × 0.9 m target area (volumetric LiDAR scan before/after)
+- Productivity by mass (BCP Mass): cm³ berm / min / kg × **4.4 coefficient**
+- Productivity by energy (BCP Energy): cm³ berm / min / Wh × **1.5 coefficient**
+- Camera bandwidth score: 0 cameras used = 120 pts, 1 camera = 60 pts, 2 cameras = 0 pts
+- Dust Tolerant Design: up to 60 pts (drivetrain enclosed 20 pts, active dust control 20 pts, custom sealing 20 pts)
+- Dust Free Operation: up to 30 pts (driving 5 pts, digging 20 pts, transfer without spillage 5 pts)
 
 ## Hardware & Sensors
 

@@ -1,0 +1,1565 @@
+UCF Lunabotics 2026 Guidebook
+Version 3
+April 13, 2026
+(some info subject to change)
+
+================================================================================
+2026 UCF LUNABOTICS QUALIFIERS GUIDEBOOK CHANGELOG
+================================================================================
+
+Updated 3/17/26:
+- [Section 3.1 and 5.7] Updated arena layout to show a more representative Excavation Zone
+- [Section 4.3.3] Updated wording to more accurately reflect the two deliberate actions that are
+  required to restart operation after an E-STOP is activated
+- [Section 4.6.7] Clarified that beacons and fiducial targets may only be implemented in the
+  Starting Zone
+- [Section 5.4.6] Clarified wording about new Excavation Zone location and how the Starting Zone
+  is now eligible to be excavated
+- [Section 5.4.10] Changed outdated wording. Excavation may now begin once a run starts since
+  the Starting Zone may be excavated
+- [Section 7.1.18] Removed outdated wording about how use of arena cameras will accumulate an
+  extra 200kb/s of data use since data/bandwidth measurements will not be performed at UCF. Use
+  of arena cameras still affects construction score (see 5.2.4).
+- [Section 7.1.19] Removed specifics about bandwidth measuring techniques as bandwidth
+  measurements will not be performed at UCF
+
+Updated 4/13/26:
+- [Section 3.1 and 5.7] Updated arena layout to include the location of the center of the Berm
+  Zone relative to the inside corner of the Starting Zone (consistent with the NASA KSC layout).
+  Removed dimensions referenced from the walls. The intent of the update is to remove the
+  reliance of exact wall dimensions during autonomy (which is not allowed), and to add a known
+  berm location with respect to the Starting Zone (an area where position tracking beacons may
+  be placed).
+- [Section 3.2.6] Corrected inconsistent team personnel limits for the Arena and Mission Control
+  Center. Teams are limited to a maximum of 4 team members in the arena, and 4 team members in
+  Mission Control.
+- [Section 4.4.1] Corrected a typo that incorrectly stated, "the robot shall be schematically
+  located between the battery and kill switch..." New wording specifies, "the power logger shall
+  be schematically located between the battery and kill switch..."
+- [Section 5.6.3] Updated the rule on the use of the walls for autonomy. Walls may be used for
+  localization when sensed naturally, provided that no a priori information about the walls is
+  used.
+- [Section 5.6.4] Updated to clarify that teams must prove that their autonomy program does not
+  inappropriately use information about the walls of the regolith bin.
+- [Section 6.2, General Rules Bullet #2] Corrected typo that stated "Teams must announce the
+  start and competition..." to "Teams must announce the start and completion..."
+- [Section 6.2.2] The phrase "Full Run" was removed from the Dump Automation header. Only a
+  single dump cycle is required for this activity.
+- [Section 6.2.3] Updated incorrect scoring example.
+
+================================================================================
+NOTE
+================================================================================
+
+This guidebook governs the Lunabotics Qualification Challenge at the University of Central
+Florida. Please see the NASA Lunabotics Guidebook available at
+https://www.nasa.gov/learning-resources/lunabotics-challenge/ for information on the Lunabotics
+Challenge deliverables and the finals competition at the Kennedy Space Center.
+
+================================================================================
+SECTION 1: APPLICATION AND ADMINISTRATION (Entire Competition – UCF and NASA)
+================================================================================
+
+1.1 Lunabotics Objective
+------------------------
+The primary objective of Lunabotics is for teams of college students to apply the NASA systems
+engineering process to design, develop, build, and test a prototype lunar robot. The goal is to
+construct berm structures that would be useful for blast and ejecta protection during lunar
+landings and launches, shading lunar housing, cryogenic propellant tank farms, providing
+radiation protection around a nuclear power plant, and other mission-critical uses.
+
+Lunabotics is a two-semester event that allows selected teams to earn points by successfully
+completing the STEM Engagement Report, the Presentation and Demonstration (optional), the
+Systems Engineering Paper, the Proof of Life Video, and developing robots that meet all the
+challenge criteria.
+
+NASA directly benefits from this competition by annually assessing student designs and data the
+same way it does for its own, less frequent, prototypes. Encouraging innovation in student
+designs increases the potential of identifying clever solutions to the many challenges inherent
+in the Artemis missions. Advances for off-world construction offer new possibilities for the
+same activities here on Earth, expanding the benefits beyond NASA alone. The skills developed in
+Lunabotics apply to other high-technology industries that rely on systems engineering principles.
+These industries will create a workforce posed to lead a new space-based economy and add to the
+economic strength of our nation.
+
+1.2 Lunabotics Events
+---------------------
+This is the gateway to the overall challenge. Applicants will follow the directions listed in
+"Applying on the STEM Gateway Website." You will receive an email letting you know the selection
+status of your application. Those teams selected will continue with the challenge consisting of
+the following events:
+
+Event 1 – Project Development Challenge:
+  1. STEM Engagement Report
+  2. Presentation and Demonstration Slides
+  3. Systems Engineering Paper
+  4. Proof of Life Video
+  Teams failing to submit any of these items will be removed from the challenge.
+
+Event 2 – University of Central Florida Lunabotics Qualification Challenge
+  1. This event is held at UCF's Florida Space Institute's Exolith Lab in Orlando, Florida from
+     May 12th–17th.
+  2. Here, the teams will put their designs to the test. The 10 highest-scoring teams from UCF's
+     Qualification Challenge will be invited to NASA's On-Site Challenge at the Kennedy Space
+     Center. Teams that do not reach the top 10 will also be invited to this event, but they
+     will not be given the opportunity to run their robots.
+
+Event 3 – NASA's Lunabotics On-Site Challenge
+  The 10 highest-scoring teams from the UCF Lunabotics Qualification Challenge will be invited
+  to the Kennedy Space Center (KSC) to compete in the Artemis Arena located in the Astronauts
+  Memorial Foundation's Center for Space Education Building, from May 19th–21st.
+
+1.3 Lunabotics Regulations and Policies
+----------------------------------------
+First, read the NASA Lunabotics Guidebook at
+https://www.nasa.gov/learning-resources/lunabotics-challenge/.
+
+Frequently Asked Questions / Ask for Help:
+  1. There will be no response to requests for information already contained in the Guidebook,
+     to change a deadline or a rubric.
+  2. The team is responsible for monitoring the NASA Lunabotics Website, the UCF Lunabotics
+     Qualifiers Website, and the Lunabotics Slack for notices, updates, feedback requests, and
+     responses to FAQs. The Guidebook and the FAQs shall be read together as one document.
+  3. The faculty advisor and/or team leads shall submit the FAQs. Email shall use an ".edu"
+     domain address. This applies to the application process and communications with Lunabotics.
+     We can only respond to ".edu" addresses.
+  4. Provide your school's name, cite the relevant rule/paragraph number, which guidebook you
+     are referencing (NASA or UCF), your inquiry, and send it to lunabotics@ucf.edu. There will
+     be no response to inquiries from any other source.
+  5. We understand the on-site events may conflict with final exams and/or your commencement
+     ceremony. We can assist with proctoring exams on-site; please don't ask us to change dates
+     or deadlines.
+
+1.4 Roles and Responsibilities
+-------------------------------
+It is the responsibility of the Chief Judge and Project Manager to ensure the integrity of the
+challenge as to the interpretation and enforcement of the rules and rubrics in the Guidebook.
+The goal is to apply the content of the Guidebook equally to the participants without passion
+or prejudice. The Lead Judges are responsible for creating the rules and rubrics and judging the
+deliverables received from the teams for their events. In matters associated with the overall
+Lunabotics Challenge, the Chief Judge and Project Manager's decision shall prevail.
+
+1.5 Code of Conduct
+--------------------
+Lunabotics is a National Aeronautics and Space Administration (NASA) Artemis Student Challenge
+and is held in a positive and safe environment. Students and faculty shall conduct themselves
+with integrity as to the spirit and intent of the rules, rubrics, and regulations. Violation of
+the intent of a rule is a violation of the rule itself. A team found in violation of the rules
+and rubrics, exhibiting unprofessional behavior, or not following the directions of the
+Lunabotics staff may be assessed penalty points or may be disqualified from a competition run
+or the entire Challenge. The Lunabotics Staff have the authority to act in this manner.
+
+1.6 Appeals
+-----------
+All scoring decisions are final. If an appeal is warranted, the advisor or the student team
+leader shall submit the appeal in writing for consideration to the Chief Judge / Project Manager
+within 30 minutes of the posting of score(s) in question. The final decision of the Chief Judge
+/ Project Manager shall prevail.
+
+1.7 Participant Waiver
+-----------------------
+Each team will receive a waiver packet which must be filled out by all team members and sent to
+lunabotics@ucf.edu in a single pdf. Separate pdf's from every team member will not be accepted.
+
+1.8 Social Media
+-----------------
+Keep up to date on Florida Space Institute activities and announcements on Instagram, Facebook,
+X, and Linkedin.
+
+1.9 Media Advisory
+-------------------
+All participants and visitors to Lunabotics at the Kennedy Space Center or to the Lunabotics
+Qualification Challenge at the University of Central Florida (UCF) give permission to be
+photographed/videotaped for potential use in future media products, unconditionally releasing
+UCF and its representatives from any claims and demands.
+
+1.10 Mentor/Protégé Teams
+--------------------------
+1. NASA collaborates with space agencies around the globe on many programs, including the
+   International Space Station, Earth observation, and the Artemis missions headed to the Moon
+   and Mars. Building and nurturing an eligible, diverse, and inclusive workforce is imperative
+   to the future success of NASA and to our Nation. Veteran schools are encouraged to mentor and
+   collaborate with first-time schools or schools classified as Minority Serving Institutions
+   (MSIs). This is a means for teams to take advantage of the economies of scale as to costs,
+   resources and overall experience. NASA will make the award to the mentor school. The
+   distribution of work, costs, awards, etc., is an arrangement between the schools. As an
+   example, awards to winning mentor / protégé teams would read as follows: "Grand Lakes
+   University" in collaboration with "Faber College".
+2. Decades of research by organizational scientists, psychologists, sociologists, economists,
+   and demographers show that socially diverse groups (that is, those with a diversity of age,
+   race, ethnicity, gender, and sexual orientation) are more innovative than homogeneous groups.
+3. MSI Capability Gateway:
+   https://beta.nasa.gov/learning-resources/minority-university-researcheducationproject/
+   the-minority-serving-institution-msi-exchange/
+4. Scientific American: https://www.scientificamerican.com/article/how-diversity-makes-us-smarter/
+
+1.11 Why the Moon
+------------------
+With NASA's Artemis campaign, we are exploring the Moon for scientific discovery and
+technological advancement and to learn how to live and work on another world as we prepare for
+human missions to Mars. We will collaborate with commercial and international partners and
+establish the first long-term presence on the Moon. NASA will land the first woman and first
+person of color on the Moon, using innovative technologies to explore more of the lunar surface
+than ever before. The agency will use what we learn on the Moon to prepare for humanity's next
+giant leap – sending astronauts to Mars.
+(https://www.nasa.gov/humans-in-space/artemis/#missions)
+
+1.12 The Lunabotics Awards
+---------------------------
+STEM Engagement Report – (1st - $1,000, 2nd - $500, 3rd - $500) best inspiration to study
+STEM-related topics in their community to include collaboration with middle school students and
+present a high number of quality activities to a large and wide range of audiences.
+
+Presentations and Demonstrations – (1st - $2,000, 2nd - $1,000, 3rd - $500) present intent and
+technical outcome of their design project. Allows the students to develop their public speaking
+skills.
+
+First Steps Award – Best Presentation by a First-Year Team.
+
+Systems Engineering Paper – (1st - $2,000, 2nd - $1,000, 3rd - $500) best application of the
+NASA Systems Engineering process used to design, build, test, and evaluate their robot.
+
+Systems Engineering Nova Award for Stellar Systems Engineering by a First Year Team – awarded to
+the team(s) who perform exceptional systems engineering in their College/University's first year
+in the Lunabotics Challenge as demonstrated in their systems engineering paper.
+
+Systems Engineering Leaps & Bounds Award – for significant improvement over the previous year(s)
+in the team's application of systems engineering to develop their robot system.
+
+Lunabotics Innovation Award – ($250) for the best design based on creative construction,
+innovative technology, and overall architecture.
+
+Lunabotics Efficient Use of Communications Power Award – ($250)
+
+The Caterpillar Autonomy Award – (1st - $2,000, 2nd - $1,250, 3rd - $750, 4th – $500,
+5th - $250, 6th - $250) awarded by Caterpillar for successfully completing the activities
+autonomously.
+
+The Lunabotics Construction Award – (1st - $2,000, 2nd - $1,000, 3rd - $500) awarded to the
+teams that score the most points during the berm building operations in the Artemis Arena.
+
+The Grand Prize, The Lunabotics Artemis Award – ($5,000) The winning team shall submit the
+required items, complete all the events, and score the most points, a cumulative of the scores.
+
+The Points:
+  1. STEM Engagement Report          10 Points
+  2. Systems Engineering Paper       25 Points
+  3. Presentations and Demonstrations 25 Points
+  4. Robotic Construction            25 Points
+
+Note: The awards list is not all-inclusive; some are not awarded every year and are subject to
+change without notice.
+
+1.13 Eligibility
+-----------------
+1. The schools shall:
+   - Be an accredited Institution.
+   - Enroll one (1) team per school only.
+   - Be a post-high school, vocational/technical school, college, university, etc.
+   - Be in the United States, its Commonwealths, territories, and or possessions.
+
+2. The students shall:
+   - Be 18 years old at registration.
+   - Be currently enrolled and in good standing with their school.
+   - Be from the same school as their team.
+   - Participate in one team.
+
+3. The Teams shall:
+   - Have its own working robot(s).
+   - Have at least two (2) undergraduate students.
+   - The number of students on the team is at the school's discretion.
+   - Students who have graduated in the same semester/quarter as this challenge are eligible to
+     be on the team.
+
+4. The Faculty / Advisor (F/A) shall:
+   - Supervise the team as to the spirit and intent of the Guidebook.
+   - Cannot be a part of the team.
+   - Be employed by the institution and authorized to represent it.
+
+5. For the on-site event at UCF:
+   Each team must be accompanied by an adult advisor age 21 or older who is employed by the
+   registered institution and will remain on-site for the duration of the challenge.
+
+1.14 Alignment with National Standards in Engineering and Space
+---------------------------------------------------------------
+Lunabotics provides students an opportunity to apply the NASA Systems Engineering process in
+designing a prototype robot capable of performing the proposed construction operations on a
+simulated Lunar regolith surface. Encouraging innovation in student designs increases the
+potential of identifying clever solutions to the many challenges inherent in future Artemis
+Lunar missions. Students will develop a deeper understanding and enhance their communication,
+collaboration, inquiry, problem-solving, and flexibility skills, which will benefit them
+throughout their academic and professional lives.
+
+The skills students develop in Lunabotics apply to other high-technology industries that rely
+on systems engineering principles. These industries will create a workforce posed to lead a new
+space-based economy and add to the economic strength of our nation. Lunabotics aligns with the
+Accreditation Board for Engineering and Technology (ABET) criteria outlined below:
+
+Criteria 3. Student Outcomes: For baccalaureate degree programs, these student outcomes must
+include, but are not limited to, the following learned capabilities:
+  1. an ability to select and apply the knowledge, techniques, skills, and modern tools of the
+     discipline to broadly defined engineering technology activities;
+  2. an ability to select and apply a knowledge of mathematics, science, engineering, and
+     technology to engineering technology problems that require the application of principles
+     and applied procedures or methodologies;
+  3. an ability to conduct standard tests and measurements; to conduct, analyze, and interpret
+     experiments; and to apply experimental results to improve processes;
+  4. an ability to design systems, components, or processes for broadly defined engineering
+     technology problems appropriate to program educational objectives;
+  5. an ability to function effectively as a member or leader on a technical team;
+  6. an ability to identify, analyze, and solve broadly-defined engineering technology problems;
+  7. an ability to apply written, oral, and graphical communication in both technical and
+     non-technical environments; and an ability to identify and use appropriate technical
+     literature;
+  8. an understanding of the need for and an ability to engage in self-directed continuing
+     professional development;
+  9. an understanding of and a commitment to address professional and ethical responsibilities
+     including a respect for diversity;
+  10. a knowledge of the impact of engineering technology solutions in a societal and global
+      context; and;
+  11. a commitment to quality, timeliness, and continuous improvement.
+
+1.15 Minority Serving Institutions Program
+-------------------------------------------
+For More Information on MSIs, visit the Department of Education Office of Postsecondary
+Education – Programs.
+
+Veteran schools are encouraged to collaborate with schools classified as Minority Serving
+Institutions (MSIs). Building and nurturing an eligible, diverse, and inclusive workforce is
+imperative to the future success of NASA and to our Nation. This is a means for teams to take
+advantage of the economies of scale as to costs, resources and overall experience. The
+distribution of work, costs, awards, etc. is an arrangement between the schools. As an example,
+awards to winning mentor / protégé teams would read as follows: "Grand Lakes University" in
+collaboration with "Faber College".
+
+Decades of research by organizational scientists, psychologists, sociologists, economists, and
+demographers show that socially diverse groups (that is, those with a diversity of age, race,
+ethnicity, gender, and sexual orientation) are more innovative than homogeneous groups:
+
+Being around people who are different from us makes us more creative, more diligent, and harder
+working. See Scientific American "How Diversity Makes Us Smarter" at
+https://www.scientificamerican.com/article/how-diversity-makes-us-smarter/
+
+1.16 Applying on the STEM Gateway Website
+------------------------------------------
+Please see the NASA Lunabotics Guidebook for information on this.
+
+NOTE: The remaining sections of this Guidebook pertain only to the Lunabotics Qualification
+Challenge at the University of Central Florida. Please see the NASA Lunabotics Guidebook
+available at https://www.nasa.gov/learning-resources/lunabotics-challenge/ for information on
+the Lunabotics Challenge deliverables and the finals competition at the Kennedy Space Center.
+
+================================================================================
+SECTION 2: UCF TECHNICAL
+================================================================================
+
+2.1 RoboPits
+-------------
+The RoboPits this year will be located on the UCF Main Campus, approximately 10 minutes away
+from the competition arena. Use of the robopits at UCF is limited to assembly and disassembly
+of rover, and code modifications. Soldering will need to be done in a separate designated
+location. Teams may not cut metal, weld, or conduct any other modifications that could create a
+potentially unsafe environment in the robopit. Drilling into your rover is permitted. We
+recommend that your rover is built before you come to the competition! The pit boss has final
+say on whether an activity is unsafe.
+
+2.2 Check-in and Set-up
+------------------------
+1. The Pit Boss will assign your pit, explain the inspection process, signing up for runs, and
+   other protocols. If things get hectic, be professional.
+2. Your team will be required to provide two contact phone numbers in case the team needs to be
+   reached at any point during the competition and cannot be found. These numbers will not be
+   shared with anyone and will be deleted at the end of the competition.
+3. Your pit measures 8'x10' with two chairs, one table, and two power outlets. Pits have power
+   strips provided. Do not daisy chain power strips.
+4. Each team will keep their team and equipment contained within their assigned pit and keep the
+   walkways/hallways clear and unobstructed.
+5. Vacuums are provided and are for shared use by all teams as needed. Return vacuums to the
+   designated area.
+6. Notify the Pit Boss about any safety concerns or vacuums that need cleaning.
+
+2.3 Transportation
+-------------------
+Teams are responsible for transportation of students and their rover from the Robopit to the
+Exolith Lab for their competition run. Further details will come at a later date but expect to
+move from the pit to the Exolith Lab at least 90 minutes before your competition run to allow
+for 10–15 minutes of transportation time and a final inspection.
+
+2.4 Team Spirit
+----------------
+You are responsible for creating your pit identification sign. Be mindful of safety guidelines
+and keep it fun! Your sign should be under 6 feet tall, and you can use LED light strings.
+Please note that UCF Fire/Safety may ask you to remove it if it doesn't comply with their
+regulations. Get creative with a team cheer or chant and in decorating your team shirts. Use
+your imagination to make your team stand out.
+
+2.5 Safety (robot) and Communication (comm) Inspection
+--------------------------------------------------------
+1. The inspection stations will be identified.
+2. The robot will have to pass the safety inspection first before moving forward.
+3. After the inspection is conducted, no modifications to the rover will be permitted until after
+   the competition attempt.
+
+2.6 Preparing for the Competition Attempt
+------------------------------------------
+The teams will be brought to the safety inspection approximately 30–45 minutes before the
+scheduled transportation time to ensure a smooth flow. Once teams arrive at the Exolith Lab
+facility, up to four (4) students will go to the personal protective equipment (PPE) prep area
+to don the PPE gear they will be wearing in the regolith bin. Following a final inspection, the
+escort will take the team to the arena, where arena escorts will take over. If the team is not
+ready or cannot be located, the competition run time will be given to another team that is ready.
+
+2.7 Clean-up and Check-out
+---------------------------
+The RoboPit is expected to be neat each night, with nothing outside of the pit boundaries.
+Unplug all items before leaving for the night. Keep the RoboPit and the surrounding area neat
+and generally clean; use the provided vacuums as necessary. You are encouraged to bring floor
+coverings/mats to facilitate this cleaning. Each team will leave their RoboPit as they found it.
+Teams are required to clean their pit and the area around it. Teams will request a RoboPit
+inspection from the RoboPit Chief prior to departure.
+
+2.8 Stop Work Order (SWO)
+--------------------------
+Lunabotics staff are authorized to issue an SWO to a team regarding any suspected safety issue.
+The team will immediately stop all activity. The Faculty Advisor must meet with the Pit Boss to
+resolve the issue. The SWO will remain in effect until the Pit Boss has ruled on the issue. The
+Pit Boss decision shall prevail.
+
+2.9 Waste Accumulation Protocol
+--------------------------------
+Teams will comply with Federal and UCF hazardous and controlled waste program requirements.
+Regulation requires that you coordinate with the RoboPit Chief before disposing of the
+representative items listed below (specially marked containers will be provided):
+
+Waste Accumulation and Disposal Protocol: Batteries (Alkaline, Lithium, Ni-Cd). Spray Paint.
+Oily wipes/IPA solvent wipes. Spray Foam. Solder Waste. Spray Adhesives. Acetone wipes. WD40.
+PVC cement – brushes, wipes, and cans. PB Blaster. PVC primer – brushes, wipes, cans. Silicone
+Spray. Super Glue (cyanoacrylates). Oil Cans. Epoxy Tubes. 3 in 1 oil. Aerosol Cans. Any as
+required by regulations.
+
+2.10 Safety in the RoboPits and UCF Arena (participants and other carbon-based life forms)
+-------------------------------------------------------------------------------------------
+Lunabotics personnel (Pit Boss, Arena Chief, etc.) are authorized to rule on any safety and
+health issues. You are responsible for using the correct Personal Protective Equipment (PPE) for
+the situation. Do not wear ties, loose clothing, jewelry, hanging key chains, or similar when
+near or working on moving or rotating machinery to avoid the potential risk of being drawn into
+rotating parts. Only break-away lanyards are permitted. Use the right tool for the right job,
+wear gloves/gauntlets to de-energize robots and equipment as needed, bring jack-stands to
+support your robot instead of folding chairs, and wire strippers should be utilized instead of
+knives. etc. Bring your own LED lighting for your pit. Address any safety concerns to the
+RoboPit Chief immediately.
+
+2.11 Personal Protective Equipment (PPE)
+-----------------------------------------
+UCF will provide goggles, N-95 masks, bunny suits, rubber gloves and booties for use in the UCF
+Arena. The teams are responsible for providing all other OSHA, ANSI, etc., or equivalent
+required PPE.
+
+2.12 Regolith Simulant – LHS-2E
+---------------------------------
+1. Is a crushed Anorthosite and Basalt aggregate with a natural particle size distribution
+   similar to lunar soil.
+2. It is alkaline and may cause skin and eye irritation.
+3. If you are allergic to talcum powder, it is a good indication that you may be allergic to
+   the LHS-2E. Participants are required to don Personal Protective Equipment (PPE) before
+   coming into contact with the LHS-2E.
+4. LHS-2E contains a small percentage of crystalline silica, which is a respiratory nuisance.
+   Respiratory protection shall be used.
+5. All PPE must be ANSI-approved, UL-Listed, CE EN166 rated, AS/NZS certified, or CSA rated,
+   as applicable. The following describes the common PPE that you are required to wear.
+
+2.13 Respirators
+-----------------
+1. OSHA1926.1153 – Respirable Crystalline Silica, 29 CFR 1910.1053. Permissible exposure limit
+   (PEL). The employer shall ensure that no employee is exposed to an airborne concentration of
+   respirable crystalline silica in excess of 50 μg/m3, calculated as an 8-hour TWA.
+2. The Respiratory Protection standard, paragraph 29 CFR 1910.134(g)(1)(i)(A), states that
+   respirators shall not be worn when facial hair comes between the sealing surface of the
+   facepiece and the face or that interferes with valve function. Facial hair is allowed as long
+   as it does not protrude under the respirator seal or extend far enough to interfere with the
+   device's valve function.
+3. OSHA – has not exempted any workers for religious reasons; however, we recognize that if such
+   a situation should arise, there are respiratory protection alternatives, such as loose-fitting
+   hoods or helmets that will accommodate facial hair.
+4. OSHA – workers cannot sign a waiver to be exempted from the stated requirements. A release or
+   waiver is not possible for employees. That being said, when a(n) employer is looking to
+   accommodate a religious practice, they may have to explore respiratory protection alternatives
+   like helmets or loose-fitting hoods.
+5. Most N95 respirators are manufactured for use in construction and other industrial-type jobs
+   that expose workers to dust and small particles. They are regulated by the National Personal
+   Protective Technology Laboratory (NPPTL) in the National Institute for Occupational Safety
+   and Health (NIOSH), which is part of the Centers for Disease Control and Prevention (CDC).
+   NIOSH-approved N95 Particulate Filtering Facepiece Respirators are required in the UCF Arena.
+6. There are very few options, but the best choice would be for the individual to purchase a
+   hooded-powered air purifying respirator (PAPR) – especially if they intend to stay in a
+   career that requires the occasional use of PPE. These items shall be provided by the
+   institutions for their participants if required.
+
+2.14 Eye/Face Protection
+--------------------------
+1. Protective eyewear must be worn in the individual pits and UCF Arena.
+2. It is also a good practice and principle to wear eye protection in the following situations:
+   - Any area posted with signs requiring the use of eye protection.
+   - When performing any work on the robot.
+   - When there is a risk of flying particles or chemical exposure (such as splashes, splatters,
+     and sprays).
+   - Several forms of eye/face protection are available to provide protection from related
+     hazards, including safety glasses with side shields, goggles, face shields, and face masks.
+   - Safety Glasses and protective eyewear are designed to provide a shield around the entire
+     eye to protect against hazards such as splashes of liquids, burns from steam, compressed
+     air, and flying wood or metal debris. To prevent injury, all individuals in the pit area,
+     the practice field area, and the arena must wear safety glasses or protective eyewear that
+     is ANSI-approved.
+   - Reflective lenses are prohibited; your eyes must be clearly visible to others.
+     Accommodations will be made for participants that require tinted safety glasses.
+   - Prescription Glasses: If you wear prescription glasses that do not have a marked safety
+     rating, you must wear rated safety goggles over them to achieve adequate protection. If you
+     wear marked safety-rated glasses, you may use ANSI-approved safety-rated glasses.
+   - Safety-rated glasses, side shields, and frames can be identified by markings stating the
+     standard that they are rated to (ex. Z87.1).
+
+2.15 Hand Protection
+---------------------
+Hand protection protects against heat, electrical, chemical, laceration, and mechanical hazards.
+Use proper gloves and mechanical tool guards for the application. Select the correct one to use
+for each activity.
+
+2.16 Hearing Protection
+------------------------
+Provide and use hearing protection devices, such as earplugs, where there are unsafe sound
+levels.
+
+2.17 Foot Protection
+---------------------
+Participants must wear shoes that completely cover the entire foot. Shoes must be substantial
+and have closed toes and heels to protect against foot injuries, regardless of work location.
+Flip-flops, sandals, mules, lightweight slippers, etc., are unacceptable when working on or
+near the robot. Safety shoes or toe guards are appropriate for areas where heavy objects can
+fall on your foot.
+
+2.18 Clothing Allowed
+----------------------
+Shirts/tops that cover the upper torso. Long pants that cover the wearer to the ankle.
+Completely enclosed shoes that cover the instep of the foot, preferably leather, which can be
+wiped clean. Baseball caps and other headgear as long as they are kept far enough back on the
+head so that vision is not impaired and do not interfere with protective eyewear.
+
+2.19 Clothing Not Allowed
+--------------------------
+Hair must not impede vision or come in contact with the work. Hair must be kept away from the
+eyes. Long hair must be tied back. Hair longer than 6 inches from the nape of the neck must
+also be pinned up (use of hair nets or hats is acceptable). Flowing garments and neckwear such
+as ties and scarves that hang loose. Caps worn low over the eyes so as to impede vision.
+Cropped shirts, plunging necklines, spaghetti straps, or ripped shirts. Ripped jeans, shorts,
+capris, or skirts. Loose or flowing tops with wide/bell sleeves, outerwear such as coats or
+shawls. Sandals, open-toe, open-back, or open weave shoes, and shoes with holes in the top or
+sides that will expose the skin to regolith or retain regolith.
+
+2.20 Spectators
+----------------
+Should follow the same rules as participants. If substantial close-toed shoes are not available,
+they may enter the pit area as long as they remain in the pit aisles. Spectators who do not meet
+the footwear requirement for participants, as described above, are not allowed inside individual
+team pits or in any locations where robots are being worked on.
+
+2.21 Personal Protective Equipment (PPE) DONN / DOFF
+------------------------------------------------------
+1. Personal protective equipment (PPE) is an important element to help ensure participants are
+   protected from hazards in the work area. The PPE Attendant will ensure that participants are
+   provided with the correct PPE for the task they are performing. The following describes the
+   common PPE that you are required to wear.
+2. Participant PPE – includes N-95 Filtering Facepiece, full body protective suits with hood
+   and booties, and nitrile gloves when entering the UCF Arena.
+3. Judges/Regolith Assistants PPE – inside the arena during robot operation includes full face
+   Respirator with P100 filters or full-face powered air purifying respirator (PAPR), full body
+   protective suits with hood and booties, rubber boots, and nitrile gloves.
+
+2.22 Donning Protocol
+----------------------
+1. Participant:
+   - Select the appropriate size Tyvek coverall suit and put it on over shoes.
+   - Select appropriate gloves and don them, overlapping the Tyvek suit.
+   - Tape gloves to the Tyvek coveralls overlap to ensure skin is not exposed.
+   - Tape may also be applied above the ankles and waist to contain excess Tyvek coverall
+     material.
+   - Place N-95 filtering face piece over nose and mouth. Adjust the nose bridge to obtain a
+     comfortable fit and prevent eye protection fogging.
+   - NOTE: Without exception, proper use of such masks and/or respirators shall require a
+     clean-shaven face as determined by the Competition Staff.
+   - Place dust goggles over eyes and cover head with Tyvek suit hood.
+
+2. Judges / Assistants:
+   - Full-face negative pressure respirator with P-100 filters or full-face powered air
+     purifying respirator (PAPR) and cover head with Tyvek suit hood.
+   - Don rubber boots over Tyvek booties if working in the regolith pit.
+
+2.23 Doffing Protocol in the UCF Arena After Completion of the Robot Run
+-------------------------------------------------------------------------
+Please keep your Tyvek suit, boot covers, and N95 mask for your 2nd run. We will only be
+giving out one of each.
+
+================================================================================
+SECTION 3: UCF ARENA SPECIFICATIONS AND PROTOCOL
+================================================================================
+
+3.1 UCF Arena Specifications
+-----------------------------
+1. The Regolith Bin at UCF is filled with Lunar Highlands Simulant (LHS-2E) from Space Resource
+   Technologies.
+2. The arena area measures ~10 m long and ~10 m wide.
+3. The UCF arena contains ~90 cm depth of LHS-2E.
+4. Larger rocks may also be mixed in with the LHS-2E in a random manner.
+5. Obstacle Zone – the judges will attempt to construct the obstacle field in such a way as to
+   require obstacle detection, mapping, and navigation planning to determine a "slalom" route to
+   reach the excavation zone.
+6. Boulder Obstacles – there will be at least three (3) obstacles placed on top of the arena
+   surface within the obstacle zone area before each competition attempt is made. The placement
+   of the obstacles will be randomly selected before the start of the competition. Each obstacle
+   may have a diameter of approximately 30 cm to 40 cm and will have random heights. There may
+   be boulders in the excavation zone; these will not exceed the dimensions of any in the
+   obstacle zone.
+7. Crater Obstacles – there will be at least three (3) craters of varying depth and width, being
+   no wider or deeper than 40–50 cm in the obstacle zone.
+
+UCF Arena Layout (all units in meters):
+  [Left arena shown; right arena is mirrored across middle orange divider]
+
+  Total width (bin):    8.10 m
+  Judge platform:       1.00 m (left side)
+  Total height:         4.57 m
+  Obstacle Zone width:  4.1 m (top/center)
+  Starting Zone:        2 m wide (right side, upper)
+  Excavation Zone:      4 m wide (right/bottom)
+  Construction Zone:    left side (dashed boundary)
+  Berm Zone (red box):  1.5 m x 0.9 m, within Construction Zone
+  Fiducials bar:        right wall (INGRESS side), vertical strip
+  Berm center location: X = 6.80 m, Y = 3.57 m (from INGRESS corner)
+
+  Note: Berm volume outside the BERM ZONE will not be counted towards the score.
+  Crater and rock locations are not representative of final competition placement (random).
+
+3.2 UCF Arena Protocol
+-----------------------
+1.  Once competition runs begin, the UCF Arena is considered an operational area with restricted
+    access.
+2.  Students shall follow the instructions of the Arena Chief and Arena personnel promptly.
+3.  Faculty / advisors are not permitted in the UCF Arena during the competition.
+4.  Access is restricted to currently active competing team members only. If the team's robot is
+    not in the arena or arena staging area, team members are not permitted in the UCF Arena.
+5.  The UCF Arena is defined as all areas surrounding the regolith bin, including the staging
+    area, mission control, and regolith bin deck.
+6.  For Arena operations, the currently active competing team members are defined as the team
+    members attired in PPE that are tasked with placing the robot in the arena during the setup
+    period and removing the robot from the arena after the run has ended (max of 4 people) and
+    the corresponding Mission Control team members (max of 4 people).
+7.  Photography and personal electronic devices (smart devices, tablets, cell phones, etc.) will
+    be restricted in the UCF Arena.
+8.  Team members placing the robot in the Competition Arena will don PPE in the Exolith staging
+    area.
+9.  When properly attired, they and Mission Control teammates will be escorted to the UCF Arena
+    entrance.
+10. The Arena Chief will grant access to UCF Arena staging area when ready.
+11. Student cell phones, cameras, tablets, and other restricted electronics devices brought into
+    the UCF Arena shall be placed on the Arena Chief's station to be retrieved later. No
+    exceptions.
+12. Team members will be given a Pre-Task Briefing (PTB) containing specific information needed
+    for the run.
+13. At the end of the PTB, the Mission Control team members will immediately exit the Arena
+    staging area and proceed directly to the Mission Control staging area.
+14. Team members in PPE shall remain with their robot in the designated Arena staging area until
+    directed otherwise by the Arena Chief or designated representative.
+15. Approaching the Competition Arena before instructed to do so by the Arena Chief or designated
+    representative is not permitted.
+16. The Arena Chief will inform the team members in the staging area when the Competition Arena
+    is ready for the team.
+17. At the direction of the Arena personnel, the team members will place their robot in the Arena
+    and perform setup activities necessary to establish communication with Mission Control. The
+    construction robot will be placed in the arena in a randomly selected starting position and
+    direction. Assume there are positive and negative obstacles. Assume you cannot drive over
+    the obstacles.
+18. When complete or directed by Arena personnel, the team members will promptly exit the Arena.
+19. Only the team members in PPE may observe the competition run from a designated area in the
+    Arena. The team members must remain in the designated area for the duration of the run.
+20. Photos may be permitted during this time at the discretion of the Arena Chief. Photos are
+    limited to the construction zone and berm construction. It may be that only the final berm
+    configuration may be photographed. Photos, if permitted, shall be taken by a single
+    designated individual using a single device (i.e. cell phone, tablet, or camera) retrieved
+    from the Arena Chief's station. Any photos taken shall not be shared, posted, or transmitted
+    in any way while the team members are in the UCF Arena. Violation of this rule may result in
+    team disqualification.
+21. When the competition run has ended, the team members in PPE shall promptly retrieve their
+    robot and equipment from the Arena and proceed to the HEPA station.
+22. At the HEPA station, team members shall:
+    1. Vacuum excess LHS-2E from their robot.
+    2. Place rover on egress platform to be lowered out of the bin.
+23. Remember, the UCF Arena is an operational area during competition days. There are many
+    activities occurring in series and in parallel. It is very important that everyone in the
+    Arena practice situational awareness at all times.
+
+================================================================================
+SECTION 4: UCF ROBOTS AND ROBOTIC OPERATIONS
+================================================================================
+
+4.1 Robots
+-----------
+1. Lunar bulk regolith construction requires teams to consider several design and operation
+   factors such as high robot dust tolerance and minimizing dust projection, efficient
+   communications, minimizing vehicle mass, minimizing energy/power required, and maximizing
+   autonomy. Each team will have the opportunity to complete two construction competition runs
+   to demonstrate their design.
+2. Students on the team shall perform 100% of this project (including design, construction, and
+   task components of their vehicle and deliverables, and including performing or supervising
+   work that is supported by a professional machinist for the purpose of training or safety).
+   Components (i.e. electronic, mechanical, etc.) are not required to be space qualified for
+   atmospheric, electromagnetic, thermal, or Lunar environments.
+
+4.2 Robot Requirements
+-----------------------
+1. Volumetric dimensions – robot(s) shall be contained within a payload envelope measuring
+   1.50 m length x 0.75 m width x 0.75 m height. The orientation of these dimensions may be
+   chosen by the team. It may deploy or expand beyond the envelope after the start of each
+   attempt but shall not exceed 1.75 m in additional height (which is 2.5 m above the surface
+   of the regolith). Multiple robot systems are allowed but the starting dimensions of the whole
+   system (all the robots) shall comply with the volumetric dimensions given in this rule.
+2. Robots will be inspected for the volumetric dimensions in the stowed configuration during the
+   Safety Inspection. No modifications or team robot interaction is permitted during this
+   verification.
+   - Robot Mass – a maximum mass of 80 kg. Subsystems/equipment on the robot that are used to
+     transmit commands / data and video to the telerobotic operators are counted toward the mass
+     limit.
+   - The mass of the navigational aid system, including any beacons or targets not attached to
+     the robot, is included in the maximum mining robot mass limit and must be self-powered.
+3. Equipment not on the robot used to receive data from and send commands to the robot for
+   telerobotic operations is excluded from the mass limit. Multiple robot systems are allowed
+   but the total mass of the whole system shall comply with the mass given in this rule. The
+   commercial cost of delivering payloads to the Moon is about $1.2 Million per kg (estimate).
+   This competition aims to simulate a Lunar mission where a robot is delivered to the Moon.
+   This corresponds to an approximate mission cost of $72 Million. Lower masses will result in
+   lower mission costs so this competition rewards teams that have a lower robot mass.
+4. External robot antennas are required to reduce potential interference problems.
+5. Robots shall have a minimum of four (4) lifting points, safe for human hands and clearly
+   marked (ISO 7000-1368) for students and staff to use. Teams are responsible for placement
+   and removal of their construction robot onto the regolith surface. There must be one person
+   per 20 kg of mass of the construction robot, requiring a minimum of four people to carry the
+   maximum allowed mass of 80 kg.
+6. The robot can separate itself intentionally, if desired, but all parts of the robot must be
+   under the team's control at all times. Unintentional breakage will not be counted against the
+   team. The robot does not have to re-assemble prior to the end of the competition run.
+7. The robot can run either by telerobotic (remote control) or in autonomous operations and
+   cannot have any touch sensors to sense and avoid obstacles.
+8. Reference Points / Reference Arrows – The launch volume dimensions of the robot may be
+   oriented in any way (length, width, height can be defined along any of the X, Y, Z axes,
+   dimensions correspond to the typical payload volume available on today's Lunar landers).
+   - The team must declare the robot orientation by length (arrow 1) and width (arrow 2) to the
+     inspection judge. Reference Point (arrow 3) – must mark the forward direction of the mining
+     robot in the starting position configuration (the reference location and arrow pointing
+     forward can point any direction of the team's choosing, except up or down). The arrow is
+     used only to orientate the robot prior to starting the robot run to face the robot arrow
+     either north, east, south, or west after spinning the direction wheel.
+   - The judges will use this reference point and arrow to orient the mining robot in the
+     randomly selected direction and position (you can use a permanent-type marker) indicating
+     the team's choice of forward direction on any location on the robot is acceptable if
+     multiple arrows do not conflict.
+
+4.3 E-STOP Button
+------------------
+1. Also known more formally as an emergency brake, emergency stop (E-stop), emergency off (EMO),
+   kill switch, or emergency power off (EPO), is a safety mechanism used to shut off machinery
+   in an emergency, when it cannot be shut down in the usual manner.
+2. OSHA and relevant standards such as IEC 60204-1 state that an e-stop must be readily
+   accessible to the operator. Additionally, it should be unobstructed—no collars or actuation
+   restrictions—and easily accessible without having to reach over, under or around to actuate.
+   Machine-building standards such as ANSI B11, B11-19 and National Fire Protection Agency
+   (NFPA) 79 also address specifics in regard to safety devices such as an e-stop.
+3. OSHA and standards such as IEC 60204-1 further state that resetting an E-stop alone shall not
+   resume machine operation. Resetting the E-stop (for example, twisting or pulling the mushroom
+   button) should only restore power and put the machine in a safe state. A second deliberate
+   action, such as pressing a separate start button or sending the robot a start signal, is
+   required to actually resume operation.
+4. The robot shall be equipped with an E-STOP button. An unmodified "Commercial Off-The-Shelf"
+   (COTS) red button is required. Use sound engineering practices and principles in placing and
+   securing the E-STOP button on your robot(s), failure to do so may result in a safety
+   disqualification. The E-STOP button shall have a minimum diameter of 40 mm and require no
+   additional steps to access it.
+5. The E-STOP button shall be placed on the highest practical location on the robot. There shall
+   be only one E-STOP button per robot and in the case of multiple robots, each robot shall have
+   its own E-STOP button.
+6. Disabling the E-STOP button without authorization from the Staff shall result in a safety
+   disqualification.
+7. The E-STOP button shall stop the construction robot's motion and disable power with one push
+   motion on the button. It shall be reliable and instantaneous. A closed control signal to a
+   mechanical relay is allowed as long as it stays open to disable the robot. This rule exists
+   in order to have the capability to safe the construction robot in the event of a fire or other
+   mishap. The button shall disconnect the batteries from all controllers (high current, forklift
+   type button) and it shall isolate the batteries from the rest of the active sub-systems as
+   well.
+8. Only onboard laptop computers may stay powered on if powered by its own, independent,
+   internal computer battery. For example: it is acceptable to have a small battery onboard that
+   only powers a Raspberry Pi control computer, and whose power does not flow through the main
+   robot E-STOP button.
+
+4.4 Power Meters / Data Loggers
+---------------------------------
+1. The robot shall provide its own onboard power. No facility power will be provided to the
+   robot during the attempt. There are no power limitations except that the robot must be
+   self-powered and included in the maximum mass limit.
+   The power logger shall be schematically located between the battery and kill switch, so the
+   readings are not erased if the E-STOP button is activated. A 30-point reduction to Berm
+   Construction Productivity – Normalized for Energy (BCP Energy) will be accessed if the robot
+   is not wired in accordance with this requirement. This will be checked at Inspection. Also,
+   if a robot is not wired in accordance teams run the risk of scoring zero if the E-STOP has to
+   be triggered.
+2. The energy consumed shall be recorded with a "Commercial Off-The-Shelf" (COTS) electronic
+   data logger device. Actual energy consumed during each attempt shall be shown to the judges
+   on the data logger immediately after the attempt ('immediate' includes time for the judge
+   climbing into the arena, finding the logger, and recording the power reading). If the logger
+   is independently powered, then the robot can be remotely powered off after the run. Although
+   this is acceptable, it is not recommended in case the robot needs to be commanded to complete
+   an operation so that it can be removed from the arena.
+
+4.5 Battery Protocol and Allowed Materials/Processes
+-----------------------------------------------------
+1. Lithium-Ion / Nic-Cad batteries used in robots must be attended while charging. Chargers
+   shall be unplugged overnight.
+2. Battery containers must be designed for safely storing, charging, and transporting
+   lithium-ion batteries, or approved equivalent.
+3. Batteries must be stored in upright containers; batteries cannot be in contact with each
+   other.
+4. Batteries that have been dropped must be inspected for damage and replaced as needed.
+5. Do not store batteries that are hot to the touch after charging.
+6. If a battery continues to feel hot after charging, if possible, remove from the building and
+   place outside and notify UCF Fire as a non-emergency issue.
+7. To ensure the robot is usable for an actual mission, it cannot employ any fundamental
+   physical processes, gases, fluids, or consumables that would not work in an off-world
+   environment. For example, any dust removal from a lens or sensor must employ a physical
+   process that would be suitable for the Lunar surface. Teams may use processes that require an
+   Earth-like environment (e.g., oxygen, water) only if the system using the processes is
+   designed to work in a Lunar environment and if such resources used by the robot are included
+   in the mass of the robot. Closed pneumatic systems are allowed if the gas is supplied by the
+   robot itself. Pneumatic systems are permitted if the gas is supplied by the robot and
+   self-contained.
+8. The rules are intended for robots to show an off-world plausible system functionality, but
+   the components do not have to be traceable to an off-world qualified component version.
+   Examples of allowable components are: Sealed Lead-Acid (SLA) or Nickel Metal Hydride (NiMH)
+   batteries; composite materials; rubber or plastic parts; actively fan cooled electronics;
+   motors with brushes; infrared sensors, inertial measurement units, and proximity detectors
+   and/or Hall Effect sensors, but proceed at your own risk since LHS-2E & BP-1 regolith
+   simulant is very dusty and abrasive.
+9. Teams may use honeycomb structures as long as they are strong enough to be safe and the edges
+   sealed to prevent dust intrusion, a wheel with a large honeycomb structures that is open on
+   both sides is allowed as long as the edges are not so sharp that they would be a cutting
+   hazard.
+10. Teams may not use GPS, rubber pneumatic tires; air/foam filled tires; open or closed cell
+    foam, ultrasonic proximity sensors; or hydraulics because NASA does not anticipate the use
+    of these on an off-world mission. This will not pass inspection.
+
+4.6 Robotic Operations
+-----------------------
+1. The robot cannot be anchored to the sand prior to the beginning of the proof of life
+   demonstration.
+2. At the start of the competition run, the mining robot may not occupy any location outside the
+   defined starting position in the regolith arena.
+3. The robot must operate within the regolith arena; it is not permitted to pass beyond the
+   confines of the outside perimeter of the arena or hit the walls during the competition run.
+4. The robot may not use any process that causes the physical or chemical properties of the
+   regolith simulant to be changed or otherwise endangers the uniformity between competition
+   attempts. The mining robot may not penetrate the regolith simulant surface with more force
+   than the weight of the mining robot before the start of each competition attempt.
+5. No ordnance, projectile, far-reaching mechanism, etc. may be used. The mining robot must
+   move on the regolith simulant surface.
+6. Far-reaching mechanism in this context does not include any deployed or extended component as
+   allowed in the dimensions rule above; those will not violate this rule.
+7. Beacons or fiducial targets may be implemented only in the starting zone, and for navigational
+   purposes only. They may be attached to the designated 80/20 fiducial bar or anywhere in the
+   regolith within the starting zone and must be completely contained within the starting zone.
+   Tape, clamps, or rods pushed into the regolith may be used, but screws or other fasteners
+   requiring holes may not be used. This navigational aid system must be attached during the
+   setup time and removed afterwards during the removal time.
+8. The beacon may send a signal or light beam or use a laser-based detection system which have
+   not been modified (optics or power). Only Class I or Class II laser or low powered lasers
+   (< 5mW) are allowed. Supporting documentation from the laser instrumentation vendor must be
+   provided to the responsible faculty member for "eye-safe" lasers.
+
+================================================================================
+SECTION 5: UCF SCORING, CONSTRUCTION, NAVIGATION
+================================================================================
+
+5.1 Scoring
+-----------
+1. UCF & KSC – The berm construction scores from each run will be added together for the final
+   score (final score will be cumulative, not the highest of the two attempts, not an average of
+   the two attempts).
+2. KSC Only – The teams with the first, second, and third most construction points will receive
+   up to 25, 20, and 15 points, respectively towards the grand prize. Teams not winning first,
+   second, or third place in the construction category can still earn one bonus point towards the
+   grand prize for every 0.2 cubic meters of berm constructed up to a maximum of ten points.
+
+5.2 Construction Points
+------------------------
+1. Pass All Inspections (Comm/Vehicle) – each team is required to perform a mechanical
+   inspection and communications check prior to the first competition run. This should be
+   performed as early as possible after check-in to ensure compliance to all rules and
+   communication functionality. Neither is optional; if one cannot pass, the robot will not be
+   permitted in the Arena.
+
+2. Construction Berm Productivity – Normalized for Robot Mass (BP Mass) –
+   A volumetric scan before and after the run will be performed. Only the berm volume within the
+   target berm location will be counted. The team will earn construction points for each cubic cm
+   of berm constructed above grade per minute per each kg of the robot's mass. Only the portions
+   of the constructed berm within the target area for berm placement will be counted. The target
+   area has perimeter dimensions of 1.5 M x 0.9 M. There is no restriction on the shape,
+   height, or number of berms constructed.
+
+3. Construction Berm Productivity – Normalized for Energy (BP Energy) – A volumetric scan
+   before and after the run will be performed. Only the berm volume within the target berm
+   location will be counted. The team will earn construction points for each cubic cm of berm
+   constructed above grade per minute per each w*hr of energy consumed. The electrical energy
+   consumed must be displayed by an (commercial off the shelf or "COTS") electronic data logger
+   and verified by a judge.
+
+4. Camera bandwidth Use – During each competition attempt, the team will be scored on arena
+   camera usage as follows: 0 cameras = 120, 1 camera = 60, 2 cameras = 0 points.
+
+5. Dust Tolerant Design – During each competition attempt a team can earn up to 60 points for
+   dust tolerant design features on the construction robot. Teams are encouraged to point out
+   dust tolerant and dust free features to the judges during setup. The judges will allocate
+   these points based on an inspection and performance during the competition run. The points
+   for dust-tolerant design are as follows:
+   - Drive train and components enclosed/protected: 20 points
+   - Active dust control (brushing, electrostatics, etc.): 20 points
+   - Custom dust sealing features (bellows, seals, etc.): 20 points
+
+6. Dust Free Operation – During each competition attempt, a team can earn up to 30 points for
+   dust free operation. The judges will allocate these points based on actual performance during
+   the attempts. If the construction robot has exposed mechanisms where dust could accumulate
+   during a lunar mission and degrade the performance or lifetime of the mechanisms, then fewer
+   Construction points will be earned in this category. If the construction robot raises a
+   substantial amount of airborne dust or projects it due to its operations, fewer construction
+   points will be earned in this category. Ideally, the construction robot will operate in a
+   clean manner without dust projection, and all mechanisms and moving parts will be protected
+   from dust intrusion. All decisions by the judges regarding dust tolerance and dust projection
+   are final. The points for dust-free operation are as follows:
+   - Driving without dusting up regolith: 5 points
+   - Digging without dusting up regolith: 20 points
+   - Transferring regolith without dumping the regolith on your own robot: 5 points
+
+Berm dimensions:
+                    KSC             UCF
+  Berm Size         2.0 m x 0.7 m   1.3 m x 0.7 m
+  Target Berm Area  2.2 m x 0.9 m   1.5 m x 0.9 m
+
+Note 1: Only the green actual berm volume inside the red box will count towards the berm volume
+measurement.
+
+5.3 Construction Points Calculator
+------------------------------------
+Example actuals based on a 30-minute run at KSC (UCF runs are based on 15-minute runs).
+
+Construction Points Calculator – UCF Arena:
+
+  1. Pass All Inspections (Comm/Vehicle)
+     Units: Pass = Run / 0 = Default
+     Example Actuals: 1
+     Example Points: Allowed to Run
+
+  2. Berm Construction Productivity – Normalized for Robot Mass (BCP Mass)
+     A volumetric scan before and after the run will be performed. Only the berm volume within
+     the target berm location will be counted. The team will earn construction points for each
+     cubic cm of berm constructed above grade per minute per each kg of the robot's mass.
+     Units: cm^3 berm / min / kg robot mass
+     Specific Points: 4.4
+     Example Actuals: 77551 cm^3 / 15 min run / 66 kg = 78.33
+     Example Points: 344.6
+
+  3. Berm Construction Productivity – Normalized for Energy (BCP Energy)
+     A volumetric scan before and after the run will be performed. Only the berm volume within
+     the target berm location will be counted. The team will earn construction points for each
+     cubic cm of berm constructed above grade per each w*hr of energy consumed. The electrical
+     energy consumed must be displayed by an (commercial off the shelf or "COTS") electronic
+     data logger and verified by a judge.
+     NOTE: A 30-point penalty will be accessed if your robot energy data logger is not wired
+     in accordance to ROBOTS AND ROBOTIC OPERATIONS section 4.
+     Units: cm^3 berm / min / watthour
+     Specific Points: 1.5
+     Example Actuals: 77551 cm^3 / 15 min run / 36 whr = 143.6
+     Example Points: 215.4
+
+  4. Camera Bandwidth Use – During each competition attempt, the team will be scored on camera
+     usage as follows: 0 cameras = 120, 1 camera = 60, 2 cameras = 0 points.
+     Units: # cameras
+     Specific Points: 120, 60, 0
+     Example Actuals: 1
+     Example Points: 60
+
+  5. Dust Tolerant Design – see description
+     Example Points: 30
+
+  6. Dust Free Operation – see description
+     Example Points: 25
+
+  7. Autonomy – See Construction Points – Autonomy task
+     Specific Points: 50, 75, 125, 250, 300, 375, 450, or 600
+     Example Actuals: 75
+     Example Points: 75
+
+  8. Total Points: 750
+
+5.4 Construction Protocol
+--------------------------
+1.  The robot will be inspected before each competition attempt. Teams will be permitted to
+    repair or otherwise modify their robots while the RoboPits are open.
+2.  Teams are responsible for the placement and removal of their robot onto the arena surface.
+    There shall be one person per 20 kg of mass of the robot, requiring a minimum of four people
+    to carry the maximum allowed mass of 80 kg. Assistance will be provided if needed.
+3.  Each team is allowed up to 10 minutes to place the construction robot in its designated
+    starting position within the arena and perform required setups from MCC, and 5 minutes to
+    remove the robot after the attempt has ended as directed by the Construction Judges.
+4.  The robot's starting direction and location will be randomly selected immediately before the
+    competition attempt.
+5.  At the start of each competition attempt, the robot shall not occupy any location outside the
+    defined starting position in the arena.
+6.  The robot shall start in the starting zone, excavate from anywhere within the excavation zone
+    (including the starting zone), move across the obstacle zone, and dump collected material in
+    the construction zone. The robot shall not acquire regolith simulant for the berm from inside
+    the obstacle zone, or construction zone. All regolith simulants for berm construction must be
+    acquired from the excavation or starting zone.
+7.  The robot shall not push or move any obstacles in the obstacle zone.
+8.  The obstacles may only be pushed to the side of the arena in the construction zone.
+9.  The robot shall avoid the craters in the obstacle zone (it shall not fill in any craters).
+10. The robot may start excavation operations as soon as a run begins, since the excavation zone
+    includes the starting zone.
+11. The robot may start construction operations as soon as any part of it crosses into the
+    construction zone.
+12. The robot shall operate within the arena; no part of it is permitted to pass beyond the
+    confines of the outside wall of the arena during each competition attempt.
+13. The robot can separate itself intentionally if desired, but all parts of the construction
+    robot must be under the team's control at all times. The robot does not have to re-assemble
+    prior to the end of the competition run.
+14. The robot shall not:
+    - be anchored to the arena surface prior to the beginning of each competition attempt.
+    - ram the wall (may result in a safety disqualification for that attempt).
+    - use any aspect of the arena (wall, structure, column, etc.) in attempting any operations.
+    - use any process that causes the physical or chemical properties of the regolith simulant to
+      be changed or otherwise compromises the uniformity between attempts.
+15. Bulldozing (i.e. pushing a pile of dirt/rocks) with a bladed dozer-type of rover is
+    considered an acceptable excavation and regolith simulant transfer technique for the
+    Lunabotics challenge. In this case, the robot would push material from the excavation zone
+    into the berm area to create the berm. All regolith simulant material must be pushed in a
+    pile from the excavation zone into and through the construction zone to the berm. Regolith
+    simulant may be skimmed from the construction zone, but only if it is part of the operation
+    of pushing it from the excavation zone into the berm (it may not be intentionally collected
+    in the construction zone). The bulldozing pushing operation shall not start inside the
+    construction zone – each bulldozing attempt shall start in the excavation zone.
+16. Obstacles that are moved from the excavation zone into the target area will count towards
+    these dimensions.
+    NOTE: If a rover drives over or compacts a berm that has been dumped, it is likely that the
+    volume will be negatively affected, thus decreasing a team's score for that run.
+    Additionally, any material placed outside of the target berm zone will not be counted.
+17. The robot shall end operations immediately when the power-off command is sent and/or as
+    instructed by the Construction Judge. After the official competition run ends, the regolith
+    judge will determine if the robot needs to move prior to being removed. The judge will
+    instruct the team members when they can enter to remove the robot after ensuring that the
+    lidar scan of the berm has been completed.
+
+5.5 Navigation Protocol
+------------------------
+1. The team must declare the robot orientation by length and width to the inspection judge. An
+   arrow on the reference point (the reference location and arrow pointing forward can be any
+   point and direction of the team's choosing, except up) must mark the forward direction of the
+   construction robot in the starting position configuration. The judges will use this reference
+   point and arrow to orient the construction robot in the randomly selected direction and
+   position (you can use a permanent-type marker), indicating the team's choice of forward
+   direction on any location on the robot is acceptable as long as multiple arrows do not
+   conflict. The arrow does not have to indicate the robot's preferred forward direction. The
+   arrow is used only to orientate the robot prior to starting the robot run to face the robot
+   arrow either north, east, south, or west after spinning the direction wheel.
+2. Compasses (analog, digital, etc.) are not allowed on the robot.
+3. Global Positioning Satellite (GPS) or IMU-enabled GPS devices are not allowed. Teams must
+   explain to the judges how the device will be switched off or the data will be subtracted and
+   ensure the internal calculations do not make use of the GPS or IMU-enabled GPS device.
+4. The mass of the navigational aid system is included in the maximum construction robot mass
+   limit of 80.0 kg and must be self-powered.
+5. Target Beacons – beacons may be attached to the provided mounting system in the starting
+   area. The beacons may be mounted on rods pushed into the regolith at the starting area for
+   anchoring.
+6. The target/beacon may be a passive fiducial, or it may send a signal or light beam or use a
+   laser-based detection system which has not been modified (optics or power). Only Class I or
+   Class II lasers or low-powered lasers (< 5mW) are allowed. Supporting documentation from the
+   laser instrumentation vendor must be provided to the inspection judges for "eye-safe" lasers.
+7. Inertial measurement units (IMU) are allowed on the construction robot. Teams have to explain
+   to the judges how the compass feature will be switched off, or the compass data is subtracted
+   to ensure the internal calculations do not make use of the compass (from any magnetic field
+   surrounding the robot).
+8. During each competition attempt, the construction robot is limited to autonomous and
+   telerobotic operations only.
+
+5.6 Autonomy Rules
+-------------------
+1. Telemetry to monitor the health of the construction robot is allowed during the autonomous
+   period. Teams will need to remain "hands free" during any attempts at autonomy points. Teams
+   shall explain to the inspection/attending judge before each competition run how they are
+   interacting with the telemetry system, and the judge will observe to ensure compliance with
+   all competition rules.
+2. Teams shall not touch the controls during the autonomous period. Orientation data cannot be
+   transmitted to the construction robot in the autonomous period. See complete details in the
+   Mission Control Center (MCC) and Autonomous Operations.
+3. Teams are expected to perceive the arena walls as obstacles and prevent collisions. The walls,
+   when detected, can be used as features for localization as long as no a priori information
+   about the walls (e.g., known dimensions and location relative to the operational area of the
+   arena) is used. In addition, a simple tracking offset cannot be used. For example, following
+   the wall 0.5 m away to traverse from one end of the arena to the other would not be allowed.
+   Touching or having a switch sensor spring wire that may brush on a wall or any other surface
+   as a collision avoidance sensor is not allowed (this includes touch sensors).
+4. The team must explain to the inspection judges how their autonomous systems work and prove
+   that their autonomy program does not inappropriately use information about the walls. Integrity
+   is expected of all team members and their faculty advisors.
+5. Teams are allowed to interact with an interface that allows different pieces of telemetry data
+   to be viewed as long as there is no real-time or other interaction to control or influence the
+   robot.
+6. Teams are not permitted to update or alter the autonomy program to account/detect or upload
+   information about obstacle locations.
+7. Failure to divulge the method of autonomy sensing shall result in disqualification from the
+   competition.
+
+5.7 Fiducials
+--------------
+Navigation beacons can be mounted using the 1.00" x 1.00" 80/20 secured to the front surface
+of the regolith bin perimeter wall. The 80/20 will be mounted at a height approximately 40 cm
+(+/- 2.5 cm) above the regolith surface. The origin point is the intersection where the barrier
+separating the two arenas meets the regolith bin perimeter wall (labeled INGRESS). The fiducial
+mounting rail will be 0.5 meters from the origin and will extend an additional 1.5 meters.
+
+The 80/20 will be matte black to avoid reflections that might impact various navigational
+systems. The part number is 1010-Black representing the 1.00" X 1.00" T-Slotted profile with
+4 open T-slots. The T-slots on the top, front, and bottom of the 80/20 should be available for
+mounting over the full length of the bar. The T-slots on the back of the bar are not accessible
+as there is not enough space to fit anything in between the bar and regolith bin wall.
+
+UCF Arena Layout (see Section 3.1 for full dimensions and zone descriptions).
+Crater and rock locations are not representative of final competition placement (random).
+
+================================================================================
+SECTION 6: UCF MISSION CONTROL CENTER AND AUTONOMOUS OPERATIONS
+================================================================================
+
+6.1 Mission Control Center (MCC)
+----------------------------------
+Teams will control or autonomously operate their robot from the MCC to simulate operations of a
+Lunar In-Situ Resource Utilization (ISRU) construction mission. Lunabotics Mission Control
+Judges (MCJs) will supervise team activities in the MCC and assess their performance during each
+competition run. A Mission Control Director (MCD) will serve as the Lead Judge for the MCC to
+maintain the integrity of the MCC rules in the Lunabotics guidebook and ensure they are
+interpreted and enforced equally for all teams.
+
+6.1.1 General Guidelines
+1.  Each team will be allowed a maximum of 4 team members in the MCC. All members must enter the
+    MCC together when authorized by the MCJ.
+2.  Faculty/Advisors are not permitted in the MCC at any time.
+3.  Teams are responsible for ensuring they enter the MCC with all mission-critical components
+    and spares they require that are not explicitly identified in the rules and rubrics as
+    provided by Lunabotics. Once in the MCC, team members will not be permitted to retrieve
+    forgotten items.
+4.  Teams may only bring electronic devices required for robot operations into the MCC.
+    Extraneous laptops, cell phones, smart devices, etc., are prohibited.
+5.  Teams that have entered the MCC are not allowed any external communications until the
+    completion of their run. The one exception is communication with their UCF Arena teammates
+    during the setup period, which is only permitted using equipment provided by Lunabotics.
+6.  Teams must resolve all questions and rule clarifications pertinent to a competition run
+    before entering the MCC for that run. The competition schedule will not be delayed
+    accommodating last-minute requests of this nature.
+7.  MCJs are observers only and are not allowed to provide "help" during robot operations.
+    Mid-run questions, such as whether the robot is in an acceptable position or if certain
+    points have been attained, will not be answered.
+8.  The Mission Control and Arena judges have the authority to terminate a setup period or
+    competition run at any time if the team is not using them in accordance with the rules and
+    rubrics.
+9.  Teams are expected to conduct themselves in a professional manner as if executing a NASA
+    operation.
+10. Teams are expected to use sound engineering practices and principles to operate their robot.
+11. Team members must comply with all directions from the MCJ.
+12. Disputes with MCJ direction or decisions must be elevated through the MCD.
+13. Violation of the intent of a rule is a violation of the rule itself. A team found in
+    violation of the rules and rubrics, exhibiting unprofessional behavior or unsportsmanlike
+    conduct, or not following the directions of the Lunabotics staff may be assessed penalty
+    points, disqualified from a competition run, or disqualified from the entire Lunabotics
+    Challenge.
+
+6.1.2 Mission Setup
+1. Teams may not connect or interact with any equipment in the MCC until the setup period
+   begins.
+2. The setup period is for placing the robot in the UCF Arena and bringing it online for the
+   competition run. Teams are allowed up to 10 minutes to connect their laptops and routers,
+   establish communications with their robot, and perform any initial systems checkout required.
+   Teams must indicate competition readiness to the MCJ as soon as their robot is ready.
+3. During the setup period, the MCJ will provide the team with a handheld radio to enable
+   communications with team members in the UCF Arena. This radio will be returned to the MCJ
+   at the end of the setup period and may not be used during the competition run.
+4. Arena team members are prohibited from pointing out obstacles, craters, and other arena
+   conditions to the MCC team members.
+5. Teams may use the arena situational awareness cameras during the setup period without
+   penalty.
+
+6.1.3 Mission Operations
+1. Teams are allowed 15 minutes per competition run under nominal conditions.
+2. Telerobotic operators will have access to two situational awareness cameras in the
+   construction area in the UCF Arena via monitors provided in the MCC. The use of these cameras
+   will result in a point deduction. The MCC monitors provided for situational awareness may not
+   be utilized by the team for any other purpose.
+3. Telerobotic operators are only allowed to use data and video originating from the robot and
+   the competition video monitors.
+4. It is the sole responsibility of team members in the MCC to communicate effectively with the
+   MCJ to ensure every autonomy attempt is recognized and scored correctly. If the judge is not
+   notified of the attempt in advance of the team initiating its execution, the score will be
+   zero points. Teams should:
+   - Clearly announce and make eye contact with the MCJ when they are going to autonomous
+     operations.
+   - Clearly announce when autonomy has begun and has been completed each time they trigger an
+     autonomy cycle.
+5. All autonomy attempts must be "Hands-Free", meaning no team members are permitted to touch
+   any components (e.g., laptops, game controllers) brought into the MCC until the team has
+   declared autonomy completion or autonomy failure.
+   - If a team member interacts with any equipment while the robot is still moving or before the
+     team has declared the autonomy attempt complete, the team will receive zero points for the
+     attempt.
+   - In the event of an autonomy failure, the team shall announce that the attempt has failed
+     before resuming manual control.
+   - Manipulation of the NASA situational awareness cameras, if in use, is permitted during
+     autonomy attempts.
+
+6.1.4 Mission Anomalies
+1. Once the competition timer has started, the robot has 5 minutes to move on the mission. If
+   the robot has not moved by the 5-minute mark, the robot is considered inoperable, and the
+   run will end.
+2. As responsible engineers, the team should notify the MCJ that they are ending the run if
+   their robot experiences an unrecoverable issue that renders it incapable of executing key
+   mission tasks. Such failures include:
+   - Loss of Comm: The robot is functional but can no longer communicate properly with the MCC.
+   - Loss of Locomotion: The robot ceases movement or experiences infrequent, non-continuous
+     movements for a period of 5 minutes.
+   - Loss of Excavation: The robot can no longer acquire regolith per its design.
+   - Loss of Deposition: The robot can no longer offload regolith per its design.
+   - Loss of Robot: The robot is fully unable to execute the mission. This scenario could be due
+     to technical issues or unfavorable interactions with the competition arena.
+3. In the event a robot experiences a mission-ending anomaly and the team does not voluntarily
+   end the run within a reasonable amount of time, Mission Control and UCF Arena judges have the
+   authority to terminate the attempt. "Reasonable" is at the judge's discretion based on the
+   specific circumstances of the run. Teams "joyriding" or otherwise wasting competition time
+   may be assessed penalty points.
+4. It is the team's responsibility to ensure they are executing corrective actions efficiently
+   and communicating properly with the MCJ about long cycle steps, such as full system resets,
+   that will make the robot appear further inoperable. Failure to do so could result in the
+   termination of the run.
+
+6.1.5 Mission Conclusion
+1. Teams must cease operations when the competition timer ends. If the robot is in the middle of
+   an autonomous activity, teams must send a command to inhibit their robot from taking any
+   further actions. Regolith offloading is permitted to be completed if the robot was actively
+   dumping material prior to the expiration of the competition timer. If the rover is loaded with
+   regolith and not in the berm zone, it may be necessary to active it once more to unload the
+   regolith prior to egress.
+2. Teams may not disconnect communications with their robot or begin dismantling their MCC
+   equipment until directed to do so by the MCJ. Sustained operability is necessary in the event
+   the robot must relocate or unload regolith prior to its removal from the UCF arena.
+3. Teams should remain in the MCC until dismissed by the MCJ.
+4. Teams are responsible for ensuring they leave the MCC with all equipment they brought into
+   it. Once the next team has entered the MCC, forgotten items cannot be retrieved until that
+   team's run is complete.
+
+6.2 Autonomous Operations
+--------------------------
+During each competition attempt, the team will earn up to 600 Construction points for autonomous
+operation. As Mission Control Judges (MCJ) are not intimately familiar with each robot's concept
+of operations (ConOps) procedures, it is the sole responsibility of the team members in the
+control room to coordinate with and inform the MCJ of each attempt for autonomy points to make
+sure their autonomous attempts are recognized and therefore scored correctly. The Caterpillar
+Autonomy Award will be based on the sum of autonomy scores from both UCF runs and runs at KSC.
+This means that teams that do not make the top 10 and move to KSC may still be eligible for the
+Caterpillar Autonomy Awards.
+
+General Rules:
+- For clarity, hands-free means that all team members in mission control must be hands-free and
+  not engage any components (e.g. laptops, game controllers, etc.). The team may control the
+  arena camera/s during this time.
+- Teams must announce the start and completion of every autonomy point attempt.
+- If your autonomy attempt has failed, you must announce your failure before you begin manual
+  control.
+
+Construction points will be awarded for successfully completing the following activities
+autonomously:
+
+6.2.1 Excavation Automation: 75 pts
+1. The Excavation Zone now overlaps with the Starting Zone. Teams may excavate material anywhere
+   in the Excavation or Starting Zone.
+2. Within the Excavation zone, the team must indicate to the MCJ that they are going hands-free
+   for the excavation attempt.
+3. The robot must execute machine control commands itself during the excavation task.
+4. The robot must demonstrate the ability to excavate and collect regolith for transport. A
+   discernible amount of regolith must be collected for transport as determined by the MCJ. The
+   MCJ may engage the arena judges for confirmation if camera angle/performance does not allow
+   confirmation in Mission Control. Collection can be in an internal hopper, a bucket, a blade,
+   a bucket drum, etc – based on the robot design. Hands-free operation must begin before the
+   robot engages the regolith to begin the excavation process.
+5. Excavation mechanisms must be completely removed from contact with the regolith before
+   returning to remote control operation.
+6. Once excavation is complete the team must indicate they are going to remote control before
+   taking control of their robot.
+7. This level of automation will require teams to master the lower-level machine control of their
+   robot platform associated with excavation. It is noted that past teams have proven this
+   capability to be helpful in achieving better excavation results, as the coordination of human
+   commands for the robot for excavation can be difficult to master.
+
+6.2.2 Dump Automation: 50 pts
+1. Teams are allowed to traverse the Obstacle Zone via remote control.
+2. Prior to crossing into the Construction zone, they must indicate to the MCJ that they are
+   going hands-free for the dump attempt.
+3. The robot must execute machine control commands itself during the dump task.
+4. The robot must place the regolith at the berm construction location. A discernible amount of
+   regolith must be placed at the berm location as determined by the MCJ. The MCJ may engage
+   the arena judges for confirmation if camera angle/performance does not allow confirmation in
+   Mission Control.
+5. Once dumping is complete the team must indicate they are going to remote control before
+   taking control of their robot.
+6. This level of automation will require teams to master the lower-level machine control of their
+   robot platform associated with dumping. In addition, teams will need to master localization
+   in the construction zone as well as path planning to align and place regolith at the
+   designated berm construction location.
+
+6.2.3 Travel Automation: 250 pts
+Teams may begin with remote control and move the robot within the starting zone only to "lock"
+in their localization solution. The teams must then indicate to the MCJ that they are going into
+hands-free mode while still in the starting zone. The robot must remain in hands-free mode while
+crossing the obstacle field and crossing into the excavation zone. The robot must start in the
+starting zone and remain hands-free until any part of the robot has crossed into the excavation
+zone. This level of automation will require the team to master the following:
+1. Localization across the entire competition arena.
+2. Object detection and location relative to the robot.
+3. Navigational planning based on location and obstacles/traversable area.
+4. The competition judges will attempt to construct the obstacle field in such a way as to
+   require obstacle detection, mapping, and navigation planning to determine a "slalom" route to
+   reach the excavation zone. The teams should not architect a "Point and traverse" approach for
+   this automation step.
+5. If the robot comes in contact with a rock or drives across a crater in the obstacle zone, as
+   determined by the MCJ/Arena judges, a 30-point reduction will be applied.
+6. For maximum points, the attempt must be made at the start of the run when first leaving the
+   starting zone. In order to discourage the approach of "breadcrumbs", a penalty of 50 points
+   will be applied to any attempt that occurs after traversing the obstacle zone in remote
+   control. If multiple attempts are made, this penalty will only be assessed one time to the
+   successful attempt.
+7. If attempting excavation and dump automation in coordination with travel automation, the robot
+   must remain in "hands-free" control during travel and excavation.
+   - Example: Robot crosses the obstacle course in remote control before the attempt, hits an
+     obstacle, and drives across a crater during the attempt. 250 points – 50 – 30 = 170 points.
+
+6.2.4 Full Autonomy (One Cycle): 450 pts
+1. The robot must be in hands free control for one entire cycle.
+2. Attempt must be made at the beginning of the competition run.
+3. Teams may begin in remote control and move the robot within the starting zone only to
+   localize. Teams must begin with hands free control from the starting area and remain in hands
+   free mode while excavating, crossing the obstacle field, crossing into the construction zone,
+   dumping the regolith for the berm, and crossing the obstacle field and returning to the
+   excavation zone. Once successfully crossing into the excavation zone the team may return to
+   remote control. A discernible amount of regolith must be placed at the berm location as
+   determined by the MCJ.
+4. If the robot comes in contact with a rock or drives across a crater, as determined by the
+   MCJ/Arena judges, a 30-point reduction will be applied up to a maximum of 90 points. This is
+   only true in the obstacle zone. The robot is allowed to move rocks and fill in craters in the
+   excavation zone.
+5. This level requires mastery of all aspects of autonomy associated with this competition and
+   demonstrates a level of robustness to complete at least two full cycles. System robustness is
+   essential for terrestrial and extra-terrestrial construction.
+   - Example: Robot hits an obstacle and drives across a crater during the attempt.
+     450 points – 30 – 30 = 390 points.
+
+6.2.5 Full Autonomy: 600 pts
+1. The attempt must be made from the beginning of the competition run.
+2. The robot must be in hands free control for the entire competition run.
+3. Teams may begin in remote control and move the robot within the starting zone only to
+   localize. Teams must begin with hands free control from the starting area and remain in hands
+   free mode for the entire competition run. At least two cycles of excavating, crossing the
+   obstacle field, crossing into the construction zone, dumping the regolith for the berm, and
+   crossing the obstacle field and returning to the excavation zone must be completed during the
+   competition run. Berm construction points, as determined by the volumetric scan, must be
+   achieved for this level of autonomy.
+4. If the robot comes in contact with a rock or drives across a crater, as determined by the
+   MCJ/Arena judges, a 30-point reduction for each occurrence will be applied up to a maximum of
+   90 points. This is only true in the obstacle zone. The robot is allowed to move rocks and
+   fill in craters in the excavation zone.
+5. This level requires mastery of all aspects of autonomy associated with this competition and
+   demonstrates a level of robustness to complete at least two full cycles. System robustness is
+   essential for terrestrial and extra-terrestrial construction.
+   - Example: Robot crossing the obstacle zone hits a rock traveling to construction zone in
+     cycle 1, drives across a crater returning to the excavation zone in cycle 2, and hits a
+     rock returning to the excavation zone in cycle 3 during the attempt.
+     600 – 30 – 30 – 30 = 510 points.
+
+6.2.6 Autonomous Operations Scoring
+Allowable Combinations:
+
+  Combination | Excavation | Dump | Travel | Excav+Dump 1-Cycle Full | Full Autonomy | Total
+  ------------|------------|------|--------|-------------------------|---------------|------
+  Ext 1       |     75     |  -   |   -    |            -            |       -       |   75
+  Ext 2       |      -     |  50  |   -    |            -            |       -       |   50
+  Ext 3       |      -     |  -   |  250   |            -            |       -       |  250
+  Ext 4       |     75     |  50  |   -    |            -            |       -       |  125
+  Ext 5       |      -     |  50  |  250   |            -            |       -       |  300
+  Ext 6       |     75     |  50  |  250   |            -            |       -       |  375
+  Ext 7       |      -     |  -   |   -    |           450           |       -       |  450
+  Ext 8       |      -     |  -   |   -    |            -            |      600      |  600
+
+Autonomous Score Sheet:
+Any successful completion of the Excavation, Dump, and Travel attempts will be combined for
+scoring. These could occur over separate passes within the run. Excavation, Dump, Travel
+automation points will not be combined with Full Autonomy (one Cycle) or Full Autonomy.
+
+================================================================================
+SECTION 7: UCF COMMUNICATIONS
+================================================================================
+
+7.1 UCF Qualification General Communication System Requirements
+----------------------------------------------------------------
+Note: The rules in this section apply to both the UCF qualification and KSC Final events.
+
+1.  All teams shall use IEEE 802.11 wireless protocol standards for their wireless connection
+    (Wireless Access Point (WAP) router and rover client).
+2.  Routers are required to support both the 2.4 and 5 GHz bands.
+3.  Routers are required to have the ability to turn off the 2.4 GHz band.
+4.  Each team will be assigned an SSID upon checking in for the competition that must be used for
+    their wireless equipment. The team's SSID will be written as "Team_##."
+5.  Teams are required to broadcast their SSID.
+6.  Robots and access points are ONLY allowed to transmit using their designated SSID.
+7.  Hidden networks are not allowed.
+8.  Wireless encryption is required.
+9.  Teams cannot use channel bonding for 2.4 GHz data transmission. Meeting this rule will
+    require a spectral mask or "maximum spectral bandwidth setting" of 20MHz for all wireless
+    transmission equipment.
+10. All team-provided wireless equipment shall operate legally within the power requirements set
+    by the Federal Communications Commission (FCC) for unlicensed wireless equipment operating
+    in the Industrial, Scientific, and Medical (ISM) radio frequency band. The FCC Federal
+    Regulations are specified in the Electronic Code of Federal Regulations, Title 47,
+    Telecommunication, Part 15, and must be followed if any commercial equipment is modified.
+    All unmodified commercial off-the-shelf access point equipment and computers already meet
+    this requirement.
+11. If a team inserts any type of power amplification device into the wireless transmission
+    system, this will likely create a violation of FCC rules and is NOT allowed in the
+    competition.
+12. The radio frequency power requirements apply to all wireless transmission devices at any ISM
+    frequency.
+13. Bluetooth transmission equipment in the 2.4 GHz range is allowed for sensors and other robot
+    communications. Bluetooth is allowed only at power levels of Classes 2 and 3 and is limited
+    to a maximum transmit power of 2.5 mW EIRP. Class 1 Bluetooth devices are not allowed.
+14. The use of 2.4 GHz Zigbee/IEEE 802.15.4 technology is prohibited because of the possibility
+    of interference with the competition wireless transmissions.
+15. Technology that uses other ISM non-licensed radio frequencies outside of the 2.4 GHz band,
+    such as 900 MHz or 5 GHz frequency bands, is allowed for robot or sensor systems, but these
+    frequencies will not be monitored during the competition. Interference avoidance will be the
+    responsibility of the team and will not be grounds for protest by any team.
+16. Teams can elect to use 5 GHz WiFi during competition for WAP to robot communications,
+    however, this frequency will not be monitored for wireless interference and will not be
+    grounds for a protest or rematch by any team.
+17. All robots should have an external WiFi antenna for the rover wireless client or show that
+    the rover antennas are not obstructed by conductive or metal structure on the robot.
+
+7.2 UCF General Radio Frequency and Communications Approval (Comm Check)
+--------------------------------------------------------------------------
+Note: The rules in this section apply to both the UCF qualification and KSC Final events.
+
+1.  All teams are required to successfully pass a Comm Check prior to entering the competition
+    in the UCF qualification or the KSC final competition.
+2.  Compliance with all rules specified in Section 1 General Communication System Requirements
+    listed previously will be verified during the Comm Check.
+3.  Each team must demonstrate to the communication judges that their robot and access point are
+    operating only on the assigned channel. Each team will have a maximum of 15 minutes at the
+    communication judges' station.
+4.  Comm checks are to be performed on Channel 1.
+5.  Teams in the queue for a comm check are allowed to quickly configure to Channel 1, then turn
+    their wireless off until they are at the comm test station for checkout.
+6.  The teams must identify and show the judges all the wireless emission equipment on the robot.
+7.  If the team robot is transmitting low-power Bluetooth or any non-2.4 or 5 GHz frequency
+    equipment, printed documentation from the manufacturer with part numbers of all wireless
+    transmission equipment must be provided to the judges. This printout must be from the
+    manufacturer's data sheet or manual, and will designate the technology, frequency, and power
+    levels in use by this type of equipment.
+8.  If teams use Bluetooth on their robot, printed documentation of the hardware in use must be
+    provided to the judges. Teams must show that the equipment in use is not using Bluetooth
+    Class 1 and can be verified within the provided documentation.
+9.  The team must also verify that they are connected to the robot by remote wireless control and
+    are able to control the robot.
+10. The team must show that they can turn off 2.4 GHz after demonstrating control of the robot.
+11. If a team cannot demonstrate the above tasks in the allotted time, the team will be
+    disqualified from the competition.
+
+7.3 UCF Comm Rule Qualifications
+----------------------------------
+Each team is required to command and monitor their robot over the EXOLITH provided network
+infrastructure. This configuration must be used for teams to communicate with their robot.
+
+7.4 UCF RoboPits Comm Rules
+-----------------------------
+1. All routers in the RoboPits shall turn off 2.4 GHz by default or power down their wireless
+   equipment.
+2. The RoboPits will have full access to the 5 GHz band and is the required WiFi frequency band
+   for use in the RoboPits if wireless connectivity is required (the alternative is to connect
+   an ethernet cable between the devices).
+3. If needed, teams in the RoboPits can test their robot using 2.4 GHz with prior authorization
+   from the PitBoss. These tests are to be conducted only on Channel 6 and will only be allowed
+   for a short period.
+4. Teams in the queue for a comm check are allowed to quickly configure to Channel 1, then turn
+   their wireless router off until they are at the comm test station for checkout.
+
+The RoboPits communication environment will be monitored. If your team is found to be
+transmitting on Channel 1 or 11 while in the RoboPits, the following will occur:
+  1st time: a warning and announcement to all teams in the RoboPits that your team was in
+            violation.
+  2nd time: a 500-point deduction from your final score (sum of the two runs) will be assessed.
+  3rd time: disqualification from the competition.
+
+7.5 The UCF Exolith Arena Comm Rules
+--------------------------------------
+1. Robot operations will be performed on WiFi Channels 1 and 11.
+2. Teams must be able to use and switch between Channel 1 and Channel 11 for the competition
+   within 15 minutes of being notified to accommodate real-time scheduling changes.
+3. If a team is on the wrong channel during their competition attempts, it will be disqualified
+   and required to power down.
+4. WiFi channels 1 and 11 will be monitored during the competition to ensure there are no other
+   teams transmitting on the assigned frequencies.
+5. Situational cameras are staged in the Exolith Arena. The camera joystick and display will be
+   located with the team in the MCC.
+
+7.6 UCF Communications [Exolith Arena – Mission Control Center (MCC)]
+-----------------------------------------------------------------------
+1. Handheld radios will be provided to each team in the Exolith Arena to link with their Mission
+   Control Center team during the setup period.
+2. Each team will provide the wireless link (access point, bridge, or wireless device) to their
+   robot, which means that each team will bring their own WiFi equipment/router and any required
+   power conversion devices.
+3. Teams must set their own network IP addresses to enable communication between their robot and
+   their MCC control computers through their own wireless link hosted in the Exolith Arena.
+4. A shelf will be set up next to the network drop at a height of 0 to 0.5 meters above the
+   walls of the arena and will be placed in a corner area. This shelf is where you will place
+   the Wireless Access Point (WAP) to communicate with your robot. During robot system
+   operations during the competition there will be dust accumulation in this area.
+5. In the arena, EXOLITH will provide an elevated network drop (male RJ-45 Ethernet plug) that
+   extends to the Mission Control Center, where EXOLITH will provide a network switch for the
+   teams to plug in their laptops. The network drop in the Exolith Arena will be elevated high
+   enough above the edge of the regolith bed wall to provide adequate radio frequency visibility
+   of the entire arena and will be located next to the shelf for the WAP.
+6. Network connections to the robot are ONLY allowed via the WAP router and the cable going to
+   the MCC. Any backchannel wireless connections via laptop or cellphone to the WAP router or
+   robot during setup or competition are expressly forbidden and will result in disqualification.
+7. EXOLITH will provide a standard US National Electrical Manufacturers Association (NEMA) 5-15
+   type, 110 VAC, 60 Hz electrical jack by the network drop. This power connection will be used
+   for the WAP router used for robot WiFi communications. This will be located no more than 1.5
+   meters from the shelf. The team must provide any conversion devices needed to interface team
+   access points or Mission Control Center computers or devices with the provided power source.
+8. Teams are strongly encouraged to develop a dust protection cover for their wireless access
+   point (WAP) that does not interfere with the radio frequency signal performance.
+9. During the setup phase, the teams will set up their access point and verify communication
+   with their robot from the Mission Control Center.
+
+See KSC Guidebook for KSC Communications Rules.
+
+================================================================================
+SECTION 8: UCF ON-SITE WEEK INFORMATION
+================================================================================
+
+Will be released 1–2 months before the competition (event dates: May 12–17, 2026).
