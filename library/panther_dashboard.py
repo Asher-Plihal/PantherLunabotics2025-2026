@@ -1,7 +1,7 @@
 """
 PantherDashboard — field viewer + telemetry panel for PantherLunabotics.
 
-Arena: 6.88 m wide × 5.0 m tall.
+Arena: 9.10 m wide × 4.57 m tall (8.10 m drivable + 1.00 m judge platform).
 Coordinate origin (0, 0) is the bottom-left corner.
 X increases to the right (east), Y increases upward (north).
 Heading: 0° = north, positive = clockwise (90° = east).
@@ -29,8 +29,8 @@ import sys
 import pygame
 
 # ── Arena geometry (metres) ───────────────────────────────────────────────────
-ARENA_W = 6.88
-ARENA_H = 5.0
+ARENA_W = 9.10   # 8.10 m drivable + 1.00 m judge platform (matches field.png)
+ARENA_H = 4.57
 
 # ── Robot footprint — read from RobotConfig; falls back to defaults if unavailable ──
 _onboard = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'onboard_software')
@@ -46,9 +46,10 @@ except ImportError:
 
 # ── Default window size ───────────────────────────────────────────────────────
 _DEFAULT_W   = 1400
-_DEFAULT_H   = 750
 _MIN_PANEL_W = 250
 _PAD         = 12
+# Height computed from width so the arena fills the window with no grey bars.
+_DEFAULT_H   = int((_DEFAULT_W - _MIN_PANEL_W - _PAD * 3) * ARENA_H / ARENA_W) + _PAD * 4
 
 # ── Colours ───────────────────────────────────────────────────────────────────
 _C = {
@@ -66,7 +67,7 @@ _C = {
 }
 
 # Path to the field image, relative to this file
-_FIELD_IMAGE = "../field.png"
+_FIELD_IMAGE = "../field/field.png"
 
 
 class PantherDashboard:
@@ -367,10 +368,36 @@ class PantherDashboard:
         else:
             self._screen.blit(txt, (cx + radius + 3, cy - txt.get_height() // 2))
 
+    def _wrap_value(self, text: str, max_w: int) -> list[str]:
+        """Split text into lines that each fit within max_w pixels (word-wrap, then char-wrap)."""
+        lines: list[str] = []
+        for word in text.split(' '):
+            if not lines:
+                lines.append(word)
+                continue
+            candidate = f"{lines[-1]} {word}"
+            if self._font_sm.size(candidate)[0] <= max_w:
+                lines[-1] = candidate
+            else:
+                lines.append(word)
+        # Char-wrap any single line still too wide (e.g. a long token with no spaces).
+        out: list[str] = []
+        for line in lines:
+            while self._font_sm.size(line)[0] > max_w and len(line) > 1:
+                cut = len(line)
+                while cut > 1 and self._font_sm.size(line[:cut])[0] > max_w:
+                    cut -= 1
+                out.append(line[:cut])
+                line = line[cut:]
+            out.append(line)
+        return out
+
     def _draw_panel(self) -> None:
-        """Render telemetry key-value entries in the right panel, one entry per line."""
+        """Render telemetry key-value entries in the right panel, wrapping long values."""
         if not self._telemetry:
             return
+        clip = pygame.Rect(self._panel_x, _PAD, self._panel_w, self._win_h - _PAD * 2)
+        self._screen.set_clip(clip)
         x           = self._panel_x + 10
         panel_right = self._panel_x + self._panel_w - 8
         row_h       = 20
@@ -386,8 +413,13 @@ class PantherDashboard:
                 cur_y += row_h
             else:
                 cur_y += row_h
-                self._screen.blit(value, (x + 10, cur_y))
-                cur_y += row_h
+                indent_x = x + 10
+                for line in self._wrap_value(val, panel_right - indent_x):
+                    wrapped = self._font_sm.render(line, True, _C["val"])
+                    self._screen.blit(wrapped, (indent_x, cur_y))
+                    cur_y += row_h
+
+        self._screen.set_clip(None)
 
 
 # ── DashboardView — runs as a separate process on the laptop ─────────────────
