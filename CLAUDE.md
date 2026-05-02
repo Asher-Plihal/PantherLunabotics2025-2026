@@ -4,8 +4,6 @@
 
 PantherLunabotics 2025-2026 is a robotics competition project (NASA Lunabotics) for Florida Institute of Technology. It is a distributed control system: Python runs on both the operator's laptop (mission control) and the robot's onboard Jetson computer, while a C++ layer (compiled via CMake/pybind11) handles low-level motor controller communication over CAN bus.
 
-The robot's job is to drive across a regolith arena, excavate ~45 cm of crushed-basalt simulant, carry it through an obstacle field, and deposit it in a scoring berm — autonomously where possible.
-
 ## Hardware Overview
 
 - **Onboard processor:** Jetson Orin Nano Super Developer Kit (Ubuntu 22.04, aarch64)
@@ -15,12 +13,6 @@ The robot's job is to drive across a regolith arena, excavate ~45 cm of crushed-
 - **Localization (primary):** UWB (Ultra-Wideband) trilateration — two Haorutech ULA1 anchors mounted on arena walls, two ULA1 tags on the robot. Provides absolute (x, y, heading) without GPS. See `uwbs/UWB.md` for details.
 - **Vision:** TBD. RPLidar A1 was used previously but is being removed; the team is currently evaluating a camera-based replacement. Treat any remaining lidar code as legacy.
 - **Operator interface:** Xbox-style gamepad on the laptop running `mission_control/control.py`.
-
-## Known Issues
-
-### CH340 Auto-Reset on UWB Tags
-
-Opening a serial port to a ULA1 tag can drop the ESP32 into download mode and hang it. The fix is implemented in `library/uwb_localizer.py` and the test scripts in `tests/`. See `uwbs/UWB.md` "Known Issues" for the full explanation.
 
 ## Feature Workflow
 
@@ -49,25 +41,6 @@ Every time you write code, review the implementation to ensure it is efficient, 
 
 Code is developed on a Windows laptop or via SSH into the Jetson computer running Ubuntu Linux. Many files and commands are Linux-specific and will only run correctly on the Jetson. All files exist on both machines as long as the GitHub repo is synced.
 
-**Robot (on Jetson):**
-```bash
-cd onboard_software
-python robot.py
-```
-
-**Mission Control (on laptop):**
-```bash
-cd mission_control
-python3 control.py
-```
-
-**Build C++ motor controller module (on Jetson):**
-```bash
-cd library/motor_controller
-mkdir build && cd build
-cmake ..
-make
-```
 The C++ module uses pybind11 to expose `MotorController` to Python.
 
 **Warning:** `library/motor_controller/CMakeLists.txt` has hardcoded paths (e.g. `/home/luna01/...`). These must be updated if the Jetson username or Python version changes.
@@ -88,30 +61,6 @@ Full guidebook: `ucf-lunabotics-guidebook-2026.txt` — **do not read the full g
 
 **Coordinate system:** Origin (0,0) at INGRESS corner (top-right, where the arena divider meets the right wall). +X = west (left across arena), +Y = south (down). Berm center is at X=6.80 m, Y=3.57 m from INGRESS. The fiducials bar is on the right wall at the INGRESS end.
 
-```
-Top-down view. Origin at INGRESS (top-right corner). X → left, Y → down.
-Bin width: 8.10 m. Bin height: 4.57 m. Judge platform: 1.00 m (left, not drivable).
-
-  INGRESS (0,0)
-  ┌──────────────────────────────────────────┬──────────────┐◄── Fiducials bar
-  │         OBSTACLE ZONE  (4.1 m wide)      │ STARTING     │ (right wall, 40 cm
-  │  ○ brown boulders (30-40 cm, min 3)      │ ZONE  2 m    │  above regolith,
-  │  ○ blue craters  (40-50 cm, min 3)       │ [Robot here] │  0.5–2.0 m from top)
-  │  Randomly placed before each run.        │              │
-  │                    ┌─────────────────────┘              │
-  │  CONSTRUCTION      │                                    │
-  │  ZONE              │    OBSTACLE ZONE (continued)       │
-  │  ┌──────────────┐  │                                    │
-  │  │  BERM ZONE   │  │                                    │
-  │  │  1.5 × 0.9 m │  │                                    │
-  │  │  (red box)   │  │                                    │
-  │  └──────────────┘  │         EXCAVATION ZONE  (4 m)     │
-  │    2.6 m from left │                                    │
-  └────────────────────┴────────────────────────────────────┘
-  ◄── 1.00 m ──►◄──────────────── 8.10 m ─────────────────►
-  (judge platform)
-```
-
 - Regolith: LHS-2E (Lunar Highlands Simulant), ~90 cm deep
 - **Excavation Zone overlaps with Starting Zone** — robot may excavate anywhere in either zone
 - Regolith for the berm must come from the Excavation Zone or Starting Zone only (not Obstacle or Construction zones)
@@ -125,29 +74,6 @@ Bin width: 8.10 m. Bin height: 4.57 m. Judge platform: 1.00 m (left, not drivabl
 - **Craters:** Min 3, varying depth/width, up to 40–50 cm wide/deep, in Obstacle Zone only
 - **No permanent central column** (that was the old NASA arena)
 - **Penalty:** 30 pts per rock contact or crater crossing in Obstacle Zone during autonomous operation (max 90 pts)
-
-### Robot Constraints
-- Max mass: 80 kg (includes all onboard comms/video equipment and navigational aid system)
-- Stowed volume: 150 cm × 75 cm × 75 cm (orientation team's choice; may expand after run starts)
-- E-stop button required: min 40 mm diameter COTS red button, highest practical location, one push stops motion AND disconnects batteries from all controllers
-- Resetting E-stop alone does NOT resume operation — a second deliberate action is required
-- Power logger must be wired between battery and kill switch (30-pt BCP Energy penalty if not)
-- Min 4 lifting points, clearly marked
-
-### Timing
-- 10 min setup, **15 min competition run**, 5 min removal
-- Robot must move within 5 min of timer start or run is terminated
-- Loss of locomotion for 5 min = run terminated
-- Two attempts allowed per team; scores from both runs are **added together** (cumulative)
-
-### Communications
-- IEEE 802.11 WiFi only, assigned SSID "Team_##", encryption required
-- Bandwidth measurements are **not performed at UCF** (only at KSC)
-- Each team provides their own WAP router placed on a shelf next to the EXOLITH network drop
-- All comms to robot via team WAP + EXOLITH ethernet cable to MCC only — **no backchannel wireless connections** (disqualification)
-- Bluetooth: Class 2 & 3 only (max 2.5 mW EIRP). Class 1, Zigbee/802.15.4 at 2.4 GHz, and power amplifiers all prohibited
-- External WiFi antenna required on robot
-- Competition runs on WiFi Channels 1 and 11; RoboPits use 5 GHz only (2.4 GHz off by default)
 
 ### Autonomy Rules
 **Allowed sensors:** IMUs (compass feature must be disabled), cameras, fiducial targets/beacons (starting zone only), infrared sensors, Hall Effect sensors, proximity detectors
@@ -172,14 +98,6 @@ Bin width: 8.10 m. Bin height: 4.57 m. Judge platform: 1.00 m (left, not drivabl
 
 Excavation/Dump/Travel points cannot be combined with Full Autonomy scores.
 Travel attempt must be made at the **start of the run** (first time leaving Starting Zone) for maximum points; a 50-pt penalty applies if attempted after traversing the Obstacle Zone in remote control.
-
-### Berm Scoring
-- Scored by volume within the 1.5 m × 0.9 m target area (volumetric LiDAR scan before/after)
-- Productivity by mass (BCP Mass): cm³ berm / min / kg × **4.4 coefficient**
-- Productivity by energy (BCP Energy): cm³ berm / min / Wh × **1.5 coefficient**
-- Camera bandwidth score: 0 cameras used = 120 pts, 1 camera = 60 pts, 2 cameras = 0 pts
-- Dust Tolerant Design: up to 60 pts (drivetrain enclosed 20 pts, active dust control 20 pts, custom sealing 20 pts)
-- Dust Free Operation: up to 30 pts (driving 5 pts, digging 20 pts, transfer without spillage 5 pts)
 
 ## Architecture
 

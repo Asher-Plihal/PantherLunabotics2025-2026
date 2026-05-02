@@ -1,10 +1,5 @@
 # Start Up commands
 
-## SSH into onboard rPi
-
-```bash
-ssh rmcnasa@100.76.221.110
-```
 ## SSH into onboard jetson
 
 ```bash
@@ -24,19 +19,26 @@ sudo ip link set can0 down
 sudo ip link set can0 type can bitrate 1000000
 sudo ip link set can0 txqueuelen 1000
 sudo ip link set can0 up
+```
+
+**Robot (on Jetson):**
+```bash
+cd onboard_software
 python robot.py
 ```
 
-## Restart the robot after power up
-
+**Mission Control (on laptop):**
 ```bash
-python robot.py
-```
-
-## Start mission control on laptop
-
-```bash
+cd mission_control
 python control.py
+```
+
+**Build C++ motor controller module (on Jetson):**
+```bash
+cd library/motor_controller
+mkdir build && cd build
+cmake ..
+make
 ```
 
 TODOs at comp:
@@ -48,6 +50,13 @@ Auger speeds
 Stage 2: Partial assist
 AutoTasks
 Auger full auto detect
+
+# At comp
+
+1. Make sure communication works
+2. Make sure all inputs work
+3. Tune drivetrain speed and auger speed
+4. Tune auger full activation 
 
 
 # TODO:
@@ -61,7 +70,6 @@ make for live tuning for auger
 
 1. Set up UWB
 2. Set up live PID tuning
-2. Figure out camera
 
 Make sure the can port is can0
 ---
