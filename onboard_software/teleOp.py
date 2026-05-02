@@ -40,6 +40,13 @@ class TeleOp:
         elif button == Button.A:
             if is_pressed:
                 self.robot.auger.set_auger_intake_angle()
+        elif button == Button.X:
+            if is_pressed:
+                task = self.robot.excavation_task
+                if task.is_running:
+                    task.stop_auto_task()
+                else:
+                    task.start_auto_task()
         elif button == Button.LB:
             if is_pressed:
                 if self.robot.auger.power > 0:
@@ -83,6 +90,9 @@ class TeleOp:
             elif not rt_pressed and self._rt_was_pressed:
                 self.robot.auger.set_auger_angle(self.robot.auger.get_auger_angle())
                 self._rt_was_pressed = False
+
+        # Run auto task state machines
+        self.robot.excavation_task.run_task_states()
 
         # Update motor controller (must come before telemetry reads)
         self.robot.motor_controller.update()
