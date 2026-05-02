@@ -144,36 +144,107 @@ transmitting on Channel 1 or 11 while in the RoboPits, the following will occur:
    with their robot from the Mission Control Center.
 
 ================================================================================
-SECTION 8: POSSIBLE ROUTERS
+SECTION 8: ROUTERS
 ================================================================================
 
-The following routers have been verified to meet all competition communication requirements
-(dual-band, independent 2.4 GHz disable, 20 MHz only channel width, WPA2, SSID broadcast,
-channels 1 and 11 selectable).
-
 --------------------------------------------------------------------------------
-Option 1 — TP-Link Archer A6 AC1200 (RECOMMENDED)
---------------------------------------------------------------------------------
-- Model: Archer A6 V2/V3
-- WiFi Standard: AC1200 (802.11ac)
-- Bands: 2.4 GHz (300 Mbps) + 5 GHz (867 Mbps)
-- LAN Ports: 4x Gigabit Ethernet
-- Antennas: 4 external
-- Price: ~$30–$35 (new)
-- Notes: Best pick. Gigabit LAN ports, 4 antennas, same TP-Link web UI.
-  Smart Connect must be disabled before per-band settings are accessible.
-
---------------------------------------------------------------------------------
-Option 2 — TP-Link Archer C54 AC1200
+TP-Link Archer C54 AC1200
 --------------------------------------------------------------------------------
 - Model: Archer C54
 - WiFi Standard: AC1200 (802.11ac)
 - Bands: 2.4 GHz (300 Mbps) + 5 GHz (867 Mbps)
 - LAN Ports: 4x Fast Ethernet (100 Mbps)
 - Antennas: 2 external
-- Price: ~$20–$25 (new)
 - Notes: Budget option. Meets all competition requirements. Fast Ethernet ports (not Gigabit) are sufficient for robot control traffic. Fewer antennas than the A6 but adequate for arena size.
 
 --------------------------------------------------------------------------------
-Admin Setup (same procedure for both models)
+Admin Setup
 --------------------------------------------------------------------------------
+
+================================================================================
+COMPETITION COMMUNICATIONS SETUP GUIDE
+================================================================================
+
+--------------------------------------------------------------------------------
+Equipment to Bring
+--------------------------------------------------------------------------------
+- TP-Link Archer C54 (or A6) router
+- Router power adapter (standard US 3-prong plug, works with EXOLITH outlet)
+- Ethernet cable (to connect router to EXOLITH network drop in arena)
+- Ethernet cable (to connect laptop to EXOLITH network switch at MCC)
+- USB-C or USB-A to Ethernet adapter for laptop (if no built-in ethernet port)
+- Printed manufacturer datasheets for any Bluetooth or non-2.4/5 GHz devices
+  on the robot (required at comm check — include part number, frequency, power)
+- Dust cover for the WAP router (strongly encouraged by the rules)
+
+--------------------------------------------------------------------------------
+Pre-Competition: Router Configuration (do this at home before the event)
+--------------------------------------------------------------------------------
+1. Connect a laptop to the router via ethernet
+2. Open browser, go to 192.168.0.1 (TP-Link admin page)
+3. Log in (credentials on sticker on bottom of router)
+4. Disable Smart Connect (required before per-band settings are accessible)
+5. Set 2.4 GHz Security to WPA2-PSK (AES) with a password
+6. Set 2.4 GHz Channel Width to 20 MHz only (NOT Auto or 40 MHz)
+7. Set 5 GHz Security to WPA2-PSK (AES) with a password
+8. Make sure SSID broadcast is ON (no hidden networks)
+9. Note: SSID will be changed to the assigned "Team_##" at check-in
+
+Pre-Competition: Jetson WiFi Profile Setup (do this on the Jetson before the event)
+------------------------------------------------------------------------------------
+1. Create an nmcli connection profile for the competition network:
+     nmcli con add type wifi ssid "Team_##" con-name "competition"
+     nmcli con modify "competition" wifi-sec.key-mgmt wpa-psk
+     nmcli con modify "competition" wifi-sec.psk "yourpassword"
+2. In robot_params.py, add the profile to NetworkConfig.NETWORKS and set
+   SELECTED_NETWORK to point to it before the competition run
+
+--------------------------------------------------------------------------------
+Comm Check Procedure (inspection before competing)
+--------------------------------------------------------------------------------
+NOTE: The comm check is done at a judges' station, NOT in the arena. EXOLITH
+does NOT provide their ethernet switch/network drop at the comm check station.
+You connect your laptop directly to the router (via WiFi or ethernet) to
+demonstrate robot control during the comm check.
+
+Steps:
+1. While waiting in queue: configure router to Channel 1, then turn WiFi OFF
+   until you reach the judges' station
+2. At the judges' station (15 minutes max):
+   a. Power on router, confirm it is on Channel 1
+   b. Power on robot, confirm Jetson connects to the router
+   c. Show judges all wireless emission equipment on the robot
+   d. Provide printed datasheets for any Bluetooth or non-2.4/5 GHz devices
+   e. Demonstrate live wireless control of the robot
+   f. Show judges you can turn off 2.4 GHz on the router
+3. If all steps pass, you are cleared to compete
+
+--------------------------------------------------------------------------------
+Competition Run: Arena Setup (during your 10-minute setup window)
+--------------------------------------------------------------------------------
+1. Place router on the arena shelf near the EXOLITH network drop
+2. Plug router power adapter into the EXOLITH wall outlet (NEMA 5-15, 110 VAC)
+3. Plug ethernet cable from router WAN/LAN port into the EXOLITH network drop
+4. At MCC: plug your laptop into the EXOLITH network switch via ethernet
+   (use USB-to-ethernet adapter if laptop has no ethernet port)
+5. Power on robot, confirm Jetson connects to router over WiFi
+6. Launch control.py on laptop, confirm TCP connection to robot at 100.87.109.7
+7. Verify robot responds to controller inputs
+8. Confirm router is on the assigned channel (Channel 1 or 11 as assigned)
+   - Must be able to switch channels within 15 minutes if notified
+
+--------------------------------------------------------------------------------
+Channel Assignment Rules (during competition)
+--------------------------------------------------------------------------------
+- You will be assigned Channel 1 or Channel 11 for your run
+- Must be able to switch between them within 15 minutes of being notified
+- Wrong channel during a run = disqualification and required power-down
+- Channels 1 and 11 are actively monitored by judges during competition
+
+--------------------------------------------------------------------------------
+RoboPits Rules (while not competing)
+--------------------------------------------------------------------------------
+- Turn off 2.4 GHz on your router by default in the pits
+- Use 5 GHz or ethernet cable for any pit testing
+- If you need 2.4 GHz in the pits, get authorization from the PitBoss first
+  (allowed only on Channel 6, for a short period)
