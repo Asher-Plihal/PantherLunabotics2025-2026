@@ -142,3 +142,38 @@ transmitting on Channel 1 or 11 while in the RoboPits, the following will occur:
    point (WAP) that does not interfere with the radio frequency signal performance.
 9. During the setup phase, the teams will set up their access point and verify communication
    with their robot from the Mission Control Center.
+
+================================================================================
+SECTION 8: POSSIBLE ROUTERS
+================================================================================
+
+The following routers have been verified to meet all competition communication requirements
+(dual-band, independent 2.4 GHz disable, 20 MHz only channel width, WPA2, SSID broadcast,
+channels 1 and 11 selectable).
+
+--------------------------------------------------------------------------------
+Option 1 — TP-Link Archer A6 AC1200 (RECOMMENDED)
+--------------------------------------------------------------------------------
+- Model: Archer A6 V2/V3
+- WiFi Standard: AC1200 (802.11ac)
+- Bands: 2.4 GHz (300 Mbps) + 5 GHz (867 Mbps)
+- LAN Ports: 4x Gigabit Ethernet
+- Antennas: 4 external
+- Price: ~$30–$35 (new)
+- Notes: Best pick. Gigabit LAN ports, 4 antennas, same TP-Link web UI.
+  Smart Connect must be disabled before per-band settings are accessible.
+
+--------------------------------------------------------------------------------
+Option 2 — TP-Link Archer C54 AC1200
+--------------------------------------------------------------------------------
+- Model: Archer C54
+- WiFi Standard: AC1200 (802.11ac)
+- Bands: 2.4 GHz (300 Mbps) + 5 GHz (867 Mbps)
+- LAN Ports: 4x Fast Ethernet (100 Mbps)
+- Antennas: 2 external
+- Price: ~$20–$25 (new)
+- Notes: Budget option. Meets all competition requirements. Fast Ethernet ports (not Gigabit) are sufficient for robot control traffic. Fewer antennas than the A6 but adequate for arena size.
+
+--------------------------------------------------------------------------------
+Admin Setup (same procedure for both models)
+--------------------------------------------------------------------------------
