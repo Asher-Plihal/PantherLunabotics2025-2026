@@ -2,12 +2,33 @@
 UWB distance print test — connects to both tag serial ports and prints the
 four raw distances (left/right tag to anchor A/B) to the terminal.
 
-Before running:
-    dmesg | grep ttyUSB   # find port assignments
-    /dev/ttyUSB0 is reserved for LiDAR; tags are typically ttyUSB1 and ttyUSB2.
-
 Run:  python tests/test_uwb_localizer.py
 Stop: Ctrl+C
+
+═══════════════════════════════════════════════════════════════════
+UWB MODULE CHEAT SHEET
+═══════════════════════════════════════════════════════════════════
+
+DISTANCE VARIABLES  (printed below each loop tick)
+  d_LA  = T0 (Tag LEFT)  → A0 (Anchor 0)
+  d_LB  = T0 (Tag LEFT)  → A1 (Anchor 1)
+  d_RA  = T1 (Tag RIGHT) → A0 (Anchor 0)
+  d_RB  = T1 (Tag RIGHT) → A1 (Anchor 1)
+
+HOW TO CHECK WHICH USBs ARE PLUGGED IN
+  # See all CH340/USB-serial devices the kernel detected (with port names):
+  dmesg | grep ttyUSB
+
+  # List currently present serial ports:
+  ls /dev/ttyUSB*
+
+  # See the stable UWB symlinks (set up by udev rules):
+  ls -la /dev/ttyUWB*
+
+  # Watch live as you plug/unplug:
+  udevadm monitor --udev --subsystem-match=tty
+
+═══════════════════════════════════════════════════════════════════
 """
 
 import sys

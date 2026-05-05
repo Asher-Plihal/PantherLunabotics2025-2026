@@ -434,6 +434,14 @@ The ULA1 outputs raw unfiltered distances, so both EMA and EKF operate directly 
 4. **Power bank auto-shutoff:** The ULA1 has no keep-alive switch. If anchors shut off during a match, investigate power banks with always-on modes or add a USB dummy load.
 5. ~~**LED behavior:**~~ Resolved — see LED Status Indicators section for full color table and blink pattern meanings.
 
+## Testing Notes
+
+### Concrete Floors Kill Ranging
+
+UWB ranging fails or produces all-`ffffffff` readings when modules are placed directly on concrete. Concrete reflects UWB signals strongly — the floor-reflected path arrives only nanoseconds after the direct path, which confuses the DWM1000's time-of-arrival calculation.
+
+**Fix:** Always elevate modules at least 10 cm off hard floors during bench testing (table, box, etc.). This is not a concern during competition — the arena floor is LHS-2E regolith simulant (~90 cm deep) which absorbs UWB and does not cause this effect.
+
 ## Known Issues
 
 ### CH340 Auto-Reset on Serial Port Open

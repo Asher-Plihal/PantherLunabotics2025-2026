@@ -5,4 +5,15 @@
     "python.analysis.extraPaths": [
         "${workspaceFolder}/library/motor_controller",
     ],
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#1a472a",
+        "titleBar.activeForeground": "#ffffff",
+        "titleBar.inactiveBackground": "#123320",
+        "titleBar.inactiveForeground": "#cccccc",
+        "activityBar.background": "#1a472a",
+        "activityBar.foreground": "#ffffff",
+        "activityBar.activeBorder": "#ffffff",
+        "minimap.background": "#1a472a",
+        "editorOverviewRuler.border": "#1a472a"
+    }
 }

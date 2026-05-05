@@ -122,7 +122,6 @@ class UWBLocalizer:
             baud:       Baud rate — 115200 matches the ESP32/DWM1000 (ULA1) default.
         """
         self._left_serial  = self._open_port(left_port,  baud)
-        time.sleep(3)  # small delay between resets to avoid USB issues
         self._right_serial = self._open_port(right_port, baud)
 
     @staticmethod
@@ -132,12 +131,14 @@ class UWBLocalizer:
         ser.port = port
         ser.baudrate = baud
         ser.timeout = 1.0
-        ser.dtr = False  # keep GPIO0 HIGH — prevents ESP32 booting into download mode
+        ser.dtr = False
         ser.open()
+        ser.dtr = False  # re-apply — driver may briefly assert DTR during open(), pulling GPIO0 LOW
+        time.sleep(0.5)  # let the capacitor transient fully dissipate before reset fires
         ser.rts = True   # EN LOW → hold in reset
         time.sleep(0.1)
-        ser.rts = False  # EN HIGH → release, ESP32 boots into ranging firmware
-        time.sleep(1.0)  # wait for boot
+        ser.rts = False  # EN HIGH → release; GPIO0 is now stable HIGH → normal boot
+        time.sleep(1.5)  # wait for boot + ranging init
         return ser
 
     # -----------------------------------------------------------------------
