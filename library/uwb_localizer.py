@@ -388,7 +388,10 @@ class UWBLocalizer:
     def _run(self) -> None:
         """Loop calling update() from hardware until the stop event is set."""
         while not self._stop_event.is_set():
-            self.update()
+            result = self.update()
+            if result is None:
+                # Avoid spinning at 100% CPU when reads fail (serial timeout, bad packet, etc.)
+                time.sleep(0.01)
     
     # -----------------------------------------------------------------------
     # Math — helper functions
@@ -415,6 +418,10 @@ class UWBLocalizer:
         Returns None if no valid packet is found or the port errors.
         """
         try:
+            # Discard any stale bytes that accumulated while this port wasn't being read.
+            # Without this, the background thread can fall behind the 10 Hz output rate and
+            # end up reading packets that are seconds old, causing frozen distance values.
+            ser.reset_input_buffer()
             for _ in range(5):  # read up to 5 lines to find a valid mc packet
                 raw = ser.readline()
                 if not raw:
