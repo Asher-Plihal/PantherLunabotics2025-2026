@@ -481,6 +481,23 @@ This is implemented in `tests/test_uwb_hardware.py` and `tests/test_uwb_reading_
 
 **Fix:** `sudo apt remove brltty`
 
+### SNIFF Mode Blocks Reception at Short Preambles
+
+**Problem:** The DW1000 library's `setDefaults()` enables SNIFF mode via `setSNIFFMode(1, 1, 128)`. SNIFF mode alternates the receiver between a brief listen window (~500 ns at PRF 16 MHz) and a long sleep (~130 µs). With long preambles (1024 symbols = ~16 µs at PRF 64 MHz), the sleep period is short enough that repeated POLL transmissions from a tag will eventually be caught. With short preambles (64 symbols = ~4 µs at PRF 16 MHz), the preamble is narrower than the sleep period — the receiver is almost always asleep when a frame arrives. Tags can still transmit POLLs that anchors eventually catch (POLLs repeat), but the one-shot RESP from anchor to tag is almost always missed, resulting in all `mc 00 ffffffff` output with no successful ranges.
+
+**Cause:** `setDefaults()` is designed for battery-powered IoT devices that need to conserve power. SNIFF mode is not appropriate for a continuously-ranging robot application.
+
+**Fix:** Call `DW1000.setSNIFFMode(0, 0, 0)` after `setDefaults()` and before `commitConfiguration()` in both tag and anchor firmware. This is already done in `RTLS_T0.ino` and `RTLS_Anchor.ino`.
+
+```cpp
+DW1000.setDefaults();
+DW1000.setSNIFFMode(0, 0, 0);  // disable — short preambles need continuous RX
+// ... other settings ...
+DW1000.commitConfiguration();
+```
+
+**Symptom signature:** All `mc` packets show `mask=00` and all distances `ffffffff` even though all 4 modules are powered with correct firmware and matching configurations. Anchor serial logs show `recv time out 0x82` (received POLL, sent RESP, but FINAL never arrived) — confirming the anchor received the tag's POLL but the tag missed the anchor's RESP.
+
 ## Integration Plan
 
 1. Run `tests/dashboard.py` to validate that the `UWBLocalizer` math in `library/uwb_localizer.py` produces correct (x, y, theta) with manual test values.

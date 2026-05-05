@@ -76,6 +76,11 @@ void setup()
     DW1000.setDataRate(DW1000.TRX_RATE_6800KBPS);
     DW1000.setPulseFrequency(DW1000.TX_PULSE_FREQ_16MHZ);
     DW1000.setPreambleLength(DW1000.TX_PREAMBLE_LEN_64);
+    // setDefaults() enables SNIFF mode (setSNIFFMode(1,1,128)) which alternates the
+    // receiver between a tiny listen window and a long sleep. At preamble 64 / PRF 16 MHz
+    // the preamble is only ~4 µs — far shorter than the SNIFF off-period, so the
+    // receiver almost never catches it. Disable SNIFF for continuous reception.
+    DW1000.setSNIFFMode(0, 0, 0);
     DW1000.setDeviceAddress(Dev_Addr);
     DW1000.setNetworkId(0x1234);
     DW1000.commitConfiguration();
@@ -354,7 +359,8 @@ void loop()
                 receiver();
                 //Serial.println("T1: cycle done, waiting for T0...");
             } else {
-                DW1000.idle();//测距周期结束，进入空闲模式
+                // T0: cycle done, stay in last TX state and let the 200ms watchdog
+                // start the next cycle. No idle() needed — avoids a DW1000 re-init.
             }
             noteActivity();//记录当前时间（喂狗）
         }
