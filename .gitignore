@@ -11,6 +11,7 @@ lunaenv/
 .venv/
 .env/
 .lunenv/
+.vscode/
 
 # ROS2 colcon build artifacts
 **/build/
