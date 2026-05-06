@@ -94,6 +94,7 @@ class ExcavationTask(AutoTask):
 
             case ExcavationState.DONE:
                 self._is_finished = True
+                print("[ExcavationTask] Excavation finished")
                 self.stop_auto_task()
 
     def claim_subsystem_ownership(self) -> None:

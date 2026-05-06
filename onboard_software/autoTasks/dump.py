@@ -95,6 +95,7 @@ class DumpTask(AutoTask):
 
             case DumpState.DONE:
                 self._is_finished = True
+                print("[DumpTask] Dump finished")
                 self.stop_auto_task()
 
     def claim_subsystem_ownership(self) -> None:
