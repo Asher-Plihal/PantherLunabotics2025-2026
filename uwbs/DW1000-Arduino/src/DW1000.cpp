@@ -2793,7 +2793,7 @@ uint16_t DW1000Class::ReadSwitch(uint8_t role)
       LedCtl(T0_ADDR);
       return T0_ADDR;
     }
-    else if((sw_addr1==1)&&(sw_addr2==1)&&(sw_addr3==0))
+    else if((sw_addr1==1)&&(sw_addr2==0)&&(sw_addr3==1))
     {
       LedCtl(T1_ADDR);
       return T1_ADDR;
