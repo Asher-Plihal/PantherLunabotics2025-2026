@@ -43,7 +43,7 @@ class RobotConfig:
     useLidar = False
 
     drivetrainMode = DriveMode.ARCADE
-    drivetrainMaxSpeed = 0.2
+    drivetrainMaxSpeed = 0.4
     usePIDDrive = False
 
     # UWB Localizer — anchor positions (metres, arena coordinates) and tag geometry
