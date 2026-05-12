@@ -84,6 +84,8 @@ class NetworkConfig:
     NETWORKS = {
         "FLTech-Guest": "FLTech-Guest",
         "Ashers-HS": "Me phone ",
+        "Router_5": "Team_9_5G",
+        "Router_2.4" "Team_9"
     }
 
 
