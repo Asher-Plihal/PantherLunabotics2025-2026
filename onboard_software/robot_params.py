@@ -25,7 +25,7 @@ class RobotConfig:
     ROBOT_WIDTH  = 1.108 # Meters from left to right
 
     # Network configuration
-    Robot_IP = "100.87.109.7"
+    Robot_IP = "192.168.0.101" #Tailscale 100.87.109.7
     Robot_Port = 8080
     Robot_CAN_Interface = "can0"
 
@@ -77,13 +77,15 @@ class NetworkConfig:
 
     # Select which network to connect to on startup.
     # The key must match one of the entries in NETWORKS below.
-    SELECTED_NETWORK = "FLTech-Guest"
+    SELECTED_NETWORK = "Router_5"
 
     # Maps a friendly name to the nmcli connection profile name saved on the Jetson.
     # Add or rename entries to match what you see in `nmcli connection show`.
     NETWORKS = {
         "FLTech-Guest": "FLTech-Guest",
         "Ashers-HS": "Me phone ",
+        "Router_5": "Team_9_5G",
+        "Router_2.4": "Team_9"
     }
 
 

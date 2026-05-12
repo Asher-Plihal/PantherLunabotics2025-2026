@@ -13,6 +13,9 @@ lunaenv/
 .lunenv/
 .vscode/
 
+# Ignore VS Code workspace settings
+.vscode/settings.json
+
 # ROS2 colcon build artifacts
 **/build/
 install/

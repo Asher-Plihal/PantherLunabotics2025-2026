@@ -36,7 +36,7 @@ class Drivetrain(Subsystem):
 
         self.mc = mc
         self._logger = telemetry_logger.TelemetryLogger("drivetrain")
-        self.motor_ids = [3, 7, 2, 1] # FL, FR, BL, BR
+        self.motor_ids = [3, 7, 2, 1] # FL, FR, BL, BR #, 4,
         self.motor_labels = list(zip(["FL", "FR", "BL", "BR"], self.motor_ids))
 
         config = motor_controller.MotorConfig()

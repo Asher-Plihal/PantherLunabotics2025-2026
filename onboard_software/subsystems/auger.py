@@ -36,7 +36,7 @@ class Auger(Subsystem):
         """Configure the auger motor, reset its position encoder, and optionally start logging."""
         super().__init__()
         self.mc = mc
-        self.motor_id = 4
+        self.motor_id = 4 #7
         self._logger = telemetry_logger.TelemetryLogger("auger")
 
         config = motor_controller.MotorConfig()
