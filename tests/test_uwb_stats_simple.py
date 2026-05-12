@@ -1,16 +1,7 @@
+#!/usr/bin/env python3
 """
-UWB ranging statistics test — HaoruTech ULA1 (ESP32 + DWM1000).
-
-Collects distance readings from both tags and prints per-anchor statistics
-(mean, median, stdev, min, max) on Ctrl+C. Use this to evaluate ranging
-accuracy and noise for a static setup.
-
-Before running: plug in both tag modules and check port assignments:
-    dmesg | grep ttyUSB
-Then update LEFT_PORT and RIGHT_PORT below to match.
-
-Run:  python test_uwb_stats.py
-Stop: Ctrl+C — prints stats summary on exit
+UWB ranging statistics test — reads raw serial from both tags without RTS/DTR toggles.
+Just opens the ports and reads what's already running.
 """
 
 import statistics
@@ -21,8 +12,8 @@ from typing import Optional
 
 import serial
 
-LEFT_PORT  = "/dev/ttyUSB0"   # Tag LEFT  (T0)
-RIGHT_PORT = "/dev/ttyUSB1"   # Tag RIGHT (T1) — set to anchor port if testing with one tag
+LEFT_PORT  = "/dev/ttyUSB0"
+RIGHT_PORT = "/dev/ttyUSB1"
 BAUD       = 115200
 
 _samples: dict[tuple[str, str], list[float]] = defaultdict(list)
@@ -30,12 +21,7 @@ _lock = threading.Lock()
 
 
 def parse(line: str) -> Optional[tuple[Optional[float], Optional[float]]]:
-    """
-    Parse one ULA1 'mc' packet to (dist_anchor_A, dist_anchor_B) in metres.
-
-    Validates the MASK field and rejects ffffffff (invalid) ranges.
-    Returns None if the line is not a valid mc packet or all ranges are invalid.
-    """
+    """Parse one ULA1 'mc' packet to (dist_A0, dist_A1) in metres."""
     parts = line.split()
     if len(parts) < 4 or parts[0] != "mc":
         return None
@@ -52,50 +38,11 @@ def parse(line: str) -> Optional[tuple[Optional[float], Optional[float]]]:
     except (ValueError, IndexError):
         return None
 
-# -------------------------------
-# Simple 1D Kalman Filter (per anchor)
-# -------------------------------
-class Kalman1D:
-    def __init__(self, Q=0.01, R=0.10):
-        self.x = None  # estimate
-        self.P = 1.0   # uncertainty
-        self.Q = Q     # process noise
-        self.R = R     # measurement noise
-
-    def update(self, z):
-        if self.x is None:
-            # initialize filter at first measurement
-            self.x = z
-            return z
-
-        # Prediction
-        self.P += self.Q
-
-        # Kalman Gain
-        K = self.P / (self.P + self.R)
-
-        # Update
-        self.x += K * (z - self.x)
-        self.P *= (1 - K)
-
-        return self.x
-
-# Kalman filter per tag-anchor key
-_filters: dict[tuple[str, str], Kalman1D] = defaultdict(Kalman1D)
 
 def read_loop(port: str, label: str) -> None:
-    """Read serial, parse tag-originated mc packets, accumulate samples, print live readings."""
+    """Read serial, parse packets, accumulate samples."""
     try:
-        ser = serial.Serial()
-        ser.port = port
-        ser.baudrate = BAUD
-        ser.timeout = 1.0
-        ser.dtr = False  # keep GPIO0 HIGH — prevents ESP32 booting into download mode
-        ser.open()
-        ser.rts = True   # EN LOW → hold in reset
-        time.sleep(0.1)
-        ser.rts = False  # EN HIGH → release, ESP32 boots into ranging firmware
-        time.sleep(1.0)  # wait for boot
+        ser = serial.Serial(port=port, baudrate=BAUD, timeout=1.0)
         print(f"[{label}] connected on {port}")
     except serial.SerialException as e:
         print(f"[{label}] failed to open {port}: {e}")
@@ -107,7 +54,7 @@ def read_loop(port: str, label: str) -> None:
             if not line.startswith("mc"):
                 continue
 
-            # Skip anchor-originated packets — not valid distances
+            # Skip anchor-originated packets
             parts_line = line.split()
             if parts_line and not parts_line[-1].startswith("t"):
                 continue
@@ -119,19 +66,14 @@ def read_loop(port: str, label: str) -> None:
             dist_a, dist_b = result
             parts_out = []
             if dist_a is not None:
-                key = (label, "A0")
-                dist_a_f = _filters[key].update(dist_a)
-                parts_out.append(f"A0={dist_a_f:.3f}")
+                parts_out.append(f"A0={dist_a:.3f}")
                 with _lock:
-                    _samples[key].append(dist_a_f)
+                    _samples[(label, "A0")].append(dist_a)
             if dist_b is not None:
-                key = (label, "A1")
-                dist_b_f = _filters[key].update(dist_b)
-                parts_out.append(f"A1={dist_b_f:.3f}")
+                parts_out.append(f"A1={dist_b:.3f}")
                 with _lock:
-                    _samples[key].append(dist_b_f)
+                    _samples[(label, "A1")].append(dist_b)
             print(f"[{label}]  {', '.join(parts_out)} m")
-
         except Exception as e:
             print(f"[{label}] error: {e}")
             break
@@ -160,7 +102,7 @@ def print_stats() -> None:
 
 
 threading.Thread(target=read_loop, args=(LEFT_PORT,  "LEFT"),  daemon=True).start()
-time.sleep(3.0)  # stagger resets — simultaneous RTS pulses cause one module to boot into download mode
+time.sleep(0.5)
 threading.Thread(target=read_loop, args=(RIGHT_PORT, "RIGHT"), daemon=True).start()
 
 print("Collecting UWB ranging stats — Ctrl+C to stop and print summary\n")

@@ -69,9 +69,9 @@ void setup()
     //初始化参数
     DW1000.newConfiguration();
     DW1000.setDefaults();
-    DW1000.setDataRate(DW1000.TRX_RATE_6800KBPS);
-    DW1000.setPulseFrequency(DW1000.TX_PULSE_FREQ_16MHZ);
-    DW1000.setPreambleLength(DW1000.TX_PREAMBLE_LEN_64);
+    DW1000.setDataRate(DW1000.TRX_RATE_850KBPS);
+    DW1000.setPulseFrequency(DW1000.TX_PULSE_FREQ_64MHZ);
+    DW1000.setPreambleLength(DW1000.TX_PREAMBLE_LEN_256);
     // setDefaults() enables SNIFF mode (setSNIFFMode(1,1,128)) which alternates the
     // receiver between a tiny listen window and a long sleep. At preamble 64 / PRF 16 MHz
     // the preamble is only ~4 µs — far shorter than the SNIFF off-period, so the
@@ -313,12 +313,14 @@ void loop()
             timeRespReceived.setTimestamp(data + 15);//接收FINLA数据中的RESP接收时间戳
             timeFinalSent.setTimestamp(data + 20);   //接收FINLA数据中的FINAL发送时间戳
             computeTOF(); //用6个时间戳计算飞行时间TOF
-            double distance = timeComputedRange.getAsMeters();//计算距离
-            //Serial.print("Range1: "); Serial.print(distance); Serial.println(" m");
-            distance=DW1000.correctRange(distance);//校准距离值
+            double rawDistance = timeComputedRange.getAsMeters();//计算原始距离
+            double correctedDistance = DW1000.correctRange(rawDistance);//校准距离值
             uint16_t tag_address=((uint16_t)data[8])<<8|data[7];//记录标签短地址
-            transmitRangeReport(tag_address,distance);//发送REPORT消息
-            // Serial.print("Range: "); Serial.print(distance); Serial.print(" m");
+            transmitRangeReport(tag_address, correctedDistance);//发送REPORT消息
+            Serial.print("RAW= "); Serial.print(rawDistance, 6);
+            Serial.print(" m, CORRECTED= "); Serial.print(correctedDistance, 6);
+            Serial.print(" m, TAG=0x"); Serial.println(tag_address, HEX);
+            // Serial.print("Range: "); Serial.print(correctedDistance); Serial.print(" m");
             // Serial.print("\t RX power: "); Serial.print(DW1000.getReceivePower()); Serial.println(" dBm");
             noteActivity();//记录当前时间（喂狗）
         }
