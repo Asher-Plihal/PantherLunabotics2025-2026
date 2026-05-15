@@ -138,10 +138,25 @@ class Drivetrain(Subsystem):
     def calculate_arcade_powers(self, y, x, turning):
         """Convert (y, x, turning) inputs to mecanum wheel powers, normalised so no wheel exceeds 1.0."""
         denominator = max(abs(y) + abs(x) + abs(turning), 1)
-        front_left_power = (-y - x - turning) / denominator
-        front_right_power = (y - x - turning) / denominator
-        back_left_power = (-y + x - turning) / denominator
-        back_right_power = (y + x - turning) / denominator
+        # front_left_power = (-y - x - turning) / denominator
+        # front_right_power = (y - x - turning) / denominator
+        # back_left_power = (-y + x - turning) / denominator
+        # back_right_power = (y + x - turning) / denominator
+        if abs(turning) > 0:
+            front_left_power = - turning / denominator
+            front_right_power = - turning / denominator
+            back_left_power = - turning / denominator
+            back_right_power = - turning / denominator
+        elif abs(x) > abs(y):
+            front_left_power = - x / denominator
+            front_right_power = - x / denominator
+            back_left_power = x / denominator
+            back_right_power = x /denominator
+        else:
+            front_left_power = - y /denominator
+            front_right_power = y / denominator
+            back_left_power = - y / denominator
+            back_right_power = y / denominator
 
         return front_left_power, front_right_power, back_left_power, back_right_power
 

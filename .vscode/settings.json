@@ -5,4 +5,32 @@
     "python.analysis.extraPaths": [
         "${workspaceFolder}/library/motor_controller",
     ],
+<<<<<<< HEAD
+=======
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#1a472a",
+        "titleBar.activeForeground": "#ffffff",
+        "titleBar.inactiveBackground": "#123320",
+        "titleBar.inactiveForeground": "#cccccc",
+        "activityBar.background": "#1a472a",
+        "activityBar.foreground": "#ffffff",
+        "activityBar.activeBorder": "#ffffff",
+        "minimap.background": "#1a472a",
+        "editorOverviewRuler.border": "#1a472a"
+    }
+}
+{
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#1a6b3c",
+    "titleBar.inactiveBackground": "#154f2d",
+    "titleBar.activeForeground": "#ffffff",
+    "titleBar.inactiveForeground": "#cccccc",
+    "activityBar.background": "#1a6b3c",
+    "activityBar.foreground": "#ffffff",
+    "statusBar.background": "#155c33",
+    "statusBar.foreground": "#ffffff",
+    "statusBar.noFolderBackground": "#155c33",
+    "statusBar.debuggingBackground": "#0f3d22"
+  }
+>>>>>>> 4a8ccea (moving jetson edits to rpi)
 }

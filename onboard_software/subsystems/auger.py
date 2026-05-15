@@ -19,8 +19,8 @@ _ACTUATOR_BAUD = 9600
 
 # Preset positions in inches
 _TRANSPORT_INCHES = 0.0
-_INTAKE_INCHES    = 2.0
-_DUMP_INCHES      = 1.0
+_INTAKE_INCHES    = 2.7
+_DUMP_INCHES      = 1.5
 _MIN_ACTUATOR_INCHES = 0.0
 _MAX_ACTUATOR_INCHES = 4.0
 
@@ -59,6 +59,7 @@ class Auger(Subsystem):
         self._actuator_moving: bool = False
         self._last_actuator_target: float | None = None
         self._pending_actuator_target: float | None = None
+        self._last_send_time: float = 0.0
         try:
             self._actuator = serial.Serial(_ACTUATOR_PORT, _ACTUATOR_BAUD, timeout=0)
             time.sleep(2)  # allow Arduino to boot
@@ -107,20 +108,36 @@ class Auger(Subsystem):
         """Return the last position reported by the linear actuator in inches."""
         return self._actuator_pos
 
+    @property
+    def is_actuator_moving(self) -> bool:
+        """Return True while the actuator is still executing a MOVE command."""
+        return self._actuator_moving
+
+    _ACTUATOR_RESEND_INTERVAL_S = 0.25
+
     def update_actuator(self) -> None:
         """Flush any pending MOVE command and drain incoming serial; must be called each cycle.
 
-        Sending is rate-limited to once per cycle, so no matter how fast the user
-        triggers preset buttons the Arduino's serial buffer can never be overrun.
+        Sending is rate-limited to once per cycle. If the actuator is still moving
+        and the target hasn't changed, the command is re-sent every 0.25 s so that
+        the Arduino's SoftwareSerial (which drops bytes while it is transmitting
+        POS updates) eventually receives interrupt commands like a freeze.
         """
         if self._actuator is None:
             return
 
-        # Send at most one MOVE per cycle, only if the target actually changed.
-        if self._pending_actuator_target is not None and self._pending_actuator_target != self._last_actuator_target:
-            self._actuator.write(f"MOVE {self._pending_actuator_target:.2f}\n".encode())
-            self._last_actuator_target = self._pending_actuator_target
-            self._actuator_moving = True
+        now = time.monotonic()
+        if self._pending_actuator_target is not None:
+            new_target = self._pending_actuator_target != self._last_actuator_target
+            stale_resend = (
+                self._actuator_moving
+                and now - self._last_send_time >= self._ACTUATOR_RESEND_INTERVAL_S
+            )
+            if new_target or stale_resend:
+                self._actuator.write(f"MOVE {self._pending_actuator_target:.2f}\n".encode())
+                self._last_actuator_target = self._pending_actuator_target
+                self._last_send_time = now
+                self._actuator_moving = True
         self._pending_actuator_target = None
 
         while self._actuator.in_waiting:

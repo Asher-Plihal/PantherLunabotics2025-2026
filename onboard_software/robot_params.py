@@ -25,7 +25,11 @@ class RobotConfig:
     ROBOT_WIDTH  = 1.108 # Meters from left to right
 
     # Network configuration
+<<<<<<< HEAD
     Robot_IP = "192.168.0.101" #Tailscale 100.87.109.7
+=======
+    Robot_IP = "192.168.0.102" #Tailscale 100.87.109.7
+>>>>>>> 4a8ccea (moving jetson edits to rpi)
     Robot_Port = 8080
     Robot_CAN_Interface = "can0"
 
@@ -43,7 +47,11 @@ class RobotConfig:
     useLidar = False
 
     drivetrainMode = DriveMode.ARCADE
+<<<<<<< HEAD
     drivetrainMaxSpeed = 0.4
+=======
+    drivetrainMaxSpeed = 0.55
+>>>>>>> 4a8ccea (moving jetson edits to rpi)
     usePIDDrive = False
 
     # UWB Localizer — anchor positions (metres, arena coordinates) and tag geometry
@@ -84,8 +92,13 @@ class NetworkConfig:
     NETWORKS = {
         "FLTech-Guest": "FLTech-Guest",
         "Ashers-HS": "Me phone ",
+<<<<<<< HEAD
         "Router_5": "Team_9_5G",
         "Router_2.4": "Team_9"
+=======
+        "Router_5": "Team_09_5G",
+        "Router_2.4": "Team_09"
+>>>>>>> 4a8ccea (moving jetson edits to rpi)
     }
 
 
