@@ -1,61 +1,21 @@
-# Start Up commands
+# Panther Lunabotics 2025–2026
 
-## SSH into onboard rPi
+Software for Panther Robotics' entry in the **NASA Lunabotics Challenge**: a robot that excavates regolith simulant, navigates an obstacle arena autonomously or by remote control, and deposits material into a target berm.
 
-```bash
-ssh rmcnasa@100.76.221.110
-```
-## SSH into onboard jetson
+## Architecture
 
-```bash
-ssh luna01@100.87.109.7
-```
+A distributed control system in **Python (type-hinted, 3.10+) and C++**:
 
-## Start venv on onboard server
+- **Mission control** (operator laptop) ↔ **Jetson Orin Nano** (onboard) over a custom TCP/IP protocol with ACKs and a 20 ms safety heartbeat
+- **C++ motor layer** (pybind11 + CMake) driving CAN-bus motors; Archimedean-screw drivetrain with arcade/tank teleop and nonlinear response curves
+- **Perception:** RPLiDAR + camera streams on daemon threads; SLAM (`src/panther_slam`) and UWB localization in progress
+- **Telemetry:** per-subsystem CSV logging; ownership locks keep TeleOp and autonomous tasks from commanding the same hardware
+- `robot_params.py` is the single source of truth for robot configuration
 
-```bash
-source lunaenv/bin/activate
-```
+## Background
 
-## Start up the robot power up
+Software written by two Panther Robotics programmers working with a PhD student mentor. The project was presented at the FIT Senior Design Showcase 2026, and the team submitted the NASA Systems Engineering Paper. The team competed at the [UCF Florida Space Institute's Exolith Lab](https://sciences.ucf.edu/class/) Challenge in Orlando — the top 10 scoring teams there advance to the Lunabotics finals at NASA's Kennedy Space Center.
 
-```bash
-sudo ip link set can0 down
-sudo ip link set can0 type can bitrate 1000000
-sudo ip link set can0 txqueuelen 1000
-sudo ip link set can0 up
-python robot.py
-```
+## Operations & setup
 
-## Restart the robot after power up
-
-```bash
-python robot.py
-```
-
-## Start mission control on laptop
-
-```bash
-python control.py
-```
-
-# Blockers:
-
-1. Waiting for UWB parts to arrive
-2. Full scale robot to be built
-
-# TODO:
-
-Make sure joystick drive works with update motor power directions
-test robot auger is full
-
-1. Finish up the dashbaord
- - Target for dashbaord should having a heading
- - Read and cleanup
-2. Setup UWB
- - Check math
- - Cleanup `/uwb_localizer.py` to work well
- - test it using dashbaord
- - setup to test the uwbs with dashbaord as well
-3. Write pathing software
-4. Auto Tasks when pathing is done
+Startup commands, SSH access, and the current blocker/TODO list live in [OPERATIONS.md](OPERATIONS.md) — split out separately since that's day-to-day team reference, not project introduction.
