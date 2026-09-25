@@ -25,11 +25,7 @@ class RobotConfig:
     ROBOT_WIDTH  = 1.108 # Meters from left to right
 
     # Network configuration
-<<<<<<< HEAD
-    Robot_IP = "192.168.0.101" #Tailscale 100.87.109.7
-=======
-    Robot_IP = "192.168.0.102" #Tailscale 100.87.109.7
->>>>>>> 4a8ccea (moving jetson edits to rpi)
+    Robot_IP = "100.70.103.14"
     Robot_Port = 8080
     Robot_CAN_Interface = "can0"
 
@@ -47,11 +43,7 @@ class RobotConfig:
     useLidar = False
 
     drivetrainMode = DriveMode.ARCADE
-<<<<<<< HEAD
-    drivetrainMaxSpeed = 0.4
-=======
     drivetrainMaxSpeed = 0.55
->>>>>>> 4a8ccea (moving jetson edits to rpi)
     usePIDDrive = False
 
     # UWB Localizer — anchor positions (metres, arena coordinates) and tag geometry
@@ -85,20 +77,15 @@ class NetworkConfig:
 
     # Select which network to connect to on startup.
     # The key must match one of the entries in NETWORKS below.
-    SELECTED_NETWORK = "Router_5"
+    SELECTED_NETWORK = "FLTech-Guest"
 
     # Maps a friendly name to the nmcli connection profile name saved on the Jetson.
     # Add or rename entries to match what you see in `nmcli connection show`.
     NETWORKS = {
         "FLTech-Guest": "FLTech-Guest",
         "Ashers-HS": "Me phone ",
-<<<<<<< HEAD
-        "Router_5": "Team_9_5G",
-        "Router_2.4": "Team_9"
-=======
         "Router_5": "Team_09_5G",
         "Router_2.4": "Team_09"
->>>>>>> 4a8ccea (moving jetson edits to rpi)
     }
 
 
